@@ -1,6 +1,6 @@
-# finance_buddy
+# FinanceBuddy
 
-A new Flutter project.
+This mobile app helps you to keep track of your finances. Specifically all of your various income sources and expenses.
 
 ## Getting Started
 

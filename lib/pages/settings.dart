@@ -12,31 +12,55 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[800],
-        title: const CustomText(
-          'Settings',
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.chevron_left,
-            color: Colors.white,
+      backgroundColor: Colors.black, //Colors.grey[900],
+      // appBar: AppBar(
+      //   backgroundColor: Colors.grey[800],
+      //   title: const CustomText(
+      //     'Settings',
+      //   ),
+      //   leading: IconButton(
+      //     icon: const Icon(
+      //       Icons.chevron_left,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.of(context).pop();
+      //     },
+      //   ),
+      //   shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.vertical(
+      //       bottom: Radius.circular(20),
+      //     ),
+      //   ),
+      // ),
+      body: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 50,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.chevron_left,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              const CustomText(
+                'Settings',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20),
-          ),
-        ),
-      ),
-      body: const Center(
-        child: CustomText(
-          'Settings',
-        ),
+        ],
       ),
     );
   }

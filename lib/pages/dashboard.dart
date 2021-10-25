@@ -1,4 +1,6 @@
+import 'package:finance_buddy/pages/settings.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
+import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -11,9 +13,64 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CustomText(
-        'Dashboard',
+    return SafeArea(
+      bottom: false,
+      child: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 50,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsPage(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const CustomText(
+                'Dashboard',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              DashboardTile(
+                title: "Current month overview",
+                width: DashboardTileWidth.half,
+              ),
+              DashboardTile(
+                title: "Last month performance",
+                width: DashboardTileWidth.half,
+              ),
+            ],
+          ),
+          const DashboardTile(
+            title: "Wealth",
+          ),
+          const DashboardTile(
+            title: "Cash Flow",
+          ),
+          const DashboardTile(
+            title: "Income",
+          ),
+          const DashboardTile(
+            title: "Expenses",
+          ),
+        ],
       ),
     );
   }

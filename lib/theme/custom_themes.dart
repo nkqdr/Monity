@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomThemes {
   static final darkTheme = ThemeData(
@@ -11,6 +12,9 @@ class CustomThemes {
     splashColor: Colors.grey[800],
     highlightColor: Colors.grey[900],
     cardColor: Colors.grey[900],
+    appBarTheme: const AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+    ),
   );
 
   static final lightTheme = ThemeData(
@@ -23,5 +27,8 @@ class CustomThemes {
     splashColor: Colors.grey[300],
     highlightColor: Colors.grey[200],
     cardColor: Colors.grey[300],
+    appBarTheme: const AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+    ),
   );
 }

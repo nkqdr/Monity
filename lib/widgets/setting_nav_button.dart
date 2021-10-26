@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 class SettingNavButton extends StatelessWidget {
   final String name;
+  final Widget? destination;
   const SettingNavButton({
     Key? key,
     required this.name,
+    this.destination,
   }) : super(key: key);
 
   @override
@@ -17,7 +19,13 @@ class SettingNavButton extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          print("Hello");
+          if (destination != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => destination as Widget),
+            );
+          } else {
+            print('No destination!');
+          }
         },
         child: Container(
           width: double.infinity,

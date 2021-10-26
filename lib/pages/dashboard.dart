@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:finance_buddy/pages/settings.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
@@ -68,6 +70,9 @@ class _DashboardState extends State<Dashboard> {
           const DashboardTile(
             title: "Expenses",
           ),
+          const SizedBox(
+            height: 50,
+          )
         ],
       ),
     );

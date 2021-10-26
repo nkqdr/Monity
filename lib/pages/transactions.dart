@@ -1,6 +1,10 @@
+import 'package:finance_buddy/api/transactions_api.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_text.dart';
+import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({Key? key}) : super(key: key);
@@ -10,8 +14,18 @@ class TransactionsPage extends StatefulWidget {
 }
 
 class _TransactionsPageState extends State<TransactionsPage> {
+  List<DateTime> months = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('en_US');
+    months = TransactionsApi.getAllMonths();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var dateFormatter = DateFormat.yMMMM("en_US");
     return SafeArea(
       bottom: false,
       child: ListView(
@@ -35,6 +49,16 @@ class _TransactionsPageState extends State<TransactionsPage> {
               onPressed: () {},
             ),
           ),
+          ...months.map((date) {
+            return CustomSection(
+              title: dateFormatter.format(date),
+              children: TransactionsApi.getTransactionsFor(date).map((e) {
+                return TransactionTile(
+                  transaction: e,
+                );
+              }).toList(),
+            );
+          })
         ],
       ),
     );

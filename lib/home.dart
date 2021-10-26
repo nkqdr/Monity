@@ -23,18 +23,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.black, //Colors.grey[900],
-      // appBar: AppBar(
-      //   backgroundColor: Colors.grey[800],
-      //   title: CustomText(
-      //     _getCurrentTitle(),
-      //   ),
-      //   leading: _getLeading(context),
-      //   shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.vertical(
-      //       bottom: Radius.circular(20),
-      //     ),
-      //   ),
-      // ),
       body: _getCurrentPage(),
       bottomNavigationBar: Theme(
         data: ThemeData(
@@ -79,28 +67,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      // floatingActionButton: SizedBox(
-      //   width: 70,
-      //   height: 70,
-      //   child: FittedBox(
-      //     child: FloatingActionButton(
-      //       onPressed: () {
-      //         _onItemTapped(1);
-      //       },
-      //       tooltip: 'Dashboard',
-      //       child: const Icon(
-      //         Icons.bar_chart_rounded,
-      //         color: Colors.black,
-      //         size: 30,
-      //       ),
-      //       backgroundColor: _currentPage == 1
-      //           ? const Color.fromRGBO(255, 215, 0, 1)
-      //           : Colors.white, // const Color.fromRGBO(255, 215, 0, 1),
-      //       elevation: 4.0,
-      //     ),
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -122,42 +88,4 @@ class _HomePageState extends State<HomePage> {
         return Container();
     }
   }
-
-  // String _getCurrentTitle() {
-  //   switch (_currentPage) {
-  //     case 0:
-  //       return 'Income';
-  //     case 1:
-  //       return 'Dashboard';
-  //     case 2:
-  //       return 'Expenses';
-  //     default:
-  //       return '';
-  //   }
-  // }
-
-  // Widget _getLeading(BuildContext context) {
-  //   switch (_currentPage) {
-  //     case 0:
-  //       return Container();
-  //     case 1:
-  //       return IconButton(
-  //         icon: const Icon(
-  //           Icons.settings,
-  //           color: Colors.white,
-  //         ),
-  //         onPressed: () {
-  //           Navigator.of(context).push(
-  //             MaterialPageRoute(
-  //               builder: (context) => const SettingsPage(),
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     case 2:
-  //       return Container();
-  //     default:
-  //       return Container();
-  //   }
-  // }
 }

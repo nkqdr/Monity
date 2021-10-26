@@ -1,12 +1,10 @@
 import 'dart:ui';
 
-// import 'package:finance_buddy/pages/settings.dart';
-// import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/dashboard.dart';
-import 'pages/wealth.dart';
-import 'pages/transactions.dart';
+import 'pages/dashboard_page.dart';
+import 'pages/wealth_page.dart';
+import 'pages/transactions_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

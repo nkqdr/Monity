@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/pages/settings.dart';
+import 'package:finance_buddy/pages/settings_page.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';

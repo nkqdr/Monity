@@ -5,8 +5,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'pages/dashboard.dart';
-import 'pages/expenses.dart';
-import 'pages/income.dart';
+import 'pages/wealth.dart';
+import 'pages/transactions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -113,11 +113,11 @@ class _HomePageState extends State<HomePage> {
   Widget _getCurrentPage() {
     switch (_currentPage) {
       case 0:
-        return const IncomePage();
+        return const TransactionsPage();
       case 1:
         return const Dashboard();
       case 2:
-        return const ExpensesPage();
+        return const WealthPage();
       default:
         return Container();
     }

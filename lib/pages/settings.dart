@@ -1,4 +1,4 @@
-import 'package:finance_buddy/widgets/custom_text.dart';
+import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,52 +13,20 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black, //Colors.grey[900],
-      // appBar: AppBar(
-      //   backgroundColor: Colors.grey[800],
-      //   title: const CustomText(
-      //     'Settings',
-      //   ),
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       Icons.chevron_left,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //   ),
-      //   shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.vertical(
-      //       bottom: Radius.circular(20),
-      //     ),
-      //   ),
-      // ),
       body: ListView(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 50,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.chevron_left,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+          CustomAppBar(
+            title: "Settings",
+            left: IconButton(
+              icon: const Icon(
+                Icons.chevron_left,
+                color: Colors.white,
               ),
-              const CustomText(
-                'Settings',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-            ],
+              splashRadius: 18,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ),
         ],
       ),

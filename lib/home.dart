@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
               selectedItemColor: Colors.blue[300],
               onTap: _onItemTapped,
               backgroundColor: const Color.fromRGBO(55, 55, 55, 0.6),
-              selectedIconTheme: const IconThemeData(size: 30),
+              selectedFontSize: 12,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(
@@ -65,9 +65,8 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.bar_chart_rounded,
-                    size: 0,
                   ),
-                  label: "",
+                  label: "Dashboard",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
@@ -80,28 +79,28 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: () {
-              _onItemTapped(1);
-            },
-            tooltip: 'Dashboard',
-            child: const Icon(
-              Icons.bar_chart_rounded,
-              color: Colors.black,
-              size: 30,
-            ),
-            backgroundColor: _currentPage == 1
-                ? const Color.fromRGBO(255, 215, 0, 1)
-                : Colors.white, // const Color.fromRGBO(255, 215, 0, 1),
-            elevation: 4.0,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: SizedBox(
+      //   width: 70,
+      //   height: 70,
+      //   child: FittedBox(
+      //     child: FloatingActionButton(
+      //       onPressed: () {
+      //         _onItemTapped(1);
+      //       },
+      //       tooltip: 'Dashboard',
+      //       child: const Icon(
+      //         Icons.bar_chart_rounded,
+      //         color: Colors.black,
+      //         size: 30,
+      //       ),
+      //       backgroundColor: _currentPage == 1
+      //           ? const Color.fromRGBO(255, 215, 0, 1)
+      //           : Colors.white, // const Color.fromRGBO(255, 215, 0, 1),
+      //       elevation: 4.0,
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

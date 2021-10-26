@@ -20,6 +20,14 @@ class _DashboardState extends State<Dashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const SizedBox(
+                width: 50,
+              ),
+              const CustomText(
+                'Dashboard',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
               SizedBox(
                 width: 50,
                 child: IconButton(
@@ -36,14 +44,6 @@ class _DashboardState extends State<Dashboard> {
                   },
                 ),
               ),
-              const CustomText(
-                'Dashboard',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(
-                width: 50,
-              ),
             ],
           ),
           Row(
@@ -53,7 +53,7 @@ class _DashboardState extends State<Dashboard> {
                 width: DashboardTileWidth.half,
               ),
               DashboardTile(
-                title: "Last month performance",
+                title: "Performance",
                 width: DashboardTileWidth.half,
               ),
             ],

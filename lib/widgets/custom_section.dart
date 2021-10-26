@@ -28,7 +28,7 @@ class CustomSection extends StatelessWidget {
             title ?? "",
             fontSize: titleSize ?? 22,
             fontWeight: titleWeight ?? FontWeight.bold,
-            color: titleColor ?? Colors.grey[300],
+            color: titleColor ?? Theme.of(context).secondaryHeaderColor,
           ),
         ),
         ...children,

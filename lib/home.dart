@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.black, //Colors.grey[900],
       body: _getCurrentPage(),
       bottomNavigationBar: Theme(
         data: ThemeData(
@@ -36,10 +35,10 @@ class _HomePageState extends State<HomePage> {
             filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
             child: BottomNavigationBar(
               currentIndex: _currentPage,
-              unselectedItemColor: Colors.white,
-              selectedItemColor: Colors.blue[300],
+              unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
               onTap: _onItemTapped,
-              backgroundColor: const Color.fromRGBO(55, 55, 55, 0.6),
+              backgroundColor: Theme.of(context).bottomAppBarColor,
               selectedFontSize: 12,
               items: const [
                 BottomNavigationBarItem(

@@ -50,8 +50,8 @@ class TransactionTile extends StatelessWidget {
                           currencyFormat.format(transaction.amount),
                           fontSize: 16,
                           color: transaction.type == TransactionType.income
-                              ? Colors.green[300]
-                              : Colors.red[300],
+                              ? Theme.of(context).hintColor
+                              : Theme.of(context).errorColor,
                         )
                       ],
                     ),
@@ -65,7 +65,7 @@ class TransactionTile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   overflow: TextOverflow.ellipsis,
-                  color: Colors.grey[300],
+                  color: Theme.of(context).secondaryHeaderColor,
                 ),
               ),
             ],

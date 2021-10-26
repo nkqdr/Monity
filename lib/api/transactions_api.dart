@@ -30,6 +30,34 @@ class TransactionsApi {
       category: 'Essen',
       date: DateTime(2021, 9, 21),
     ),
+    Transaction(
+      title: 'Rewe',
+      amount: 5.11,
+      type: TransactionType.expense,
+      category: 'Essen',
+      date: DateTime(2021, 9, 21),
+    ),
+    Transaction(
+      title: 'Rewe',
+      amount: 5.11,
+      type: TransactionType.expense,
+      category: 'Essen',
+      date: DateTime(2021, 9, 21),
+    ),
+    Transaction(
+      title: "Sela's",
+      amount: 5,
+      type: TransactionType.expense,
+      category: 'Essen',
+      date: DateTime(2021, 8, 11),
+    ),
+    Transaction(
+      title: 'Test',
+      amount: 51.11,
+      type: TransactionType.expense,
+      category: 'Essen',
+      date: DateTime(2021, 8, 12),
+    ),
   ];
 
   static List<Transaction> getTransactions() {

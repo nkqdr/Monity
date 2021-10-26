@@ -25,7 +25,6 @@ class _DashboardState extends State<Dashboard> {
             right: IconButton(
               icon: const Icon(
                 Icons.settings,
-                color: Colors.white,
               ),
               splashRadius: 18,
               onPressed: () {

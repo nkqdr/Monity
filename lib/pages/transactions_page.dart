@@ -28,38 +28,39 @@ class _TransactionsPageState extends State<TransactionsPage> {
     var dateFormatter = DateFormat.yMMMM("en_US");
     return SafeArea(
       bottom: false,
-      child: ListView(
-        children: [
-          CustomAppBar(
-            title: "Transactions",
-            left: IconButton(
-              icon: const Icon(
-                Icons.filter_alt_rounded,
-                color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: ListView(
+          children: [
+            CustomAppBar(
+              title: "Transactions",
+              left: IconButton(
+                icon: const Icon(
+                  Icons.filter_alt_rounded,
+                ),
+                splashRadius: 18,
+                onPressed: () {},
               ),
-              splashRadius: 18,
-              onPressed: () {},
-            ),
-            right: IconButton(
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
+              right: IconButton(
+                icon: const Icon(
+                  Icons.add,
+                ),
+                splashRadius: 18,
+                onPressed: () {},
               ),
-              splashRadius: 18,
-              onPressed: () {},
             ),
-          ),
-          ...months.map((date) {
-            return CustomSection(
-              title: dateFormatter.format(date),
-              children: TransactionsApi.getTransactionsFor(date).map((e) {
-                return TransactionTile(
-                  transaction: e,
-                );
-              }).toList(),
-            );
-          })
-        ],
+            ...months.map((date) {
+              return CustomSection(
+                title: dateFormatter.format(date),
+                children: TransactionsApi.getTransactionsFor(date).map((e) {
+                  return TransactionTile(
+                    transaction: e,
+                  );
+                }).toList(),
+              );
+            })
+          ],
+        ),
       ),
     );
   }

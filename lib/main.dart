@@ -1,4 +1,5 @@
 import 'package:finance_buddy/home.dart';
+import 'package:finance_buddy/theme/custom_themes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,9 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FinanceBuddy',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+      themeMode: ThemeMode.system,
+      theme: CustomThemes.lightTheme,
+      darkTheme: CustomThemes.darkTheme,
       home: const HomePage(),
     );
   }

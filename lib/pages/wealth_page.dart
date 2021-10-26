@@ -23,7 +23,6 @@ class _WealthPageState extends State<WealthPage> {
             right: IconButton(
               icon: const Icon(
                 Icons.add,
-                color: Colors.white,
               ),
               splashRadius: 18,
               onPressed: () {},
@@ -34,7 +33,7 @@ class _WealthPageState extends State<WealthPage> {
             padding: const EdgeInsets.only(left: 15.0, top: 15),
             child: CustomText(
               'Log:',
-              color: Colors.grey[400],
+              color: Theme.of(context).secondaryHeaderColor,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),

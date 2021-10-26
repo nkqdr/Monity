@@ -32,14 +32,14 @@ class DashboardTile extends StatelessWidget {
               width: width == DashboardTileWidth.half
                   ? screenSize.width * 0.5 - 20
                   : screenSize.width,
-              color: Colors.grey[900],
+              color: Theme.of(context).cardColor,
               child: Padding(
                 padding: const EdgeInsets.only(top: 15, left: 15),
                 child: CustomText(
                   title == null ? "" : title as String,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Colors.grey[300],
+                  color: Theme.of(context).secondaryHeaderColor,
                 ),
               ),
             ),

@@ -13,7 +13,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, //Colors.grey[900],
       body: SafeArea(
         child: ListView(
           children: [
@@ -22,7 +21,6 @@ class _SettingsPageState extends State<SettingsPage> {
               left: IconButton(
                 icon: const Icon(
                   Icons.chevron_left,
-                  color: Colors.white,
                 ),
                 splashRadius: 18,
                 onPressed: () {

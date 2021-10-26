@@ -19,8 +19,6 @@ class SettingNavButton extends StatelessWidget {
         onTap: () {
           print("Hello");
         },
-        splashColor: Colors.grey[800],
-        highlightColor: Colors.grey[900],
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
@@ -40,7 +38,6 @@ class SettingNavButton extends StatelessWidget {
                 ),
                 const Icon(
                   Icons.chevron_right,
-                  color: Colors.white,
                 ),
               ],
             ),

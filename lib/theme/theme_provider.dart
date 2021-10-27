@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.system;
+  ThemeMode themeMode;
+
+  ThemeProvider({
+    required this.themeMode,
+  });
 
   ThemeMode getThemeMode() {
     return themeMode;

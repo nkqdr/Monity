@@ -1,3 +1,4 @@
+import 'package:finance_buddy/api/settings_api.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
@@ -68,6 +69,7 @@ class _AppearancePageState extends State<AppearancePage> {
 
   void setThemeMode(ThemeMode mode, ThemeProvider themeProvider) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
+    SettingsApi.setAppearance(mode);
     provider.setThemeMode(mode);
   }
 }

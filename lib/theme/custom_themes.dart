@@ -5,7 +5,7 @@ class CustomThemes {
   static final darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.black,
     colorScheme: ColorScheme.dark(primary: Colors.blue[300] as Color),
-    secondaryHeaderColor: Colors.grey[300],
+    secondaryHeaderColor: Colors.grey[500],
     hintColor: Colors.green[300],
     errorColor: Colors.red[300],
     bottomAppBarColor: const Color.fromRGBO(55, 55, 55, 0.6),

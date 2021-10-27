@@ -5,6 +5,7 @@ class CustomSection extends StatelessWidget {
   final List<Widget> children;
   final String? title;
   final double? titleSize;
+  final double? titlePadding;
   final FontWeight? titleWeight;
   final Color? titleColor;
 
@@ -15,6 +16,7 @@ class CustomSection extends StatelessWidget {
     this.title,
     this.titleWeight,
     this.titleColor,
+    this.titlePadding,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,8 @@ class CustomSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 30, left: 15.0),
+          padding:
+              EdgeInsets.only(top: 30, left: 15.0, bottom: titlePadding ?? 0),
           child: CustomText(
             title ?? "",
             fontSize: titleSize ?? 22,

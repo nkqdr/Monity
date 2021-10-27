@@ -1,6 +1,7 @@
 import 'package:finance_buddy/api/settings_api.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,27 +40,51 @@ class _AppearancePageState extends State<AppearancePage> {
               const SizedBox(
                 height: 20,
               ),
-              ThemeModeSetting(
-                title: 'System',
-                isActive: _themeProvider.getThemeMode() == ThemeMode.system,
-                onTap: () {
-                  setThemeMode(ThemeMode.system, _themeProvider);
-                },
+              CustomSection(
+                title: 'Theme',
+                titleSize: 18,
+                titlePadding: 10,
+                children: [
+                  ThemeModeSetting(
+                    title: 'System',
+                    isActive: _themeProvider.getThemeMode() == ThemeMode.system,
+                    onTap: () {
+                      setThemeMode(ThemeMode.system, _themeProvider);
+                    },
+                  ),
+                  ThemeModeSetting(
+                    title: 'Light',
+                    isActive: _themeProvider.getThemeMode() == ThemeMode.light,
+                    onTap: () {
+                      setThemeMode(ThemeMode.light, _themeProvider);
+                    },
+                  ),
+                  ThemeModeSetting(
+                    title: 'Dark',
+                    isActive: _themeProvider.getThemeMode() == ThemeMode.dark,
+                    onTap: () {
+                      setThemeMode(ThemeMode.dark, _themeProvider);
+                    },
+                  ),
+                ],
               ),
-              ThemeModeSetting(
-                title: 'Light',
-                isActive: _themeProvider.getThemeMode() == ThemeMode.light,
-                onTap: () {
-                  setThemeMode(ThemeMode.light, _themeProvider);
-                },
-              ),
-              ThemeModeSetting(
-                title: 'Dark',
-                isActive: _themeProvider.getThemeMode() == ThemeMode.dark,
-                onTap: () {
-                  setThemeMode(ThemeMode.dark, _themeProvider);
-                },
-              ),
+              CustomSection(
+                title: 'Language',
+                titleSize: 18,
+                titlePadding: 10,
+                children: [
+                  ThemeModeSetting(
+                    title: 'English',
+                    isActive: true,
+                    onTap: () {},
+                  ),
+                  ThemeModeSetting(
+                    title: 'Deutsch',
+                    isActive: false,
+                    onTap: () {},
+                  ),
+                ],
+              )
             ],
           ),
         ),

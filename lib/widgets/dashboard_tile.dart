@@ -10,11 +10,18 @@ class DashboardTile extends StatelessWidget {
   final DashboardTileWidth? width;
   final double? height;
   final String? title;
+  final Widget? child;
+  final Color? titleColor;
+  final double? titleSize;
+
   const DashboardTile({
     Key? key,
     this.title,
     this.width,
     this.height,
+    this.child,
+    this.titleColor,
+    this.titleSize,
   }) : super(key: key);
 
   @override
@@ -33,14 +40,22 @@ class DashboardTile extends StatelessWidget {
                   ? screenSize.width * 0.5 - 20
                   : screenSize.width,
               color: Theme.of(context).cardColor,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15, left: 15),
-                child: CustomText(
-                  title == null ? "" : title as String,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Theme.of(context).secondaryHeaderColor,
-                ),
+              child: Stack(
+                children: [
+                  child ?? Container(),
+                  title != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 15, left: 15),
+                          child: CustomText(
+                            title == null ? "" : title as String,
+                            fontWeight: FontWeight.bold,
+                            fontSize: titleSize ?? 16,
+                            color: titleColor ??
+                                Theme.of(context).secondaryHeaderColor,
+                          ),
+                        )
+                      : Container(),
+                ],
               ),
             ),
           ),

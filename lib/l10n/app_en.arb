@@ -1,0 +1,82 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Title string for the settings page"
+  },
+  "wealthTitle": "Wealth",
+  "@wealthTitle": {
+    "description": "Title string for the wealth page"
+  },
+  "dashboardTitle": "Dashboard",
+  "@dashboardTitle": {
+    "description": "Title for the dashboard page"
+  },
+  "transactionsTitle": "Transactions",
+  "@transactionsTitle": {
+    "description": "Title for the transactions page"
+  },
+  "currentMonthOverview": "Current month overview",
+  "@currentMonthOverview": {
+    "description": "Title for monthly overview tile"
+  },
+  "performanceTitle": "Performance",
+  "@performanceTitle": {
+    "description": "Title for performance tile"
+  },
+  "cashFlow": "Cash Flow",
+  "@cashFlow": {
+    "description": "Title for cash flow tile"
+  },
+  "income": "Income",
+  "@income": {
+    "description": "Title for income tile"
+  },
+  "expenses": "Expenses",
+  "@expenses": {
+    "description": "Title for expenses tile"
+  },
+  "logbook": "Logbook",
+  "@logbook": {
+    "description": "Logbook section title inside of wealth section"
+  },
+  "viewAll": "View all",
+  "@viewAll": {
+    "description": "Text for view-all button"
+  },
+  "system": "System",
+  "@system": {
+    "description": "System string used inside settings"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance string used inside settings"
+  },
+  "transactionsSettings": "Transactions",
+  "@transactionsSettings": {
+    "description": "Transactions string used inside settings"
+  },
+  "help": "Help",
+  "@help": {
+    "description": "Help string used inside settings"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme string used inside settings"
+  },
+  "lightTheme": "Light",
+  "@lightTheme": {
+    "description": "Light-theme string used inside settings"
+  },
+  "darkTheme": "Dark",
+  "@darkTheme": {
+    "description": "Dark-theme string used inside settings"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language string used inside settings"
+  }
+}

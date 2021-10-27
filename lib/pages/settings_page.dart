@@ -3,6 +3,7 @@ import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/setting_nav_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: Theme.of(context).appBarTheme.systemOverlayStyle
@@ -22,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ListView(
             children: [
               CustomAppBar(
-                title: "Settings",
+                title: language.settingsTitle,
                 left: IconButton(
                   icon: const Icon(
                     Icons.chevron_left,
@@ -36,18 +38,18 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(
                 height: 20,
               ),
-              const SettingNavButton(
-                name: "System",
+              SettingNavButton(
+                name: language.system,
               ),
-              const SettingNavButton(
-                name: "Appearance",
-                destination: AppearancePage(),
+              SettingNavButton(
+                name: language.appearance,
+                destination: const AppearancePage(),
               ),
-              const SettingNavButton(
-                name: "Transactions",
+              SettingNavButton(
+                name: language.transactionsSettings,
               ),
-              const SettingNavButton(
-                name: "Help",
+              SettingNavButton(
+                name: language.help,
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:finance_buddy/pages/settings_page.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,13 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return SafeArea(
       bottom: false,
       child: ListView(
         children: [
           CustomAppBar(
-            title: "Dashboard",
+            title: language.dashboardTitle,
             right: IconButton(
               icon: const Icon(
                 Icons.settings,
@@ -37,19 +39,19 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Row(
-            children: const [
+            children: [
               DashboardTile(
-                title: "Current month overview",
+                title: language.currentMonthOverview,
                 width: DashboardTileWidth.half,
               ),
               DashboardTile(
-                title: "Performance",
+                title: language.performanceTitle,
                 width: DashboardTileWidth.half,
               ),
             ],
           ),
-          const DashboardTile(
-            title: "Wealth",
+          DashboardTile(
+            title: language.wealthTitle,
           ),
           const DashboardTile(
             title: 'Trade Republic',
@@ -60,14 +62,14 @@ class _DashboardState extends State<Dashboard> {
           const DashboardTile(
             title: 'MLP-Depot',
           ),
-          const DashboardTile(
-            title: "Cash Flow",
+          DashboardTile(
+            title: language.cashFlow,
           ),
-          const DashboardTile(
-            title: "Income",
+          DashboardTile(
+            title: language.income,
           ),
-          const DashboardTile(
-            title: "Expenses",
+          DashboardTile(
+            title: language.expenses,
           ),
           const SizedBox(
             height: 50,

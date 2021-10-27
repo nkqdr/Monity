@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'pages/dashboard_page.dart';
 import 'pages/wealth_page.dart';
 import 'pages/transactions_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return Scaffold(
       extendBody: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -45,24 +47,24 @@ class _HomePageState extends State<HomePage> {
               onTap: _onItemTapped,
               backgroundColor: Theme.of(context).bottomAppBarColor,
               selectedFontSize: 12,
-              items: const [
+              items: [
                 BottomNavigationBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.compare_arrows_rounded,
                   ),
-                  label: 'Transactions',
+                  label: language.transactionsTitle,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.bar_chart_rounded,
                   ),
-                  label: "Dashboard",
+                  label: language.dashboardTitle,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.attach_money_rounded,
                   ),
-                  label: 'Wealth',
+                  label: language.wealthTitle,
                 ),
               ],
             ),

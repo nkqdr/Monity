@@ -1,4 +1,5 @@
 import 'package:finance_buddy/api/settings_api.dart';
+import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
@@ -6,6 +7,7 @@ import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppearancePage extends StatefulWidget {
   const AppearancePage({Key? key}) : super(key: key);
@@ -18,6 +20,9 @@ class _AppearancePageState extends State<AppearancePage> {
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context);
+    final LanguageProvider _languageProvider =
+        Provider.of<LanguageProvider>(context);
+    var language = AppLocalizations.of(context)!;
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: Theme.of(context).appBarTheme.systemOverlayStyle
@@ -26,7 +31,7 @@ class _AppearancePageState extends State<AppearancePage> {
           child: ListView(
             children: [
               CustomAppBar(
-                title: 'Appearance',
+                title: language.appearance,
                 left: IconButton(
                   icon: const Icon(
                     Icons.chevron_left,
@@ -41,47 +46,58 @@ class _AppearancePageState extends State<AppearancePage> {
                 height: 20,
               ),
               CustomSection(
-                title: 'Theme',
+                title: language.theme,
                 titleSize: 18,
                 titlePadding: 10,
                 children: [
-                  ThemeModeSetting(
-                    title: 'System',
-                    isActive: _themeProvider.getThemeMode() == ThemeMode.system,
+                  MultipleChoiceSetting(
+                    title: language.system,
+                    isActive: _themeProvider.themeMode == ThemeMode.system,
                     onTap: () {
-                      setThemeMode(ThemeMode.system, _themeProvider);
+                      setThemeMode(ThemeMode.system);
                     },
                   ),
-                  ThemeModeSetting(
-                    title: 'Light',
-                    isActive: _themeProvider.getThemeMode() == ThemeMode.light,
+                  MultipleChoiceSetting(
+                    title: language.lightTheme,
+                    isActive: _themeProvider.themeMode == ThemeMode.light,
                     onTap: () {
-                      setThemeMode(ThemeMode.light, _themeProvider);
+                      setThemeMode(ThemeMode.light);
                     },
                   ),
-                  ThemeModeSetting(
-                    title: 'Dark',
-                    isActive: _themeProvider.getThemeMode() == ThemeMode.dark,
+                  MultipleChoiceSetting(
+                    title: language.darkTheme,
+                    isActive: _themeProvider.themeMode == ThemeMode.dark,
                     onTap: () {
-                      setThemeMode(ThemeMode.dark, _themeProvider);
+                      setThemeMode(ThemeMode.dark);
                     },
                   ),
                 ],
               ),
               CustomSection(
-                title: 'Language',
+                title: language.language,
                 titleSize: 18,
                 titlePadding: 10,
                 children: [
-                  ThemeModeSetting(
-                    title: 'English',
-                    isActive: true,
-                    onTap: () {},
+                  MultipleChoiceSetting(
+                    title: 'System',
+                    isActive: _languageProvider.locale == null,
+                    onTap: () {
+                      setLanguage(null);
+                    },
                   ),
-                  ThemeModeSetting(
+                  MultipleChoiceSetting(
+                    title: 'English',
+                    isActive: _languageProvider.locale == const Locale('en'),
+                    onTap: () {
+                      setLanguage('en');
+                    },
+                  ),
+                  MultipleChoiceSetting(
                     title: 'Deutsch',
-                    isActive: false,
-                    onTap: () {},
+                    isActive: _languageProvider.locale == const Locale('de'),
+                    onTap: () {
+                      setLanguage('de');
+                    },
                   ),
                 ],
               )
@@ -92,18 +108,28 @@ class _AppearancePageState extends State<AppearancePage> {
     );
   }
 
-  void setThemeMode(ThemeMode mode, ThemeProvider themeProvider) {
+  void setThemeMode(ThemeMode mode) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    SettingsApi.setAppearance(mode);
+    SettingsApi.setTheme(mode);
     provider.setThemeMode(mode);
+  }
+
+  void setLanguage(String? languageCode) {
+    final provider = Provider.of<LanguageProvider>(context, listen: false);
+    SettingsApi.setLanguage(languageCode);
+    if (languageCode == null) {
+      provider.setLocale(null);
+      return;
+    }
+    provider.setLocale(Locale(languageCode));
   }
 }
 
-class ThemeModeSetting extends StatelessWidget {
+class MultipleChoiceSetting extends StatelessWidget {
   final String title;
   final bool isActive;
   final void Function()? onTap;
-  const ThemeModeSetting({
+  const MultipleChoiceSetting({
     Key? key,
     required this.title,
     required this.isActive,

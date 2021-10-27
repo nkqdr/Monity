@@ -3,6 +3,7 @@ import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WealthPage extends StatefulWidget {
   const WealthPage({Key? key}) : super(key: key);
@@ -14,12 +15,13 @@ class WealthPage extends StatefulWidget {
 class _WealthPageState extends State<WealthPage> {
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return SafeArea(
       bottom: false,
       child: ListView(
         children: [
           CustomAppBar(
-            title: "Wealth",
+            title: language.wealthTitle,
             right: IconButton(
               icon: const Icon(
                 Icons.add,
@@ -32,16 +34,16 @@ class _WealthPageState extends State<WealthPage> {
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 15),
             child: CustomText(
-              'Log:',
+              language.logbook,
               color: Theme.of(context).secondaryHeaderColor,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
           ),
           CupertinoButton(
-            child: const Text(
-              'View all',
-              style: TextStyle(color: Colors.blue),
+            child: Text(
+              language.viewAll,
+              style: const TextStyle(color: Colors.blue),
             ),
             onPressed: () {},
           ),

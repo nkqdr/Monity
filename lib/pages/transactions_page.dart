@@ -1,10 +1,13 @@
 import 'package:finance_buddy/api/transactions_api.dart';
+import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({Key? key}) : super(key: key);
@@ -19,13 +22,30 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   void initState() {
     super.initState();
-    initializeDateFormatting('en_US');
+    // final provider = Provider.of<LanguageProvider>(context);
+    // if (provider.locale == null) {
+    //   initializeDateFormatting('en_US');
+    // } else {
+    //   initializeDateFormatting(provider.locale!.languageCode +
+    //       "_" +
+    //       (provider.locale!.countryCode ?? ""));
+    // }
     months = TransactionsApi.getAllMonths();
   }
 
   @override
   Widget build(BuildContext context) {
-    var dateFormatter = DateFormat.yMMMM("en_US");
+    final provider = Provider.of<LanguageProvider>(context);
+    DateFormat dateFormatter;
+    if (provider.locale == null) {
+      dateFormatter = DateFormat.yMMMM("en_US");
+    } else {
+      dateFormatter = DateFormat.yMMMM(provider.locale!.languageCode +
+          "_" +
+          (provider.locale!.countryCode ?? ""));
+    }
+
+    var language = AppLocalizations.of(context)!;
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -33,7 +53,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
         child: ListView(
           children: [
             CustomAppBar(
-              title: "Transactions",
+              title: language.transactionsTitle,
               left: IconButton(
                 icon: const Icon(
                   Icons.filter_alt_rounded,

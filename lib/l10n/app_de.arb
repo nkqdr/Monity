@@ -1,0 +1,22 @@
+{
+  "helloWorld": "Hallo Welt!",
+  "settingsTitle": "Einstellungen",
+  "wealthTitle": "Vermögen",
+  "dashboardTitle": "Dashboard",
+  "transactionsTitle": "Transaktionen",
+  "currentMonthOverview": "Übersicht des Monats",
+  "performanceTitle": "Performance",
+  "cashFlow": "Geldumlauf",
+  "income": "Einnahmen",
+  "expenses": "Ausgaben",
+  "logbook": "Logbuch",
+  "viewAll": "Alle anzeigen",
+  "system": "System",
+  "appearance": "Anzeige",
+  "transactionsSettings": "Transaktionen",
+  "help": "Hilfe",
+  "theme": "Erscheinungsbild",
+  "lightTheme": "Hell",
+  "darkTheme": "Dunkel",
+  "language": "Sprache"
+}

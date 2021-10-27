@@ -7,10 +7,6 @@ class ThemeProvider extends ChangeNotifier {
     required this.themeMode,
   });
 
-  ThemeMode getThemeMode() {
-    return themeMode;
-  }
-
   void setThemeMode(ThemeMode mode) {
     themeMode = mode;
     notifyListeners();

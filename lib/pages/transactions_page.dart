@@ -22,14 +22,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   void initState() {
     super.initState();
-    // final provider = Provider.of<LanguageProvider>(context);
-    // if (provider.locale == null) {
-    //   initializeDateFormatting('en_US');
-    // } else {
-    //   initializeDateFormatting(provider.locale!.languageCode +
-    //       "_" +
-    //       (provider.locale!.countryCode ?? ""));
-    // }
     months = TransactionsApi.getAllMonths();
   }
 
@@ -38,11 +30,10 @@ class _TransactionsPageState extends State<TransactionsPage> {
     final provider = Provider.of<LanguageProvider>(context);
     DateFormat dateFormatter;
     if (provider.locale == null) {
-      dateFormatter = DateFormat.yMMMM("en_US");
+      dateFormatter =
+          DateFormat.yMMMM(Localizations.localeOf(context).toString());
     } else {
-      dateFormatter = DateFormat.yMMMM(provider.locale!.languageCode +
-          "_" +
-          (provider.locale!.countryCode ?? ""));
+      dateFormatter = DateFormat.yMMMM(provider.locale!.languageCode);
     }
 
     var language = AppLocalizations.of(context)!;

@@ -4,6 +4,7 @@ import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,17 +38,17 @@ class _WealthPageState extends State<WealthPage> {
         displayWealth = WealthApi.getCurrentWealth();
       });
       return;
-    } else {
-      print(event);
     }
 
     if (response != null && response.lineBarSpots != null) {
       var value = response.lineBarSpots?[0].y;
-      setState(() {
-        displayWealth = value == null
-            ? WealthApi.getCurrentWealth()
-            : value * WealthApi.getDivisor();
-      });
+
+      if (value != null && value * WealthApi.getDivisor() != displayWealth) {
+        HapticFeedback.mediumImpact();
+        setState(() {
+          displayWealth = value * WealthApi.getDivisor();
+        });
+      }
     }
   }
 

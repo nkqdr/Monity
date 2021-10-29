@@ -3,6 +3,18 @@
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   },
+  "lastYear": "Last year",
+  "@lastYear": {
+    "description": "Used for filtering datasets by specific time"
+  },
+   "remainingDays": "Days left:",
+  "@remainingDays": {
+    "description": "Remaining days in a month"
+  },
+   "remainingBudget": "Budget left:",
+  "@remainingBudget": {
+    "description": "Remaining budget in a month"
+  },
   "settingsTitle": "Settings",
   "@settingsTitle": {
     "description": "Title string for the settings page"
@@ -39,9 +51,13 @@
   "@expenses": {
     "description": "Title for expenses tile"
   },
-  "logbook": "Logbook",
-  "@logbook": {
-    "description": "Logbook section title inside of wealth section"
+  "investments": "Investments",
+  "@investments": {
+    "description": "Investments section title inside of wealth section"
+  },
+  "lastChange": "Last change:",
+  "@lastChange": {
+    "description": "String for the last changed date of an investment"
   },
   "viewAll": "View all",
   "@viewAll": {

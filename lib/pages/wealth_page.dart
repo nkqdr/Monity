@@ -4,9 +4,9 @@ import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:finance_buddy/widgets/investment_tile.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +22,7 @@ class WealthPage extends StatefulWidget {
 class _WealthPageState extends State<WealthPage> {
   List<WealthEntry> wealthEntries = [];
   double displayWealth = WealthApi.getCurrentWealth();
+  String? subtitle = null;
 
   @override
   void initState() {
@@ -29,12 +30,14 @@ class _WealthPageState extends State<WealthPage> {
     wealthEntries = WealthApi.getAllEntries();
   }
 
-  void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response) {
+  void _handleChartTouch(
+      FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
     if (event is FlTapUpEvent ||
         event is FlPanCancelEvent ||
         event is FlPanEndEvent ||
         event is FlLongPressEnd) {
       setState(() {
+        subtitle = null;
         displayWealth = WealthApi.getCurrentWealth();
       });
       return;
@@ -47,6 +50,8 @@ class _WealthPageState extends State<WealthPage> {
         HapticFeedback.mediumImpact();
         setState(() {
           displayWealth = value * WealthApi.getDivisor();
+          subtitle = dateFormat.format(
+              wealthEntries[response.lineBarSpots?[0].x.toInt() as int].date);
         });
       }
     }
@@ -83,6 +88,7 @@ class _WealthPageState extends State<WealthPage> {
             title: currencyFormat.format(displayWealth),
             titleColor: Theme.of(context).colorScheme.onBackground,
             titleSize: 24,
+            subtitle: subtitle,
             child: Column(
               children: [
                 const SizedBox(
@@ -101,7 +107,10 @@ class _WealthPageState extends State<WealthPage> {
                         show: false,
                       ),
                       lineTouchData: LineTouchData(
-                          enabled: false, touchCallback: _handleChartTouch),
+                          enabled: false,
+                          touchCallback: (e, v) {
+                            _handleChartTouch(e, v, dateFormatter);
+                          }),
                       borderData: FlBorderData(show: false),
                       gridData: FlGridData(show: false),
                       lineBarsData: [
@@ -126,84 +135,22 @@ class _WealthPageState extends State<WealthPage> {
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 15),
             child: CustomText(
-              language.logbook,
+              language.investments,
               color: Theme.of(context).secondaryHeaderColor,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
           ),
-          // Render the last few entries
-          for (var i = 0; i < 5; i++)
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: SizedBox(
-                  height: 60,
-                  child: Container(
-                    color: Theme.of(context).cardColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            currencyFormat.format(wealthEntries[i].amount),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            dateFormatter.format(wealthEntries[i].date),
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          // ...wealthEntries.reversed.map((e) {
-          //   return Padding(
-          //     padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
-          //     child: ClipRRect(
-          //       borderRadius: BorderRadius.circular(20),
-          //       child: SizedBox(
-          //         height: 60,
-          //         child: Container(
-          //           color: Theme.of(context).cardColor,
-          //           child: Padding(
-          //             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: [
-          //                 Text(
-          //                   currencyFormat.format(e.amount),
-          //                   style: const TextStyle(
-          //                     fontSize: 18,
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text(
-          //                   dateFormatter.format(e.date),
-          //                   style: const TextStyle(fontSize: 18),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }),
-          CupertinoButton(
-            child: Text(
-              language.viewAll,
-              style: const TextStyle(color: Colors.blue),
-            ),
-            onPressed: () {},
+          // Render investment categories
+          const InvestmentTile(title: 'Trade Republic'),
+          const InvestmentTile(title: 'Crypto'),
+          const InvestmentTile(title: 'MLP-Depot'),
+          const InvestmentTile(title: 'Tresor'),
+          const InvestmentTile(title: 'Girokonto'),
+          const InvestmentTile(title: 'Tagesgeldkonto'),
+          const InvestmentTile(title: 'DKB-Cash'),
+          const SizedBox(
+            height: 50,
           ),
         ],
       ),

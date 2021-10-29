@@ -1,5 +1,8 @@
 {
   "helloWorld": "Hallo Welt!",
+  "lastYear": "Letztes Jahr",
+  "remainingDays": "Tage übrig:",
+  "remainingBudget": "Übriges Budget:",
   "settingsTitle": "Einstellungen",
   "wealthTitle": "Vermögen",
   "dashboardTitle": "Dashboard",
@@ -9,7 +12,8 @@
   "cashFlow": "Geldumlauf",
   "income": "Einnahmen",
   "expenses": "Ausgaben",
-  "logbook": "Logbuch",
+  "investments": "Geldanlagen",
+  "lastChange": "Letzte Änderung:",
   "viewAll": "Alle anzeigen",
   "system": "System",
   "appearance": "Anzeige",

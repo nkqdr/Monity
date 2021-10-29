@@ -2,6 +2,7 @@ import 'package:finance_buddy/api/transactions_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/pie_chart.dart';
 import 'package:finance_buddy/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -69,7 +70,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   );
                 }).toList(),
               );
-            })
+            }),
           ],
         ),
       ),

@@ -1,4 +1,3 @@
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 enum DashboardTileWidth {
@@ -8,9 +7,11 @@ enum DashboardTileWidth {
 
 class DashboardTile extends StatelessWidget {
   final DashboardTileWidth? width;
+  final DashboardTileFill fill;
   final double? height;
   final String? title;
   final Widget? child;
+  final Widget? sideWidget;
   final Color? titleColor;
   final double? titleSize;
 
@@ -22,6 +23,8 @@ class DashboardTile extends StatelessWidget {
     this.child,
     this.titleColor,
     this.titleSize,
+    this.sideWidget,
+    this.fill = const DashboardTileFillAll(),
   }) : super(key: key);
 
   @override
@@ -35,31 +38,80 @@ class DashboardTile extends StatelessWidget {
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             child: Container(
-              height: height ?? 200,
+              height: height ?? 220,
               width: width == DashboardTileWidth.half
                   ? screenSize.width * 0.5 - 20
                   : screenSize.width,
               color: Theme.of(context).cardColor,
-              child: Stack(
-                children: [
-                  child ?? Container(),
-                  title != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 15),
-                          child: CustomText(
-                            title == null ? "" : title as String,
-                            fontWeight: FontWeight.bold,
-                            fontSize: titleSize ?? 16,
-                            color: titleColor ??
-                                Theme.of(context).secondaryHeaderColor,
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
+              child: fill.getChildFill(
+                  context,
+                  child,
+                  sideWidget,
+                  title,
+                  TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: titleSize ?? 16,
+                    color: titleColor ?? Theme.of(context).secondaryHeaderColor,
+                  )),
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+abstract class DashboardTileFill {
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget,
+      String? title, TextStyle? titleStyle);
+}
+
+class DashboardTileFillAll implements DashboardTileFill {
+  const DashboardTileFillAll();
+
+  @override
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget,
+      String? title, TextStyle? titleStyle) {
+    return Stack(
+      children: [
+        child ?? Container(),
+        title != null
+            ? Padding(
+                padding: const EdgeInsets.only(top: 15, left: 15),
+                child: Text(
+                  title,
+                  style: titleStyle,
+                ))
+            : Container(),
+      ],
+    );
+  }
+}
+
+class DashboardTileFillLeaveTitle implements DashboardTileFill {
+  const DashboardTileFillLeaveTitle();
+
+  @override
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget,
+      String? title, TextStyle? titleStyle) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        title != null
+            ? Padding(
+                padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: titleStyle,
+                    ),
+                    sideWidget ?? Container(),
+                  ],
+                ))
+            : Container(),
+        child ?? Container(),
       ],
     );
   }

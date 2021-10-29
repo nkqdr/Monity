@@ -20,11 +20,35 @@ class WealthPage extends StatefulWidget {
 
 class _WealthPageState extends State<WealthPage> {
   List<WealthEntry> wealthEntries = [];
+  double displayWealth = WealthApi.getCurrentWealth();
 
   @override
   void initState() {
     super.initState();
     wealthEntries = WealthApi.getAllEntries();
+  }
+
+  void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response) {
+    if (event is FlTapUpEvent ||
+        event is FlPanCancelEvent ||
+        event is FlPanEndEvent ||
+        event is FlLongPressEnd) {
+      setState(() {
+        displayWealth = WealthApi.getCurrentWealth();
+      });
+      return;
+    } else {
+      print(event);
+    }
+
+    if (response != null && response.lineBarSpots != null) {
+      var value = response.lineBarSpots?[0].y;
+      setState(() {
+        displayWealth = value == null
+            ? WealthApi.getCurrentWealth()
+            : value * WealthApi.getDivisor();
+      });
+    }
   }
 
   @override
@@ -55,53 +79,47 @@ class _WealthPageState extends State<WealthPage> {
             ),
           ),
           DashboardTile(
-            title: currencyFormat.format(WealthApi.getCurrentWealth()),
+            title: currencyFormat.format(displayWealth),
             titleColor: Theme.of(context).colorScheme.onBackground,
             titleSize: 24,
-            child: SizedBox(
-              height: 200,
-              child: LineChart(
-                LineChartData(
-                  backgroundColor: Theme.of(context).cardColor,
-                  minX: 0,
-                  maxX: wealthEntries.length - 1,
-                  minY: 0,
-                  maxY: WealthApi.getMaxLineChartValue() + 1,
-                  borderData: FlBorderData(show: false),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: SideTitles(showTitles: false),
-                    topTitles: SideTitles(showTitles: false),
-                    leftTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 0,
-                      margin: 3,
-                      getTextStyles: (context, d) {
-                        return TextStyle(color: Theme.of(context).cardColor);
-                      },
-                    ),
-                    rightTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 0,
-                        margin: 4,
-                        getTextStyles: (context, d) {
-                          return TextStyle(color: Theme.of(context).cardColor);
-                        }),
-                  ),
-                  gridData: FlGridData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                        isCurved: true,
-                        barWidth: 3,
-                        spots: wealthEntries.asMap().entries.map((e) {
-                          return FlSpot(
-                            e.key.toDouble(),
-                            e.value.amount / WealthApi.getDivisor(),
-                          );
-                        }).toList())
-                  ],
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
+                SizedBox(
+                  height: 180,
+                  child: LineChart(
+                    LineChartData(
+                      backgroundColor: Theme.of(context).cardColor,
+                      minX: 0,
+                      maxX: wealthEntries.length - 1,
+                      minY: 0,
+                      maxY: WealthApi.getMaxLineChartValue() + 1,
+                      titlesData: FlTitlesData(
+                        show: false,
+                      ),
+                      lineTouchData: LineTouchData(
+                          enabled: false, touchCallback: _handleChartTouch),
+                      borderData: FlBorderData(show: false),
+                      gridData: FlGridData(show: false),
+                      lineBarsData: [
+                        LineChartBarData(
+                            isCurved: true,
+                            preventCurveOverShooting: true,
+                            dotData: FlDotData(show: false),
+                            barWidth: 4,
+                            spots: wealthEntries.asMap().entries.map((e) {
+                              return FlSpot(
+                                e.key.toDouble(),
+                                e.value.amount / WealthApi.getDivisor(),
+                              );
+                            }).toList())
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -113,8 +131,9 @@ class _WealthPageState extends State<WealthPage> {
               fontSize: 20,
             ),
           ),
-          ...wealthEntries.reversed.map((e) {
-            return Padding(
+          // Render the last few entries
+          for (var i = 0; i < 5; i++)
+            Padding(
               padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -128,14 +147,14 @@ class _WealthPageState extends State<WealthPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            currencyFormat.format(e.amount),
+                            currencyFormat.format(wealthEntries[i].amount),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            dateFormatter.format(e.date),
+                            dateFormatter.format(wealthEntries[i].date),
                             style: const TextStyle(fontSize: 18),
                           ),
                         ],
@@ -144,8 +163,40 @@ class _WealthPageState extends State<WealthPage> {
                   ),
                 ),
               ),
-            );
-          }),
+            ),
+          // ...wealthEntries.reversed.map((e) {
+          //   return Padding(
+          //     padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(20),
+          //       child: SizedBox(
+          //         height: 60,
+          //         child: Container(
+          //           color: Theme.of(context).cardColor,
+          //           child: Padding(
+          //             padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 Text(
+          //                   currencyFormat.format(e.amount),
+          //                   style: const TextStyle(
+          //                     fontSize: 18,
+          //                     fontWeight: FontWeight.bold,
+          //                   ),
+          //                 ),
+          //                 Text(
+          //                   dateFormatter.format(e.date),
+          //                   style: const TextStyle(fontSize: 18),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   );
+          // }),
           CupertinoButton(
             child: Text(
               language.viewAll,

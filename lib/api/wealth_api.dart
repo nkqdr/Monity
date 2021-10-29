@@ -48,12 +48,12 @@ class WealthApi {
 
 List<WealthEntry> wealthEntries = [
   WealthEntry(date: DateTime(2021, 8, 1), amount: 1000),
-  WealthEntry(date: DateTime(2021, 9, 1), amount: 2000),
+  WealthEntry(date: DateTime(2021, 9, 1), amount: 3000),
   WealthEntry(date: DateTime(2021, 10, 1), amount: 1600),
   WealthEntry(date: DateTime(2021, 11, 1), amount: 2000.5),
   WealthEntry(date: DateTime(2021, 12, 1), amount: 2800.32),
   WealthEntry(date: DateTime(2022, 1, 1), amount: 1000),
   WealthEntry(date: DateTime(2022, 2, 1), amount: 1500),
   WealthEntry(date: DateTime(2022, 3, 1), amount: 1600),
-  WealthEntry(date: DateTime(2022, 4, 1), amount: 5398.52),
+  WealthEntry(date: DateTime(2022, 4, 1), amount: 9398.52),
 ];

@@ -3,7 +3,6 @@ import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -157,10 +156,12 @@ class MultipleChoiceSetting extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomText(
+                Text(
                   title,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),

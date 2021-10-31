@@ -1,4 +1,3 @@
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -21,10 +20,12 @@ class CustomAppBar extends StatelessWidget {
           width: 50,
           child: left,
         ),
-        CustomText(
+        Text(
           title ?? "",
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         SizedBox(
           width: 50,

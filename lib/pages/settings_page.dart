@@ -1,4 +1,5 @@
 import 'package:finance_buddy/pages/settings/appearance_page.dart';
+import 'package:finance_buddy/pages/settings/transactions_settings_page.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/setting_nav_button.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,15 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SettingNavButton(
                 name: language.transactionsSettings,
+                destination: Scaffold(
+                  body: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: Theme.of(context).appBarTheme.systemOverlayStyle
+                          as SystemUiOverlayStyle,
+                      child: const TransactionsSettingsPage()),
+                ),
+              ),
+              SettingNavButton(
+                name: language.investments,
               ),
               SettingNavButton(
                 name: language.help,

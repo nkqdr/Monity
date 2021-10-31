@@ -2,7 +2,7 @@
   "helloWorld": "Hallo Welt!",
   "lastYear": "Letztes Jahr",
   "remainingDays": "Tage übrig:",
-  "remainingBudget": "Übriges Budget:",
+  "remainingBudget": "Budget:",
   "settingsTitle": "Einstellungen",
   "wealthTitle": "Vermögen",
   "dashboardTitle": "Dashboard",
@@ -22,5 +22,10 @@
   "theme": "Erscheinungsbild",
   "lightTheme": "Hell",
   "darkTheme": "Dunkel",
-  "language": "Sprache"
+  "language": "Sprache",
+  "monthlyLimit": "Monatliches Limit",
+  "categories": "Kategorien",
+  "newCategoryName": "Gib einen Namen für die neue Kategorie ein:",
+  "newCategoryNameHint": "Neue Kategorie...",
+  "addCategoryButton": "Kategorie Hinzufügen"
 }

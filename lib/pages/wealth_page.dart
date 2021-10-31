@@ -1,10 +1,9 @@
 import 'package:finance_buddy/api/wealth_api.dart';
-import 'package:finance_buddy/helper/wealth_entry.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/investment_tile.dart';
+import 'package:finance_buddy/widgets/wealth_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -20,43 +19,9 @@ class WealthPage extends StatefulWidget {
 }
 
 class _WealthPageState extends State<WealthPage> {
-  List<WealthEntry> wealthEntries = [];
   double displayWealth = WealthApi.getCurrentWealth();
-  String? subtitle = null;
-
-  @override
-  void initState() {
-    super.initState();
-    wealthEntries = WealthApi.getAllEntries();
-  }
-
-  void _handleChartTouch(
-      FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
-    if (event is FlTapUpEvent ||
-        event is FlPanCancelEvent ||
-        event is FlPanEndEvent ||
-        event is FlLongPressEnd) {
-      setState(() {
-        subtitle = null;
-        displayWealth = WealthApi.getCurrentWealth();
-      });
-      return;
-    }
-
-    if (response != null && response.lineBarSpots != null) {
-      var value = response.lineBarSpots?[0].y;
-
-      if (value != null && value * WealthApi.getDivisor() != displayWealth) {
-        HapticFeedback.mediumImpact();
-        setState(() {
-          displayWealth = value * WealthApi.getDivisor();
-          subtitle = dateFormat.format(
-              wealthEntries[response.lineBarSpots?[0].x.toInt() as int].date);
-        });
-      }
-    }
-  }
-
+  VerticalLine? _indexLine;
+  String? subtitle;
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LanguageProvider>(context);
@@ -92,41 +57,15 @@ class _WealthPageState extends State<WealthPage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
                 SizedBox(
                   height: 180,
-                  child: LineChart(
-                    LineChartData(
-                      backgroundColor: Theme.of(context).cardColor,
-                      minX: 0,
-                      maxX: wealthEntries.length - 1,
-                      minY: 0,
-                      maxY: WealthApi.getMaxLineChartValue() + 1,
-                      titlesData: FlTitlesData(
-                        show: false,
-                      ),
-                      lineTouchData: LineTouchData(
-                          enabled: false,
-                          touchCallback: (e, v) {
-                            _handleChartTouch(e, v, dateFormatter);
-                          }),
-                      borderData: FlBorderData(show: false),
-                      gridData: FlGridData(show: false),
-                      lineBarsData: [
-                        LineChartBarData(
-                            isCurved: true,
-                            preventCurveOverShooting: true,
-                            dotData: FlDotData(show: false),
-                            barWidth: 4,
-                            spots: wealthEntries.asMap().entries.map((e) {
-                              return FlSpot(
-                                e.key.toDouble(),
-                                e.value.amount / WealthApi.getDivisor(),
-                              );
-                            }).toList())
-                      ],
-                    ),
+                  child: WealthChart(
+                    indexLine: _indexLine,
+                    touchHandler: (e, v) {
+                      _handleChartTouch(e, v, dateFormatter);
+                    },
                   ),
                 ),
               ],
@@ -134,11 +73,13 @@ class _WealthPageState extends State<WealthPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 15),
-            child: CustomText(
+            child: Text(
               language.investments,
-              color: Theme.of(context).secondaryHeaderColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+              style: TextStyle(
+                color: Theme.of(context).secondaryHeaderColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
           ),
           // Render investment categories
@@ -155,5 +96,38 @@ class _WealthPageState extends State<WealthPage> {
         ],
       ),
     );
+  }
+
+  void _handleChartTouch(
+      FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
+    if (event is FlTapUpEvent ||
+        event is FlPanCancelEvent ||
+        event is FlPanEndEvent ||
+        event is FlLongPressEnd) {
+      setState(() {
+        subtitle = null;
+        _indexLine = null;
+        displayWealth = WealthApi.getCurrentWealth();
+      });
+      return;
+    }
+
+    if (response != null && response.lineBarSpots != null) {
+      var value = response.lineBarSpots?[0].y;
+
+      if (value != null && value * WealthApi.getDivisor() != displayWealth) {
+        HapticFeedback.mediumImpact();
+        setState(() {
+          displayWealth = value * WealthApi.getDivisor();
+          subtitle = dateFormat.format(
+              wealthEntries[response.lineBarSpots?[0].x.toInt() as int].date);
+          _indexLine = VerticalLine(
+            x: response.lineBarSpots?[0].x as double,
+            color: Theme.of(context).secondaryHeaderColor,
+            strokeWidth: 1,
+          );
+        });
+      }
+    }
   }
 }

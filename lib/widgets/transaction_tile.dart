@@ -1,5 +1,4 @@
 import 'package:finance_buddy/helper/transaction.dart';
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,18 +39,22 @@ class TransactionTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomText(
+                        Text(
                           transaction.category,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        CustomText(
+                        Text(
                           currencyFormat.format(transaction.amount),
-                          fontSize: 16,
-                          color: transaction.type == TransactionType.income
-                              ? Theme.of(context).hintColor
-                              : Theme.of(context).errorColor,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: transaction.type == TransactionType.income
+                                ? Theme.of(context).hintColor
+                                : Theme.of(context).errorColor,
+                          ),
                         )
                       ],
                     ),
@@ -60,12 +63,14 @@ class TransactionTile extends StatelessWidget {
               ),
               SizedBox(
                 width: 150,
-                child: CustomText(
+                child: Text(
                   transaction.title,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
                   overflow: TextOverflow.ellipsis,
-                  color: Theme.of(context).secondaryHeaderColor,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
                 ),
               ),
             ],

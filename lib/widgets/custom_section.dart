@@ -1,4 +1,3 @@
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomSection extends StatelessWidget {
@@ -8,6 +7,7 @@ class CustomSection extends StatelessWidget {
   final double? titlePadding;
   final FontWeight? titleWeight;
   final Color? titleColor;
+  final Widget? trailing;
 
   const CustomSection({
     Key? key,
@@ -17,6 +17,7 @@ class CustomSection extends StatelessWidget {
     this.titleWeight,
     this.titleColor,
     this.titlePadding,
+    this.trailing,
   }) : super(key: key);
 
   @override
@@ -27,11 +28,20 @@ class CustomSection extends StatelessWidget {
         Padding(
           padding:
               EdgeInsets.only(top: 30, left: 15.0, bottom: titlePadding ?? 0),
-          child: CustomText(
-            title ?? "",
-            fontSize: titleSize ?? 22,
-            fontWeight: titleWeight ?? FontWeight.bold,
-            color: titleColor ?? Theme.of(context).secondaryHeaderColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title ?? "",
+                style: TextStyle(
+                  fontSize: titleSize ?? 22,
+                  fontWeight: titleWeight ?? FontWeight.bold,
+                  color: titleColor ?? Theme.of(context).secondaryHeaderColor,
+                ),
+              ),
+              trailing ?? Container(),
+            ],
           ),
         ),
         ...children,

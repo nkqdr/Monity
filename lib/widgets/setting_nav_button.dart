@@ -1,4 +1,3 @@
-import 'package:finance_buddy/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class SettingNavButton extends StatelessWidget {
@@ -39,10 +38,12 @@ class SettingNavButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomText(
+                Text(
                   name,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const Icon(
                   Icons.chevron_right,

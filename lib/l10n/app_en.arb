@@ -11,7 +11,7 @@
   "@remainingDays": {
     "description": "Remaining days in a month"
   },
-   "remainingBudget": "Budget left:",
+   "remainingBudget": "Budget:",
   "@remainingBudget": {
     "description": "Remaining budget in a month"
   },
@@ -94,5 +94,25 @@
   "language": "Language",
   "@language": {
     "description": "Language string used inside settings"
+  },
+  "monthlyLimit": "Monthly limit",
+  "@monthlyLimit": {
+    "description": "Settings title where the user can change his monthly limit"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Settings categories title"
+  },
+  "newCategoryName": "Enter the name for the new category:",
+  "@newCategoryName": {
+    "description": "Hint that tells the user to add the name for the new category"
+  },
+  "newCategoryNameHint": "New category...",
+  "@newCategoryNameHint": {
+    "description": "Hint that appears as a placeholder"
+  },
+  "addCategoryButton": "Add category",
+  "@addCategoryButton": {
+    "description": "Button text for submitting the entered data"
   }
 }

@@ -5,6 +5,10 @@ class TransactionsApi {
     return transactionList;
   }
 
+  static List<String> getCategories() {
+    return categoryList;
+  }
+
   static List<DateTime> getAllMonths() {
     return transactionList
         .map((e) => DateTime(e.date.year, e.date.month))
@@ -19,6 +23,12 @@ class TransactionsApi {
         .toList();
   }
 }
+
+List<String> categoryList = [
+  "Miete",
+  "Essen",
+  "Freizeit",
+];
 
 List<Transaction> transactionList = [
   Transaction(

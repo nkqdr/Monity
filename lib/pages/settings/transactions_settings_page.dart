@@ -1,8 +1,9 @@
 import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class TransactionsSettingsPage extends StatefulWidget {
   const TransactionsSettingsPage({Key? key}) : super(key: key);
@@ -73,11 +74,18 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   }
 
   void _handleAddCategory() {
-    print("Adding category..");
-    showBottomSheet(
+    showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         builder: (context) {
-          return const AddCategoryBottomSheet();
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: const AddCategoryBottomSheet(),
+          );
         });
   }
 }
@@ -90,62 +98,66 @@ class AddCategoryBottomSheet extends StatefulWidget {
 }
 
 class _AddCategoryBottomSheetState extends State<AddCategoryBottomSheet> {
+  final _categoryNameController = TextEditingController();
+  late bool isButtonDisabled;
+
+  @override
+  void initState() {
+    super.initState();
+    isButtonDisabled = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Container(
-        height: 250,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).cardColor,
-          boxShadow: const [
-            BoxShadow(blurRadius: 10),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  language.newCategoryName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+
+    return CustomBottomSheet(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              language.newCategoryName,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
-              Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  decoration: InputDecoration.collapsed(
-                    hintText: language.newCategoryNameHint,
-                  ),
-                ),
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _handleSubmit,
-                  child: Text(language.addCategoryButton),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          CustomTextField(
+            controller: _categoryNameController,
+            onChanged: _handleChangeTextField,
+            decoration: InputDecoration.collapsed(
+              hintText: language.newCategoryNameHint,
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: isButtonDisabled ? null : _handleSubmit,
+              style: isButtonDisabled
+                  ? ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).secondaryHeaderColor))
+                  : null,
+              child: Text(language.addCategoryButton),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _handleChangeTextField(String value) {
+    if (value != "") {
+      setState(() {
+        isButtonDisabled = false;
+      });
+    } else {
+      setState(() {
+        isButtonDisabled = true;
+      });
+    }
   }
 
   void _handleSubmit() {

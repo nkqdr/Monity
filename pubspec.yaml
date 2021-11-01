@@ -43,6 +43,8 @@ dependencies:
   fl_chart: ^0.40.2
   # Local key-value-storage
   shared_preferences: ^2.0.8
+  # structured local database
+  sqflite: ^2.0.0+4
 
 dev_dependencies:
   flutter_test:

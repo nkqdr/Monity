@@ -1,19 +1,21 @@
-import 'package:finance_buddy/helper/transaction.dart';
+import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
+  final TransactionCategory category;
 
   const TransactionTile({
     Key? key,
     required this.transaction,
+    required this.category,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var currencyFormat = NumberFormat.compactCurrency(
-        locale: "de_DE", decimalDigits: 2, symbol: "€");
+    var currencyFormat =
+        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: ClipRRect(
@@ -40,7 +42,7 @@ class TransactionTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          transaction.category,
+                          category.name,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -64,7 +66,7 @@ class TransactionTile extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: Text(
-                  transaction.title,
+                  transaction.description ?? "",
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

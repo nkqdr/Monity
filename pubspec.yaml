@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^2.0.8
   # structured local database
   sqflite: ^2.0.0+4
+  adaptive_dialog: ^1.2.0
 
 dev_dependencies:
   flutter_test:

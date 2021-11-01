@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+//import 'package:finance_buddy/helper/transaction.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,6 +27,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   late bool isButtonDisabled;
   late Widget currentContent;
   final _amountController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -50,8 +52,16 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     });
   }
 
-  void _handleAddExpense() {
-    print("Adding expense...");
+  void _handleAddTransaction() {
+    int category =
+        categories.where((element) => element.name == _category).first.id!;
+    FinancesDatabase.instance.createTransaction(Transaction(
+      amount: _amount,
+      date: DateTime.now(),
+      type: isExpense ? TransactionType.expense : TransactionType.income,
+      categoryId: category,
+      description: _descriptionController.text,
+    ));
   }
 
   @override
@@ -163,82 +173,123 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ),
           ),
         ),
-        Autocomplete<String>(
-          optionsBuilder: (TextEditingValue textEditValue) {
-            if (textEditValue.text == '') {
-              return const Iterable<String>.empty();
-            }
-            return categories.map((e) => e.name).where((String option) {
-              var lowOption = option.toLowerCase();
-              return lowOption.contains(textEditValue.text.toLowerCase());
-            });
-          },
-          onSelected: (String selection) {
-            setState(() {
-              _category = selection;
-            });
-          },
-          optionsViewBuilder: (context,
-              AutocompleteOnSelected<String> onSelected,
-              Iterable<String> options) {
-            return Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: SizedBox(
-                  width: 300,
-                  height: 120,
-                  child: Material(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemCount: options.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final String option = options.elementAt(index);
-                        return GestureDetector(
-                          onTap: () {
-                            onSelected(option);
-                          },
-                          child: ListTile(
-                            title: Text(
-                              option,
+        if (categories.isNotEmpty)
+          Autocomplete<String>(
+            optionsBuilder: (TextEditingValue textEditValue) {
+              if (textEditValue.text == '') {
+                return const Iterable<String>.empty();
+              }
+              return categories.map((e) => e.name).where((String option) {
+                var lowOption = option.toLowerCase();
+                return lowOption.contains(textEditValue.text.toLowerCase());
+              });
+            },
+            onSelected: (String selection) {
+              setState(() {
+                _category = selection.trim();
+                isButtonDisabled = false;
+                currentContent = _getSecondPage();
+              });
+            },
+            optionsViewBuilder: (context,
+                AutocompleteOnSelected<String> onSelected,
+                Iterable<String> options) {
+              return Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: SizedBox(
+                    width: 300,
+                    height: 120,
+                    child: Material(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(10.0),
+                        itemCount: options.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final String option = options.elementAt(index);
+                          return GestureDetector(
+                            onTap: () {
+                              onSelected(option);
+                            },
+                            child: ListTile(
+                              title: Text(
+                                option,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
+              );
+            },
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted) {
+              return CustomTextField(
+                focusNode: fieldFocusNode,
+                controller: fieldTextEditingController,
+                onChanged: (v) {
+                  if (_isValidCategory(v)) {
+                    setState(() {
+                      isButtonDisabled = false;
+                      _category = v.trim();
+                      currentContent = _getSecondPage();
+                    });
+                  } else {
+                    setState(() {
+                      isButtonDisabled = true;
+                      currentContent = _getSecondPage();
+                    });
+                  }
+                },
+                decoration:
+                    InputDecoration.collapsed(hintText: language.startTyping),
+              );
+            },
+          )
+        else
+          SizedBox(
+            height: 50,
+            child: Center(
+              child: Text(
+                language.firstCreateCategories,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).secondaryHeaderColor,
+                ),
               ),
-            );
-          },
-          fieldViewBuilder: (BuildContext context,
-              TextEditingController fieldTextEditingController,
-              FocusNode fieldFocusNode,
-              VoidCallback onFieldSubmitted) {
-            return CustomTextField(
-              focusNode: fieldFocusNode,
-              controller: fieldTextEditingController,
-              decoration:
-                  InputDecoration.collapsed(hintText: language.startTyping),
-            );
-          },
-        ),
+            ),
+          ),
         Center(
           child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                currentContent = _getThirdPage();
-                currentIndex++;
-              });
-            },
+            onPressed: isButtonDisabled
+                ? null
+                : () {
+                    setState(() {
+                      currentContent = _getThirdPage();
+                      currentIndex++;
+                    });
+                  },
+            style: isButtonDisabled
+                ? ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).secondaryHeaderColor))
+                : null,
             child: Text(language.next),
           ),
         ),
       ],
     );
+  }
+
+  bool _isValidCategory(String value) {
+    return categories.where((e) => e.name == value.trim()).isNotEmpty;
   }
 
   Widget _getThirdPage() {
@@ -342,6 +393,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           ],
         ),
         CustomTextField(
+          controller: _descriptionController,
           decoration:
               InputDecoration.collapsed(hintText: language.optionalDescription),
         ),
@@ -356,7 +408,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  _handleAddExpense();
+                  _handleAddTransaction();
                   Navigator.of(context).pop();
                 },
                 child: Text(language.saveButton)),

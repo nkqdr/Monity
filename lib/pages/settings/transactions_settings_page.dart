@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -71,7 +72,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               splashRadius: 18,
             ),
             children: isLoading
-                ? [const CircularProgressIndicator()]
+                ? [const Center(child: CircularProgressIndicator())]
                 : [
                     ...categories.map(
                       (e) => TransactionCategoryTile(
@@ -195,8 +196,19 @@ class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
   }
 
   Future _handleDelete() async {
-    await FinancesDatabase.instance
-        .deleteTransactionCategory(widget.category.id!);
-    widget.refreshCallback();
+    var language = AppLocalizations.of(context)!;
+    var dialogResult = await showOkCancelAlertDialog(
+      context: context,
+      title: language.attention,
+      message: language.sureDeleteCategory,
+      isDestructiveAction: true,
+      okLabel: language.delete,
+      cancelLabel: language.abort,
+    );
+    if (dialogResult == OkCancelResult.ok) {
+      await FinancesDatabase.instance
+          .deleteTransactionCategory(widget.category.id!);
+      widget.refreshCallback();
+    }
   }
 }

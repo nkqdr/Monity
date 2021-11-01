@@ -1,7 +1,10 @@
-import 'package:finance_buddy/helper/transaction.dart';
-
 const String tableTransaction = "transaction_base";
 const String tableTransactionCategory = "transaction_category";
+
+enum TransactionType {
+  expense,
+  income,
+}
 
 class TransactionFields {
   static const List<String> values = [
@@ -29,7 +32,7 @@ class TransactionCategoryFields {
 class Transaction {
   final int? id;
   final String? description;
-  final int category;
+  final int categoryId;
   final double amount;
   final DateTime date;
   final TransactionType type;
@@ -37,7 +40,7 @@ class Transaction {
   const Transaction({
     this.id,
     this.description,
-    required this.category,
+    required this.categoryId,
     required this.amount,
     required this.date,
     required this.type,
@@ -47,7 +50,7 @@ class Transaction {
     return {
       TransactionFields.id: id,
       TransactionFields.description: description,
-      TransactionFields.category: category,
+      TransactionFields.category: categoryId,
       TransactionFields.amount: amount,
       TransactionFields.date: date.toIso8601String(),
       TransactionFields.type: type.index,
@@ -57,8 +60,8 @@ class Transaction {
   static Transaction fromJson(Map<String, Object?> json) {
     return Transaction(
       id: json[TransactionFields.id] as int?,
-      description: json[TransactionFields.description] as String,
-      category: json[TransactionFields.category] as int,
+      description: json[TransactionFields.description] as String?,
+      categoryId: json[TransactionFields.category] as int,
       amount: json[TransactionFields.amount] as double,
       date: DateTime.parse(json[TransactionFields.date] as String),
       type: TransactionType.values[json[TransactionFields.type] as int],
@@ -68,7 +71,7 @@ class Transaction {
   Transaction copy({
     int? id,
     String? description,
-    int? category,
+    int? categoryId,
     double? amount,
     DateTime? date,
     TransactionType? type,
@@ -76,7 +79,7 @@ class Transaction {
     return Transaction(
       id: id ?? this.id,
       description: description ?? this.description,
-      category: category ?? this.category,
+      categoryId: categoryId ?? this.categoryId,
       amount: amount ?? this.amount,
       date: date ?? this.date,
       type: type ?? this.type,

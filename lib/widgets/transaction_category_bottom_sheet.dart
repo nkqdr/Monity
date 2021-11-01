@@ -95,7 +95,7 @@ class _TransactionCategoryBottomSheetState
 
   void _handleSubmit() {
     Navigator.of(context).pop();
-    String value = _categoryNameController.text;
+    String value = _categoryNameController.text.trim();
     widget.onSubmit(value);
   }
 }

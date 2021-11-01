@@ -1,6 +1,8 @@
 import 'package:finance_buddy/backend/models/transaction_model.dart' as model;
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'dart:io';
+import 'package:path/path.dart';
 
 class FinancesDatabase {
   static final FinancesDatabase instance = FinancesDatabase._init();
@@ -14,9 +16,18 @@ class FinancesDatabase {
     return _database!;
   }
 
+  Future deleteDatabase() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, "finances.db");
+    File toDelete = File(path);
+    await toDelete.delete();
+    print("Deleted database");
+  }
+
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
-    final path = dbPath + filePath;
+    final path = join(dbPath, filePath);
+    print("Path is: $path");
 
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
@@ -25,13 +36,13 @@ class FinancesDatabase {
     await db.execute('''
     CREATE TABLE ${model.tableTransactionCategory} (
       ${model.TransactionCategoryFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-      ${model.TransactionCategoryFields.name} VARCHAR(32)
+      ${model.TransactionCategoryFields.name} TEXT UNIQUE
     )
     ''');
     await db.execute('''
     CREATE TABLE ${model.tableTransaction} (
       ${model.TransactionFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-      ${model.TransactionFields.description} TEXT NOT NULL,
+      ${model.TransactionFields.description} TEXT,
       ${model.TransactionFields.category} INTEGER NOT NULL,
       ${model.TransactionFields.amount} REAL NOT NULL,
       ${model.TransactionFields.date} TEXT NOT NULL,
@@ -86,6 +97,20 @@ class FinancesDatabase {
     return category.copy(id: id);
   }
 
+  Future<model.TransactionCategory?> readTransactionCategory(int id) async {
+    final db = await instance.database;
+    final maps = await db.query(
+      model.tableTransactionCategory,
+      columns: model.TransactionCategoryFields.values,
+      where: "${model.TransactionCategoryFields.id} = ?",
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return model.TransactionCategory.fromJson(maps.first);
+    }
+  }
+
   Future<List<model.TransactionCategory>> readAllTransactionCategories() async {
     final db = await instance.database;
     final result = await db.query(model.tableTransactionCategory,
@@ -106,6 +131,8 @@ class FinancesDatabase {
 
   Future<int> deleteTransactionCategory(int id) async {
     final db = await instance.database;
+    await db.delete(model.tableTransaction,
+        where: "${model.TransactionFields.category} = ?", whereArgs: [id]);
     return await db.delete(
       model.tableTransactionCategory,
       where: "${model.TransactionCategoryFields.id} = ?",

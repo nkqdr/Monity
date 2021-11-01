@@ -1,7 +1,4 @@
-enum TransactionType {
-  expense,
-  income,
-}
+import 'package:finance_buddy/backend/models/transaction_model.dart';
 
 class Transaction {
   final String title;

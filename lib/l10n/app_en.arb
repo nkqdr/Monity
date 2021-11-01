@@ -174,5 +174,25 @@
   "abort": "Abort",
   "@abort": {
     "description": "Content for button with abort functionality"
+  },
+  "attention": "Attention",
+  "@attention": {
+    "description": "Title of an attention dialog"
+  },
+  "sureDeleteCategory": "Are you sure you want to delete this category? This will also delete all transactions related to this category.",
+  "@sureDeleteCategory": {
+    "description": "Asks the user if he's sure that he wants to delete the category."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete action of an attention dialog"
+  },
+  "firstCreateCategories": "Please set up some categories in the settings first.",
+  "@firstCreateCategories": {
+    "description": "Tells the user that he needs at least one category configured before he can continue adding a transaction"
+  },
+  "noTransactions": "You have not created any transactions yet. Press the icon in the upper right corner to add a new transaction.",
+  "@noTransactions": {
+    "description": "Tells the user that he hasn't created a transaction yet"
   }
 }

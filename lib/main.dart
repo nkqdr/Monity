@@ -1,3 +1,4 @@
+import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/controller/settings_api.dart';
 import 'package:finance_buddy/home.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';

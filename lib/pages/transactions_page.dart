@@ -1,3 +1,5 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/controller/transactions_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
@@ -17,12 +19,27 @@ class TransactionsPage extends StatefulWidget {
 }
 
 class _TransactionsPageState extends State<TransactionsPage> {
-  List<DateTime> months = [];
+  late List<DateTime> months;
+  late List<Transaction> transactions;
+  late List<TransactionCategory> transactionCategories;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    months = TransactionsApi.getAllMonths();
+    _refreshTransactions();
+  }
+
+  Future _refreshTransactions() async {
+    setState(() => isLoading = true);
+    transactions = await FinancesDatabase.instance.readAllTransactions();
+    months = transactions
+        .map((e) => DateTime(e.date.year, e.date.month))
+        .toSet()
+        .toList();
+    transactionCategories =
+        await FinancesDatabase.instance.readAllTransactionCategories();
+    setState(() => isLoading = false);
   }
 
   @override
@@ -60,24 +77,54 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 onPressed: _handleAddTransaction,
               ),
             ),
-            ...months.map((date) {
-              return CustomSection(
-                title: dateFormatter.format(date),
-                children: TransactionsApi.getTransactionsFor(date).map((e) {
-                  return TransactionTile(
-                    transaction: e,
-                  );
-                }).toList(),
-              );
-            }),
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              )
+            else if (transactions.isEmpty)
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 150,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      language.noTransactions,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
+              ...months.map((date) {
+                return CustomSection(
+                  title: dateFormatter.format(date),
+                  children: _getTransactionsFor(date).map((e) {
+                    return TransactionTile(
+                      transaction: e,
+                      category: transactionCategories
+                          .where((c) => c.id == e.categoryId)
+                          .first,
+                    );
+                  }).toList(),
+                );
+              }),
           ],
         ),
       ),
     );
   }
 
-  void _handleAddTransaction() {
-    showModalBottomSheet(
+  List<Transaction> _getTransactionsFor(DateTime date) {
+    return transactions
+        .where((e) => e.date.year == date.year && e.date.month == date.month)
+        .toList();
+  }
+
+  void _handleAddTransaction() async {
+    await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -90,5 +137,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
             child: const AddTransactionBottomSheet(),
           );
         });
+    _refreshTransactions();
   }
 }

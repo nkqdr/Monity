@@ -42,5 +42,10 @@
   "category": "Kategorie:",
   "amount": "Betrag:",
   "optionalDescription": "Beschreibung (Optional)",
-  "abort": "Abbrechen"
+  "abort": "Abbrechen",
+  "attention": "Achtung",
+  "sureDeleteCategory": "Bist du sicher dass du diese Kategorie löschen willst? Dabei werden auch alle Transaktionen gelöscht, welche mit dieser Kategorie zusammenhängen.",
+  "delete": "Löschen",
+  "firstCreateCategories": "Bitte erstelle zuerst eine Kategorie in den Einstellungen.",
+  "noTransactions": "Du hast noch keine Transaktionen erstellt. Drücke auf das Icon oben rechts, um eine neue Transaktion hinzuzufügen."
 }

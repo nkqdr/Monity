@@ -1,3 +1,5 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
@@ -14,14 +16,23 @@ class TransactionsSettingsPage extends StatefulWidget {
 }
 
 class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
-  List<String> categories = [];
+  late List<TransactionCategory> categories;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    categories = [
-      "Test",
-    ];
+    _refreshCategories();
+  }
+
+  Future _refreshCategories() async {
+    setState(() {
+      isLoading = true;
+    });
+    categories = await FinancesDatabase.instance.readAllTransactionCategories();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -60,21 +71,24 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               onPressed: _handleAddCategory,
               splashRadius: 18,
             ),
-            children: [
-              ...categories.map(
-                (e) => TransactionCategory(
-                  title: e,
-                ),
-              ),
-            ],
+            children: isLoading
+                ? [const CircularProgressIndicator()]
+                : [
+                    ...categories.map(
+                      (e) => TransactionCategoryTile(
+                        category: e,
+                        refreshCallback: _refreshCategories,
+                      ),
+                    ),
+                  ],
           )
         ],
       ),
     );
   }
 
-  void _handleAddCategory() {
-    showModalBottomSheet(
+  void _handleAddCategory() async {
+    await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -87,6 +101,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
             child: const AddCategoryBottomSheet(),
           );
         });
+    _refreshCategories();
   }
 }
 
@@ -162,20 +177,26 @@ class _AddCategoryBottomSheetState extends State<AddCategoryBottomSheet> {
 
   void _handleSubmit() {
     Navigator.of(context).pop();
+    String value = _categoryNameController.text;
+    FinancesDatabase.instance
+        .createTransactionCategory(TransactionCategory(name: value));
   }
 }
 
-class TransactionCategory extends StatelessWidget {
-  final String title;
-  const TransactionCategory({
+class TransactionCategoryTile extends StatelessWidget {
+  final TransactionCategory category;
+  final Function refreshCallback;
+
+  const TransactionCategoryTile({
     Key? key,
-    required this.title,
+    required this.refreshCallback,
+    required this.category,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -184,15 +205,44 @@ class TransactionCategory extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                category.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
+              Row(
+                children: [
+                  InkWell(
+                    child: const Icon(Icons.edit_rounded),
+                    onTap: _handleEdit,
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  InkWell(
+                    child: const Icon(Icons.delete_rounded, color: Colors.red),
+                    onTap: _handleDelete,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  void _handleEdit() {
+    print("Edit");
+  }
+
+  Future _handleDelete() async {
+    await FinancesDatabase.instance.deleteTransactionCategory(category.id!);
+    refreshCallback();
   }
 }

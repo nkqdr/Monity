@@ -1,4 +1,6 @@
-import 'package:finance_buddy/api/transactions_api.dart';
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/controller/transactions_api.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   double _amount = 0;
   int currentIndex = 0;
   int maxIndex = 3;
+  bool isLoading = false;
+  late List<TransactionCategory> categories;
   late bool isButtonDisabled;
   late Widget currentContent;
   final _amountController = TextEditingController();
@@ -27,6 +31,17 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     super.initState();
     currentContent = _getFirstPage();
     isButtonDisabled = true;
+    _refreshCategories();
+  }
+
+  Future _refreshCategories() async {
+    setState(() {
+      isLoading = true;
+    });
+    categories = await FinancesDatabase.instance.readAllTransactionCategories();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void _handleAddExpense() {
@@ -122,6 +137,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Widget _getSecondPage() {
+    if (isLoading) {
+      return CircularProgressIndicator();
+    }
     return Column(
       key: const ValueKey<int>(1),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +160,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             if (textEditValue.text == '') {
               return const Iterable<String>.empty();
             }
-            return TransactionsApi.getCategories().where((String option) {
+            return categories.map((e) => e.name).where((String option) {
               var lowOption = option.toLowerCase();
               return lowOption.contains(textEditValue.text.toLowerCase());
             });

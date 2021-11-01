@@ -1,6 +1,6 @@
 import 'package:finance_buddy/helper/transaction.dart';
 
-const String tableTransaction = "transaction";
+const String tableTransaction = "transaction_base";
 const String tableTransactionCategory = "transaction_category";
 
 class TransactionFields {
@@ -92,4 +92,25 @@ class TransactionCategory {
     this.id,
     required this.name,
   });
+
+  TransactionCategory copy({int? id, String? name}) {
+    return TransactionCategory(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
+
+  Map<String, Object?> toJson() {
+    return {
+      TransactionCategoryFields.id: id,
+      TransactionCategoryFields.name: name,
+    };
+  }
+
+  static TransactionCategory fromJson(Map<String, Object?> json) {
+    return TransactionCategory(
+      id: json[TransactionCategoryFields.id] as int?,
+      name: json[TransactionCategoryFields.name] as String,
+    );
+  }
 }

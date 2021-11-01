@@ -1,4 +1,4 @@
-import 'package:finance_buddy/api/transactions_api.dart';
+import 'package:finance_buddy/controller/transactions_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';

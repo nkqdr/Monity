@@ -1,4 +1,4 @@
-import 'package:finance_buddy/api/wealth_api.dart';
+import 'package:finance_buddy/controller/wealth_api.dart';
 import 'package:finance_buddy/helper/wealth_entry.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

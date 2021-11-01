@@ -31,10 +31,10 @@ class FinancesDatabase {
     await db.execute('''
     CREATE TABLE ${model.tableTransaction} (
       ${model.TransactionFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-      ${model.TransactionFields.description} VARCHAR(20) NOT NULL,
+      ${model.TransactionFields.description} TEXT NOT NULL,
       ${model.TransactionFields.category} INTEGER NOT NULL,
       ${model.TransactionFields.amount} REAL NOT NULL,
-      ${model.TransactionFields.date} VARCHAR(20) NOT NULL,
+      ${model.TransactionFields.date} TEXT NOT NULL,
       ${model.TransactionFields.type} INTEGER NOT NULL,
       FOREIGN KEY(${model.TransactionFields.category}) REFERENCES ${model.tableTransactionCategory}(${model.TransactionCategoryFields.id})
     )
@@ -74,6 +74,30 @@ class FinancesDatabase {
     return await db.delete(
       model.tableTransaction,
       where: "${model.TransactionFields.id} = ?",
+      whereArgs: [id],
+    );
+  }
+
+  Future<model.TransactionCategory> createTransactionCategory(
+      model.TransactionCategory category) async {
+    final db = await instance.database;
+    final id =
+        await db.insert(model.tableTransactionCategory, category.toJson());
+    return category.copy(id: id);
+  }
+
+  Future<List<model.TransactionCategory>> readAllTransactionCategories() async {
+    final db = await instance.database;
+    final result = await db.query(model.tableTransactionCategory,
+        orderBy: "${model.TransactionCategoryFields.name} ASC");
+    return result.map((e) => model.TransactionCategory.fromJson(e)).toList();
+  }
+
+  Future<int> deleteTransactionCategory(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      model.tableTransactionCategory,
+      where: "${model.TransactionCategoryFields.id} = ?",
       whereArgs: [id],
     );
   }

@@ -1,4 +1,4 @@
-import 'package:finance_buddy/api/wealth_api.dart';
+import 'package:finance_buddy/controller/wealth_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';

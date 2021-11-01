@@ -1,9 +1,8 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/custom_textfield.dart';
+import 'package:finance_buddy/widgets/transaction_category_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -98,92 +97,20 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
           return Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const AddCategoryBottomSheet(),
+            child: TransactionCategoryBottomSheet(
+              mode: CategoryBottomSheetMode.add,
+              onSubmit: (s) {
+                FinancesDatabase.instance
+                    .createTransactionCategory(TransactionCategory(name: s));
+              },
+            ),
           );
         });
     _refreshCategories();
   }
 }
 
-class AddCategoryBottomSheet extends StatefulWidget {
-  const AddCategoryBottomSheet({Key? key}) : super(key: key);
-
-  @override
-  _AddCategoryBottomSheetState createState() => _AddCategoryBottomSheetState();
-}
-
-class _AddCategoryBottomSheetState extends State<AddCategoryBottomSheet> {
-  final _categoryNameController = TextEditingController();
-  late bool isButtonDisabled;
-
-  @override
-  void initState() {
-    super.initState();
-    isButtonDisabled = true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var language = AppLocalizations.of(context)!;
-
-    return CustomBottomSheet(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              language.newCategoryName,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          CustomTextField(
-            controller: _categoryNameController,
-            onChanged: _handleChangeTextField,
-            decoration: InputDecoration.collapsed(
-              hintText: language.newCategoryNameHint,
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-              onPressed: isButtonDisabled ? null : _handleSubmit,
-              style: isButtonDisabled
-                  ? ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).secondaryHeaderColor))
-                  : null,
-              child: Text(language.addCategoryButton),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleChangeTextField(String value) {
-    if (value != "") {
-      setState(() {
-        isButtonDisabled = false;
-      });
-    } else {
-      setState(() {
-        isButtonDisabled = true;
-      });
-    }
-  }
-
-  void _handleSubmit() {
-    Navigator.of(context).pop();
-    String value = _categoryNameController.text;
-    FinancesDatabase.instance
-        .createTransactionCategory(TransactionCategory(name: value));
-  }
-}
-
-class TransactionCategoryTile extends StatelessWidget {
+class TransactionCategoryTile extends StatefulWidget {
   final TransactionCategory category;
   final Function refreshCallback;
 
@@ -193,6 +120,12 @@ class TransactionCategoryTile extends StatelessWidget {
     required this.category,
   }) : super(key: key);
 
+  @override
+  State<TransactionCategoryTile> createState() =>
+      _TransactionCategoryTileState();
+}
+
+class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -209,7 +142,7 @@ class TransactionCategoryTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                category.name,
+                widget.category.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 18,
@@ -237,12 +170,33 @@ class TransactionCategoryTile extends StatelessWidget {
     );
   }
 
-  void _handleEdit() {
-    print("Edit");
+  Future _handleEdit() async {
+    await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: TransactionCategoryBottomSheet(
+              mode: CategoryBottomSheetMode.edit,
+              placeholder: widget.category.name,
+              onSubmit: (s) {
+                FinancesDatabase.instance
+                    .updateTransactionCategory(widget.category.copy(name: s));
+              },
+            ),
+          );
+        });
+    widget.refreshCallback();
   }
 
   Future _handleDelete() async {
-    await FinancesDatabase.instance.deleteTransactionCategory(category.id!);
-    refreshCallback();
+    await FinancesDatabase.instance
+        .deleteTransactionCategory(widget.category.id!);
+    widget.refreshCallback();
   }
 }

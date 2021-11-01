@@ -93,6 +93,17 @@ class FinancesDatabase {
     return result.map((e) => model.TransactionCategory.fromJson(e)).toList();
   }
 
+  Future<int> updateTransactionCategory(
+      model.TransactionCategory category) async {
+    final db = await instance.database;
+    return db.update(
+      model.tableTransactionCategory,
+      category.toJson(),
+      where: '${model.TransactionCategoryFields.id} = ?',
+      whereArgs: [category.id],
+    );
+  }
+
   Future<int> deleteTransactionCategory(int id) async {
     final db = await instance.database;
     return await db.delete(

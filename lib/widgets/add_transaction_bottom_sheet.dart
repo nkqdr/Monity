@@ -1,8 +1,9 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/controller/transactions_api.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,9 +30,14 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   @override
   void initState() {
     super.initState();
-    currentContent = _getFirstPage();
     isButtonDisabled = true;
     _refreshCategories();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    currentContent = _getFirstPage();
   }
 
   Future _refreshCategories() async {
@@ -92,15 +98,16 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Widget _getFirstPage() {
+    var language = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey<int>(0),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            "What kind of transaction do you want to enter?",
-            style: TextStyle(
+            language.whatKindOfTransaction,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -119,7 +126,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red)),
-              child: Text('Expense'),
+              child: Text(language.expense),
             ),
             ElevatedButton(
               onPressed: () {
@@ -128,7 +135,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                   currentIndex++;
                 });
               },
-              child: Text('Income'),
+              child: Text(language.income),
             ),
           ],
         )
@@ -137,19 +144,20 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Widget _getSecondPage() {
+    var language = AppLocalizations.of(context)!;
     if (isLoading) {
-      return CircularProgressIndicator();
+      return const CircularProgressIndicator();
     }
     return Column(
       key: const ValueKey<int>(1),
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            "Select a category for this transaction:",
-            style: TextStyle(
+            language.selectCategoryForTransaction,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -166,7 +174,6 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             });
           },
           onSelected: (String selection) {
-            print('You just selected $selection');
             setState(() {
               _category = selection;
             });
@@ -215,20 +222,19 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               focusNode: fieldFocusNode,
               controller: fieldTextEditingController,
               decoration:
-                  const InputDecoration.collapsed(hintText: "Start typing..."),
+                  InputDecoration.collapsed(hintText: language.startTyping),
             );
           },
         ),
         Center(
           child: ElevatedButton(
             onPressed: () {
-              print("Selected category is: $_category");
               setState(() {
                 currentContent = _getThirdPage();
                 currentIndex++;
               });
             },
-            child: Text('Next'),
+            child: Text(language.next),
           ),
         ),
       ],
@@ -236,16 +242,17 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Widget _getThirdPage() {
+    var language = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey<int>(2),
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            "Enter the amount of this transaction:",
-            style: TextStyle(
+            language.enterAmountOfTransaction,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -272,9 +279,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 currentContent = _getFourthPage();
                 currentIndex++;
               });
-              print("Selected amount is: $_amount");
             },
-            child: Text('Next'),
+            child: Text(language.next),
           ),
         ),
       ],
@@ -284,15 +290,16 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   Widget _getFourthPage() {
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    var language = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey<int>(3),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            "Review:",
-            style: TextStyle(
+            language.review,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -301,20 +308,20 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         Row(
           children: [
             Text(
-              'Type:',
-              style: TextStyle(
+              language.type,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(width: 10),
-            Text(isExpense ? "Expense" : "Income"),
+            Text(isExpense ? language.expense : language.income),
           ],
         ),
         Row(
           children: [
             Text(
-              'Category:',
-              style: TextStyle(
+              language.category,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -325,8 +332,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         Row(
           children: [
             Text(
-              'Amount:',
-              style: TextStyle(
+              language.amount,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -336,7 +343,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         ),
         CustomTextField(
           decoration:
-              InputDecoration.collapsed(hintText: "Description (Optional)"),
+              InputDecoration.collapsed(hintText: language.optionalDescription),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -345,14 +352,14 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Abort"),
+              child: Text(language.abort),
             ),
             ElevatedButton(
                 onPressed: () {
                   _handleAddExpense();
                   Navigator.of(context).pop();
                 },
-                child: Text("Add")),
+                child: Text(language.saveButton)),
           ],
         ),
       ],

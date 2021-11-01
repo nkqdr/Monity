@@ -107,6 +107,10 @@
   "@newCategoryName": {
     "description": "Hint that tells the user to add the name for the new category"
   },
+  "editCategoryNewName": "Enter the new name for this category:",
+  "@editCategoryNewName": {
+    "description": "Hint that tells the user to add the new name for the category"
+  },
   "newCategoryNameHint": "New category...",
   "@newCategoryNameHint": {
     "description": "Hint that appears as a placeholder"
@@ -114,5 +118,61 @@
   "addCategoryButton": "Add category",
   "@addCategoryButton": {
     "description": "Button text for submitting the entered data"
+  },
+  "saveButton": "Save",
+  "@saveButton": {
+    "description": "Text that appears on a button with save functionality"
+  },
+  "whatKindOfTransaction": "What kind of transaction do you want to enter?",
+  "@whatKindOfTransaction": {
+    "description": "Question that asks the user what kind of transaction he wants to enter"
+  },
+  "expense": "Expense",
+  "@expense": {
+    "description": "Expense string"
+  },
+  "income": "Income",
+  "@income": {
+    "description": "Income string"
+  },
+  "selectCategoryForTransaction": "Select a category for this transaction:",
+  "@selectCategoryForTransaction": {
+    "description": "Tells the user to select a category for this transaction"
+  },
+  "startTyping": "Start typing...",
+  "@startTyping": {
+    "description": "Indicates to the user that he can just start typing"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Content for button with next functionality"
+  },
+  "enterAmountOfTransaction": "Enter the amount of this transaction:",
+  "@enterAmountOfTransaction": {
+    "description": "Tells the user to enter the amount of this transaction"
+  },
+  "review": "Review:",
+  "@review": {
+    "description": "Review for the configured transaction"
+  },
+  "type": "Type:",
+  "@type": {
+    "description": "Type of the configured transaction"
+  },
+  "category": "Category:",
+  "@category": {
+    "description": "Category of the configured transaction"
+  },
+  "amount": "Amount:",
+  "@amount": {
+    "description": "Amount of the configured transaction"
+  },
+  "optionalDescription": "Description (Optional)",
+  "@optionalDescription": {
+    "description": "Optional description for this transaction"
+  },
+  "abort": "Abort",
+  "@abort": {
+    "description": "Content for button with abort functionality"
   }
 }

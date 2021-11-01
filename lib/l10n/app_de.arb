@@ -26,6 +26,21 @@
   "monthlyLimit": "Monatliches Limit",
   "categories": "Kategorien",
   "newCategoryName": "Gib einen Namen für die neue Kategorie ein:",
+  "editCategoryNewName": "Gib einen neuen Namen für diese Kategorie ein:",
   "newCategoryNameHint": "Neue Kategorie...",
-  "addCategoryButton": "Kategorie hinzufügen"
+  "addCategoryButton": "Kategorie hinzufügen",
+  "saveButton": "Speichern",
+  "whatKindOfTransaction": "Welche Art von Transaktion möchtest du hinzufügen?",
+  "expense": "Ausgabe",
+  "income": "Einnahme",
+  "selectCategoryForTransaction": "Wähle eine Kategorie für diese Transaktion:",
+  "startTyping": "Tippe hier...",
+  "next": "Weiter",
+  "enterAmountOfTransaction": "Gib den Betrag der Transaktion an:",
+  "review": "Zusammenfassung:",
+  "type": "Typ:",
+  "category": "Kategorie:",
+  "amount": "Betrag:",
+  "optionalDescription": "Beschreibung (Optional)",
+  "abort": "Abbrechen"
 }

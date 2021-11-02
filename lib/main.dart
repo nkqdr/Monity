@@ -1,4 +1,4 @@
-import 'package:finance_buddy/controller/settings_api.dart';
+import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/home.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/custom_themes.dart';
@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  ThemeMode mode = await SettingsApi.getTheme();
-  Locale? locale = await SettingsApi.getLocale();
+  ThemeMode mode = await KeyValueDatabase.getTheme();
+  Locale? locale = await KeyValueDatabase.getLocale();
   runApp(MyApp(
     initialTheme: mode,
     selectedLocale: locale,

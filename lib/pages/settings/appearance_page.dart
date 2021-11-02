@@ -1,4 +1,4 @@
-import 'package:finance_buddy/controller/settings_api.dart';
+import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -99,13 +99,13 @@ class _AppearancePageState extends State<AppearancePage> {
 
   void setThemeMode(ThemeMode mode) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    SettingsApi.setTheme(mode);
+    KeyValueDatabase.setTheme(mode);
     provider.setThemeMode(mode);
   }
 
   void setLanguage(String? languageCode) {
     final provider = Provider.of<LanguageProvider>(context, listen: false);
-    SettingsApi.setLanguage(languageCode);
+    KeyValueDatabase.setLanguage(languageCode);
     if (languageCode == null) {
       provider.setLocale(null);
       return;

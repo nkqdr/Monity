@@ -53,5 +53,11 @@
   "dataTitle": "Daten",
   "dataSectionDescription": "Verwalte alle Daten, die du jemals in dieser App gespeichert hast",
   "deleteAllData": "Alle Daten löschen",
-  "usedStorage": "Verwendeter Speicher:"
+  "usedStorage": "Verwendeter Speicher:",
+  "yourMonthlyLimit": "Dein monatliches Limit beträgt ",
+  "noMonthlyLimit": "Du hast noch kein monatliches Limit gesetzt.",
+  "changeMonthlyLimit": "Limit ändern",
+  "enterNewMonthlyLimit": "Bitte gib dein neues monatliches Limit ein.",
+  "deleteMonthlyLimit": "Limit löschen",
+   "sureDeleteMonthlyLimit": "Bist du sicher dass du dein monatliches Limit löschen willst? Dabei werden keine weiteren Daten gelöscht."
 }

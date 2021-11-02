@@ -3,8 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const String appearanceKey = 'APPEARANCE';
 const String languageKey = 'LANGUAGE';
+const String monthlyLimitKey = 'MONTHLY_LIMIT';
 
-class SettingsApi {
+class KeyValueDatabase {
   static Future<void> setTheme(ThemeMode mode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int value =
@@ -43,5 +44,24 @@ class SettingsApi {
       return null;
     }
     return Locale(languageCode);
+  }
+
+  static Future<double?> getMonthlyLimit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var limit = prefs.getDouble(monthlyLimitKey);
+    if (limit == null) {
+      return null;
+    }
+    return limit;
+  }
+
+  static Future setMonthlyLimit(double limit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(monthlyLimitKey, limit);
+  }
+
+  static Future deleteMonthlyLimit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(monthlyLimitKey);
   }
 }

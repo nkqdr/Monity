@@ -1,13 +1,16 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
+import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_category_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionsSettingsPage extends StatefulWidget {
   const TransactionsSettingsPage({Key? key}) : super(key: key);
@@ -19,6 +22,7 @@ class TransactionsSettingsPage extends StatefulWidget {
 
 class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   late List<TransactionCategory> categories;
+  late double? monthlyLimit;
   bool isLoading = false;
 
   @override
@@ -30,12 +34,15 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   Future _refreshCategories() async {
     setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllTransactionCategories();
+    monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+    var currencyFormat =
+        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     return View(
       appBar: CustomAppBar(
         title: language.transactionsSettings,
@@ -55,7 +62,53 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
           title: language.monthlyLimit,
           titleSize: 18,
           titlePadding: 10,
-          children: [],
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: isLoading
+                    ? const AdaptiveProgressIndicator()
+                    : RichText(
+                        text: TextSpan(
+                          text: monthlyLimit != null
+                              ? language.yourMonthlyLimit
+                              : language.noMonthlyLimit,
+                          style: monthlyLimit != null
+                              ? null
+                              : TextStyle(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                          children: monthlyLimit != null
+                              ? [
+                                  TextSpan(
+                                    text: currencyFormat.format(monthlyLimit),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                      ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AdaptiveTextButton(
+                  text: language.changeMonthlyLimit,
+                  onPressed: _handleSetMonthlyLimit,
+                ),
+                AdaptiveTextButton(
+                  text: language.deleteMonthlyLimit,
+                  isDescructive: true,
+                  onPressed: _handleDeleteMonthlyLimit,
+                ),
+              ],
+            ),
+          ],
         ),
         CustomSection(
           title: language.categories,
@@ -81,7 +134,49 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
     );
   }
 
-  void _handleAddCategory() async {
+  Future _handleDeleteMonthlyLimit() async {
+    var language = AppLocalizations.of(context)!;
+    var dialogResult = await showOkCancelAlertDialog(
+      context: context,
+      title: language.attention,
+      message: language.sureDeleteMonthlyLimit,
+      isDestructiveAction: true,
+      okLabel: language.delete,
+      cancelLabel: language.abort,
+    );
+    if (dialogResult == OkCancelResult.ok) {
+      await KeyValueDatabase.deleteMonthlyLimit();
+      await _refreshCategories();
+    }
+  }
+
+  Future _handleSetMonthlyLimit() async {
+    var language = AppLocalizations.of(context)!;
+    var dialogResult = await showTextInputDialog(
+      context: context,
+      title: language.changeMonthlyLimit,
+      message: language.enterNewMonthlyLimit,
+      okLabel: language.saveButton,
+      cancelLabel: language.abort,
+      textFields: [
+        const DialogTextField(
+            keyboardType:
+                TextInputType.numberWithOptions(decimal: true, signed: false))
+      ],
+    );
+    if (dialogResult != null) {
+      double limit;
+      try {
+        limit = double.parse(dialogResult.first);
+      } catch (e) {
+        return;
+      }
+      await KeyValueDatabase.setMonthlyLimit(limit);
+      await _refreshCategories();
+    }
+  }
+
+  Future _handleAddCategory() async {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,

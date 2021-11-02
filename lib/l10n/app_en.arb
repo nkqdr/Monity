@@ -218,5 +218,29 @@
   "usedStorage": "Used storage:",
   "@usedStorage": {
     "description": "Tells the user how much storage is currently used"
+  },
+  "yourMonthlyLimit": "Your monthly limit is ",
+  "@yourMonthlyLimit": {
+    "description": "Tells the user his monthly limit"
+  },
+  "noMonthlyLimit": "You haven't set a monthly limit yet.",
+  "@noMonthlyLimit": {
+    "description": "Appears when the user hasn't set his monthly limit"
+  },
+  "changeMonthlyLimit": "Change limit",
+  "@changeMonthlyLimit": {
+    "description": "Text that appears on the change monthly limit button"
+  },
+  "enterNewMonthlyLimit": "Please enter the new monthly limit.",
+  "@enterNewMonthlyLimit": {
+    "description": "Tells the user to enter his new monthly limit"
+  },
+  "deleteMonthlyLimit": "Delete limit",
+  "@deleteMonthlyLimit": {
+    "description": "Text that appears on the delete monthly limit button"
+  },
+  "sureDeleteMonthlyLimit": "Are you sure you want to delete your monthly limit? No additional data will be deleted.",
+  "@sureDeleteMonthlyLimit": {
+    "description": "Asks the user if he's sure that he wants to delete the monthly limit."
   }
 }

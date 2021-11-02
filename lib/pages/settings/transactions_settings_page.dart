@@ -60,8 +60,9 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       children: [
         CustomSection(
           title: language.monthlyLimit,
-          titleSize: 18,
+          // titleSize: 18,
           titlePadding: 10,
+          subtitle: language.monthlyLimitDescription,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -69,9 +70,9 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: isLoading
                     ? const AdaptiveProgressIndicator()
-                    : RichText(
-                        text: TextSpan(
-                          text: monthlyLimit != null
+                    : Row(children: [
+                        Text(
+                          monthlyLimit != null
                               ? language.yourMonthlyLimit
                               : language.noMonthlyLimit,
                           style: monthlyLimit != null
@@ -79,19 +80,16 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
                               : TextStyle(
                                   color: Theme.of(context).secondaryHeaderColor,
                                 ),
-                          children: monthlyLimit != null
-                              ? [
-                                  TextSpan(
-                                    text: currencyFormat.format(monthlyLimit),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).hintColor,
-                                    ),
-                                  ),
-                                ]
-                              : [],
                         ),
-                      ),
+                        if (monthlyLimit != null)
+                          Text(
+                            currencyFormat.format(monthlyLimit),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          )
+                      ]),
               ),
             ),
             Row(
@@ -112,12 +110,16 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
         ),
         CustomSection(
           title: language.categories,
-          titleSize: 18,
+          //titleSize: 18,
           titlePadding: 10,
-          trailing: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _handleAddCategory,
-            splashRadius: 18,
+          subtitle: language.categoriesDescription,
+          trailing: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            child: const Icon(
+              Icons.add,
+              color: Colors.blue,
+            ),
+            onTap: _handleAddCategory,
           ),
           children: isLoading
               ? [const Center(child: AdaptiveProgressIndicator())]
@@ -125,6 +127,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
                   ...categories.map(
                     (e) => TransactionCategoryTile(
                       category: e,
+                      categories: categories,
                       refreshCallback: _refreshCategories,
                     ),
                   ),
@@ -189,6 +192,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: TransactionCategoryBottomSheet(
               mode: CategoryBottomSheetMode.add,
+              categories: categories,
               onSubmit: (s) {
                 FinancesDatabase.instance
                     .createTransactionCategory(TransactionCategory(name: s));
@@ -203,11 +207,13 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
 class TransactionCategoryTile extends StatefulWidget {
   final TransactionCategory category;
   final Function refreshCallback;
+  final List<TransactionCategory> categories;
 
   const TransactionCategoryTile({
     Key? key,
     required this.refreshCallback,
     required this.category,
+    required this.categories,
   }) : super(key: key);
 
   @override
@@ -273,6 +279,7 @@ class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: TransactionCategoryBottomSheet(
               mode: CategoryBottomSheetMode.edit,
+              categories: widget.categories,
               placeholder: widget.category.name,
               onSubmit: (s) {
                 FinancesDatabase.instance

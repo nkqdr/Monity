@@ -124,31 +124,34 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isExpense = true;
-                  currentContent = _getSecondPage();
-                  currentIndex++;
-                });
-              },
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red)),
-              child: Text(language.expense),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  currentContent = _getSecondPage();
-                  currentIndex++;
-                });
-              },
-              child: Text(language.income),
-            ),
-          ],
+        SizedBox(
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    isExpense = true;
+                    currentContent = _getSecondPage();
+                    currentIndex++;
+                  });
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red)),
+                child: Text(language.expense),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    currentContent = _getSecondPage();
+                    currentIndex++;
+                  });
+                },
+                child: Text(language.income),
+              ),
+            ],
+          ),
         )
       ],
     );

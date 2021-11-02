@@ -223,6 +223,14 @@
   "@yourMonthlyLimit": {
     "description": "Tells the user his monthly limit"
   },
+  "monthlyLimitDescription": "Set yourself a monthly limit and try to stay in your own budget",
+  "@monthlyLimitDescription": {
+    "description": "Tells the user what his monthly limit is for"
+  },
+  "categoriesDescription": "These will help you categorize all of your expenses and income",
+  "@categoriesDescription": {
+    "description": "Tells the user what his monthly limit is for"
+  },
   "noMonthlyLimit": "You haven't set a monthly limit yet.",
   "@noMonthlyLimit": {
     "description": "Appears when the user hasn't set his monthly limit"
@@ -242,5 +250,9 @@
   "sureDeleteMonthlyLimit": "Are you sure you want to delete your monthly limit? No additional data will be deleted.",
   "@sureDeleteMonthlyLimit": {
     "description": "Asks the user if he's sure that he wants to delete the monthly limit."
+  },
+  "needToSetLimit": "In order to utilize this functionality, you have to set a monthly limit in the settings.",
+  "@needToSetLimit": {
+    "description": "Tells the user to set a monthly limit in order to use this functionality"
   }
 }

@@ -3,6 +3,7 @@ import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/investment_tile.dart';
+import 'package:finance_buddy/widgets/view.dart';
 import 'package:finance_buddy/widgets/wealth_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -35,66 +36,65 @@ class _WealthPageState extends State<WealthPage> {
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     var language = AppLocalizations.of(context)!;
-    return SafeArea(
-      bottom: false,
-      child: ListView(
-        children: [
-          CustomAppBar(
-            title: language.wealthTitle,
-            right: IconButton(
-              icon: const Icon(
-                Icons.add,
-              ),
-              splashRadius: 18,
-              onPressed: () {},
-            ),
+    return View(
+      appBar: CustomAppBar(
+        title: language.wealthTitle,
+        right: IconButton(
+          icon: const Icon(
+            Icons.add,
           ),
-          DashboardTile(
-            title: currencyFormat.format(displayWealth),
-            titleColor: Theme.of(context).colorScheme.onBackground,
-            titleSize: 24,
-            subtitle: subtitle,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                SizedBox(
-                  height: 180,
-                  child: WealthChart(
-                    indexLine: _indexLine,
-                    touchHandler: (e, v) {
-                      _handleChartTouch(e, v, dateFormatter);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0, top: 15),
-            child: Text(
-              language.investments,
-              style: TextStyle(
-                color: Theme.of(context).secondaryHeaderColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-          ),
-          // Render investment categories
-          const InvestmentTile(title: 'Trade Republic'),
-          const InvestmentTile(title: 'Crypto'),
-          const InvestmentTile(title: 'MLP-Depot'),
-          const InvestmentTile(title: 'Tresor'),
-          const InvestmentTile(title: 'Girokonto'),
-          const InvestmentTile(title: 'Tagesgeldkonto'),
-          const InvestmentTile(title: 'DKB-Cash'),
-          const SizedBox(
-            height: 50,
-          ),
-        ],
+          splashRadius: 18,
+          onPressed: () {},
+        ),
       ),
+      fixedAppBar: true,
+      safeAreaBottomDisabled: true,
+      children: [
+        DashboardTile(
+          title: currencyFormat.format(displayWealth),
+          titleColor: Theme.of(context).colorScheme.onBackground,
+          titleSize: 24,
+          subtitle: subtitle,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                height: 180,
+                child: WealthChart(
+                  indexLine: _indexLine,
+                  touchHandler: (e, v) {
+                    _handleChartTouch(e, v, dateFormatter);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15.0, top: 15),
+          child: Text(
+            language.investments,
+            style: TextStyle(
+              color: Theme.of(context).secondaryHeaderColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        // Render investment categories
+        const InvestmentTile(title: 'Trade Republic'),
+        const InvestmentTile(title: 'Crypto'),
+        const InvestmentTile(title: 'MLP-Depot'),
+        const InvestmentTile(title: 'Tresor'),
+        const InvestmentTile(title: 'Girokonto'),
+        const InvestmentTile(title: 'Tagesgeldkonto'),
+        const InvestmentTile(title: 'DKB-Cash'),
+        const SizedBox(
+          height: 50,
+        ),
+      ],
     );
   }
 

@@ -45,7 +45,9 @@ class _HomePageState extends State<HomePage> {
               unselectedItemColor: Theme.of(context).colorScheme.onBackground,
               selectedItemColor: Theme.of(context).colorScheme.primary,
               onTap: _onItemTapped,
-              backgroundColor: Theme.of(context).bottomAppBarColor,
+              backgroundColor: Theme.of(context)
+                  .scaffoldBackgroundColor
+                  .withOpacity(0.5), // Theme.of(context).bottomAppBarColor,
               selectedFontSize: 12,
               items: [
                 BottomNavigationBarItem(

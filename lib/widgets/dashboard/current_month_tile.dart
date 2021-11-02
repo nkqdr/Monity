@@ -1,10 +1,45 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/key_value_database.dart';
+import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-class CurrentMonthTile extends StatelessWidget {
+class CurrentMonthTile extends StatefulWidget {
   const CurrentMonthTile({Key? key}) : super(key: key);
+
+  @override
+  State<CurrentMonthTile> createState() => _CurrentMonthTileState();
+}
+
+class _CurrentMonthTileState extends State<CurrentMonthTile> {
+  late double? monthlyLimit;
+  double? remainingAmount;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshTile();
+  }
+
+  Future _refreshTile() async {
+    setState(() => isLoading = true);
+    monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
+    if (monthlyLimit != null) {
+      remainingAmount = await _getRemainingAmount();
+    }
+    setState(() => isLoading = false);
+  }
+
+  Future _checkNewLimit() async {
+    var storedLimit = await KeyValueDatabase.getMonthlyLimit();
+    if (monthlyLimit != storedLimit) {
+      _refreshTile();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,50 +53,81 @@ class CurrentMonthTile extends StatelessWidget {
         padding: const EdgeInsets.only(top: 60, left: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              language.remainingDays,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              _getCurrentDaysRemaining(),
-              style: TextStyle(
-                color: Theme.of(context).secondaryHeaderColor,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              language.remainingBudget,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              "+" + currencyFormat.format(352.31),
-              style: const TextStyle(
-                color: Colors.green,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+          children: remainingAmount != null
+              ? [
+                  Text(
+                    language.remainingDays,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    _getCurrentDaysRemaining(),
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    language.remainingBudget,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  isLoading
+                      ? const AdaptiveProgressIndicator()
+                      : Text(
+                          remainingAmount! >= 0
+                              ? "+" + currencyFormat.format(remainingAmount)
+                              : currencyFormat.format(remainingAmount),
+                          style: TextStyle(
+                            color: remainingAmount! >= 0
+                                ? Colors.green
+                                : Colors.red,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ]
+              : [
+                  Text(
+                    language.needToSetLimit,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                    ),
+                  )
+                ],
         ),
       ),
     );
+  }
+
+  Future<double> _getRemainingAmount() async {
+    var currentMonth = DateTime.now().month;
+    var transactions = await FinancesDatabase.instance.readAllTransactions();
+    var thisMonthTransactions =
+        transactions.where((element) => element.date.month == currentMonth);
+    double sum = 0;
+    for (var month in thisMonthTransactions) {
+      if (month.type == TransactionType.expense) {
+        sum += month.amount;
+      } else {
+        sum -= month.amount;
+      }
+    }
+    return monthlyLimit! - sum;
   }
 
   String _getCurrentDaysRemaining() {

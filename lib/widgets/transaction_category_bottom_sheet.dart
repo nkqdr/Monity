@@ -1,3 +1,4 @@
+import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,12 +13,14 @@ class TransactionCategoryBottomSheet extends StatefulWidget {
   final CategoryBottomSheetMode mode;
   final String? placeholder;
   final Function(String) onSubmit;
+  final List<TransactionCategory> categories;
 
   const TransactionCategoryBottomSheet({
     Key? key,
     this.placeholder,
     required this.onSubmit,
     required this.mode,
+    required this.categories,
   }) : super(key: key);
 
   @override
@@ -82,7 +85,10 @@ class _TransactionCategoryBottomSheetState
   }
 
   void _handleChangeTextField(String value) {
-    if (value != "") {
+    if (value.trim() != "" &&
+        widget.categories
+            .where((element) => element.name == value.trim())
+            .isEmpty) {
       setState(() {
         isButtonDisabled = false;
       });

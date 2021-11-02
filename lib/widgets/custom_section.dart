@@ -8,7 +8,7 @@ class CustomSection extends StatelessWidget {
   final double? titlePadding;
   final FontWeight? titleWeight;
   final Color? titleColor;
-  final Widget? trailing;
+  final InkWell? trailing;
 
   const CustomSection({
     Key? key,

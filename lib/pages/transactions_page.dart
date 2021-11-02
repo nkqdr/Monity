@@ -6,6 +6,7 @@ import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_tile.dart';
+import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -54,69 +55,65 @@ class _TransactionsPageState extends State<TransactionsPage> {
     }
 
     var language = AppLocalizations.of(context)!;
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: ListView(
-          children: [
-            CustomAppBar(
-              title: language.transactionsTitle,
-              left: IconButton(
-                icon: const Icon(
-                  Icons.filter_alt_rounded,
-                ),
-                splashRadius: 18,
-                onPressed: () {},
-              ),
-              right: IconButton(
-                icon: const Icon(
-                  Icons.add,
-                ),
-                splashRadius: 18,
-                onPressed: _handleAddTransaction,
-              ),
-            ),
-            if (isLoading)
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 150,
-                child: const Center(
-                  child: AdaptiveProgressIndicator(),
-                ),
-              )
-            else if (transactions.isEmpty)
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 150,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Text(
-                      language.noTransactions,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).secondaryHeaderColor,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            else
-              ...months.map((date) {
-                return CustomSection(
-                  title: dateFormatter.format(date),
-                  children: _getTransactionsFor(date).map((e) {
-                    return TransactionTile(
-                      transaction: e,
-                      category: transactionCategories
-                          .where((c) => c.id == e.categoryId)
-                          .first,
-                    );
-                  }).toList(),
-                );
-              }),
-          ],
+    return View(
+      appBar: CustomAppBar(
+        title: language.transactionsTitle,
+        left: IconButton(
+          icon: const Icon(
+            Icons.filter_alt_rounded,
+          ),
+          splashRadius: 18,
+          onPressed: () {},
+        ),
+        right: IconButton(
+          icon: const Icon(
+            Icons.add,
+          ),
+          splashRadius: 18,
+          onPressed: _handleAddTransaction,
         ),
       ),
+      fixedAppBar: true,
+      safeAreaBottomDisabled: true,
+      children: [
+        if (isLoading)
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 150,
+            child: const Center(
+              child: AdaptiveProgressIndicator(),
+            ),
+          )
+        else if (transactions.isEmpty)
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 150,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(
+                  language.noTransactions,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                ),
+              ),
+            ),
+          )
+        else
+          ...months.map((date) {
+            return CustomSection(
+              title: dateFormatter.format(date),
+              children: _getTransactionsFor(date).map((e) {
+                return TransactionTile(
+                  transaction: e,
+                  category: transactionCategories
+                      .where((c) => c.id == e.categoryId)
+                      .first,
+                );
+              }).toList(),
+            );
+          }),
+      ],
     );
   }
 

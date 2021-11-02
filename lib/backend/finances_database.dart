@@ -20,15 +20,16 @@ class FinancesDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, "finances.db");
     File toDelete = File(path);
-    await toDelete.delete();
-    print("Deleted database");
+    if (await toDelete.exists()) {
+      close();
+      _database = null;
+      await toDelete.delete();
+    }
   }
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    print("Path is: $path");
-
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 

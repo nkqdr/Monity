@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomSection extends StatelessWidget {
   final List<Widget> children;
   final String? title;
+  final String? subtitle;
   final double? titleSize;
   final double? titlePadding;
   final FontWeight? titleWeight;
@@ -14,6 +15,7 @@ class CustomSection extends StatelessWidget {
     required this.children,
     this.titleSize,
     this.title,
+    this.subtitle,
     this.titleWeight,
     this.titleColor,
     this.titlePadding,
@@ -28,19 +30,37 @@ class CustomSection extends StatelessWidget {
         Padding(
           padding:
               EdgeInsets.only(top: 30, left: 15.0, bottom: titlePadding ?? 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title ?? "",
-                style: TextStyle(
-                  fontSize: titleSize ?? 22,
-                  fontWeight: titleWeight ?? FontWeight.bold,
-                  color: titleColor ?? Theme.of(context).secondaryHeaderColor,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    title ?? "",
+                    style: TextStyle(
+                      fontSize: titleSize ?? 22,
+                      fontWeight: titleWeight ?? FontWeight.bold,
+                      color:
+                          titleColor ?? Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
+                  trailing ?? Container(),
+                ],
               ),
-              trailing ?? Container(),
+              if (subtitle != null)
+                const SizedBox(
+                  height: 5,
+                ),
+              if (subtitle != null)
+                Text(
+                  subtitle!,
+                  style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                )
             ],
           ),
         ),

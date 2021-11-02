@@ -4,6 +4,7 @@ import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_category_bottom_sheet.dart';
+import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -38,52 +39,48 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    return SafeArea(
-      child: ListView(
-        children: [
-          CustomAppBar(
-            title: language.transactionsSettings,
-            left: IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-              ),
-              splashRadius: 18,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+    return View(
+      appBar: CustomAppBar(
+        title: language.transactionsSettings,
+        left: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          CustomSection(
-            title: language.monthlyLimit,
-            titleSize: 18,
-            titlePadding: 10,
-            children: [],
-          ),
-          CustomSection(
-            title: language.categories,
-            titleSize: 18,
-            titlePadding: 10,
-            trailing: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _handleAddCategory,
-              splashRadius: 18,
-            ),
-            children: isLoading
-                ? [const Center(child: CircularProgressIndicator())]
-                : [
-                    ...categories.map(
-                      (e) => TransactionCategoryTile(
-                        category: e,
-                        refreshCallback: _refreshCategories,
-                      ),
-                    ),
-                  ],
-          )
-        ],
+          splashRadius: 18,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
+      fixedAppBar: true,
+      children: [
+        CustomSection(
+          title: language.monthlyLimit,
+          titleSize: 18,
+          titlePadding: 10,
+          children: [],
+        ),
+        CustomSection(
+          title: language.categories,
+          titleSize: 18,
+          titlePadding: 10,
+          trailing: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _handleAddCategory,
+            splashRadius: 18,
+          ),
+          children: isLoading
+              ? [const Center(child: CircularProgressIndicator())]
+              : [
+                  ...categories.map(
+                    (e) => TransactionCategoryTile(
+                      category: e,
+                      refreshCallback: _refreshCategories,
+                    ),
+                  ),
+                ],
+        ),
+      ],
     );
   }
 
@@ -138,7 +135,7 @@ class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
           color: Theme.of(context).cardColor,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -3,8 +3,8 @@ import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,88 +22,78 @@ class _AppearancePageState extends State<AppearancePage> {
     final LanguageProvider _languageProvider =
         Provider.of<LanguageProvider>(context);
     var language = AppLocalizations.of(context)!;
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: Theme.of(context).appBarTheme.systemOverlayStyle
-            as SystemUiOverlayStyle,
-        child: SafeArea(
-          child: ListView(
-            children: [
-              CustomAppBar(
-                title: language.appearance,
-                left: IconButton(
-                  icon: const Icon(
-                    Icons.chevron_left,
-                  ),
-                  splashRadius: 18,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CustomSection(
-                title: language.theme,
-                titleSize: 18,
-                titlePadding: 10,
-                children: [
-                  MultipleChoiceSetting(
-                    title: language.system,
-                    isActive: _themeProvider.themeMode == ThemeMode.system,
-                    onTap: () {
-                      setThemeMode(ThemeMode.system);
-                    },
-                  ),
-                  MultipleChoiceSetting(
-                    title: language.lightTheme,
-                    isActive: _themeProvider.themeMode == ThemeMode.light,
-                    onTap: () {
-                      setThemeMode(ThemeMode.light);
-                    },
-                  ),
-                  MultipleChoiceSetting(
-                    title: language.darkTheme,
-                    isActive: _themeProvider.themeMode == ThemeMode.dark,
-                    onTap: () {
-                      setThemeMode(ThemeMode.dark);
-                    },
-                  ),
-                ],
-              ),
-              CustomSection(
-                title: language.language,
-                titleSize: 18,
-                titlePadding: 10,
-                children: [
-                  MultipleChoiceSetting(
-                    title: 'System',
-                    isActive: _languageProvider.locale == null,
-                    onTap: () {
-                      setLanguage(null);
-                    },
-                  ),
-                  MultipleChoiceSetting(
-                    title: 'English',
-                    isActive: _languageProvider.locale == const Locale('en'),
-                    onTap: () {
-                      setLanguage('en');
-                    },
-                  ),
-                  MultipleChoiceSetting(
-                    title: 'Deutsch',
-                    isActive: _languageProvider.locale == const Locale('de'),
-                    onTap: () {
-                      setLanguage('de');
-                    },
-                  ),
-                ],
-              )
-            ],
+    return View(
+      appBar: CustomAppBar(
+        title: language.appearance,
+        left: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
           ),
+          splashRadius: 18,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       ),
+      fixedAppBar: true,
+      children: [
+        CustomSection(
+          title: language.theme,
+          titleSize: 18,
+          titlePadding: 10,
+          children: [
+            MultipleChoiceSetting(
+              title: language.system,
+              isActive: _themeProvider.themeMode == ThemeMode.system,
+              onTap: () {
+                setThemeMode(ThemeMode.system);
+              },
+            ),
+            MultipleChoiceSetting(
+              title: language.lightTheme,
+              isActive: _themeProvider.themeMode == ThemeMode.light,
+              onTap: () {
+                setThemeMode(ThemeMode.light);
+              },
+            ),
+            MultipleChoiceSetting(
+              title: language.darkTheme,
+              isActive: _themeProvider.themeMode == ThemeMode.dark,
+              onTap: () {
+                setThemeMode(ThemeMode.dark);
+              },
+            ),
+          ],
+        ),
+        CustomSection(
+          title: language.language,
+          titleSize: 18,
+          titlePadding: 10,
+          children: [
+            MultipleChoiceSetting(
+              title: 'System',
+              isActive: _languageProvider.locale == null,
+              onTap: () {
+                setLanguage(null);
+              },
+            ),
+            MultipleChoiceSetting(
+              title: 'English',
+              isActive: _languageProvider.locale == const Locale('en'),
+              onTap: () {
+                setLanguage('en');
+              },
+            ),
+            MultipleChoiceSetting(
+              title: 'Deutsch',
+              isActive: _languageProvider.locale == const Locale('de'),
+              onTap: () {
+                setLanguage('de');
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 

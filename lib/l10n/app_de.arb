@@ -47,5 +47,10 @@
   "sureDeleteCategory": "Bist du sicher dass du diese Kategorie löschen willst? Dabei werden auch alle Transaktionen gelöscht, welche mit dieser Kategorie zusammenhängen.",
   "delete": "Löschen",
   "firstCreateCategories": "Bitte erstelle zuerst eine Kategorie in den Einstellungen.",
-  "noTransactions": "Du hast noch keine Transaktionen erstellt. Drücke auf das Icon oben rechts, um eine neue Transaktion hinzuzufügen."
+  "noTransactions": "Du hast noch keine Transaktionen erstellt. Drücke auf das Icon oben rechts, um eine neue Transaktion hinzuzufügen.",
+  "sureDeleteData": "Sind Sie sicher, dass Sie alle gespeicherten Daten löschen wollen? Bitte geben Sie den folgenden Text ein, um diese Löschung zu bestätigen:",
+  "invalidInput": "Ungültige Eingabe",
+  "dataTitle": "Daten",
+  "dataSectionDescription": "Verwalte alle Daten, die du jemals in dieser App gespeichert hast",
+  "deleteAllData": "Alle Daten löschen"
 }

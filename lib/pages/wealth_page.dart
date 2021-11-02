@@ -1,4 +1,3 @@
-import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/controller/wealth_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -47,9 +46,7 @@ class _WealthPageState extends State<WealthPage> {
                 Icons.add,
               ),
               splashRadius: 18,
-              onPressed: () async {
-                await FinancesDatabase.instance.deleteDatabase();
-              },
+              onPressed: () {},
             ),
           ),
           DashboardTile(

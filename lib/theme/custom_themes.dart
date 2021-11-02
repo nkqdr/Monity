@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,6 +25,9 @@ class CustomThemes {
           ),
         ),
       ),
+    ),
+    cupertinoOverrideTheme: const CupertinoThemeData(
+      textTheme: CupertinoTextThemeData(), // This is required
     ),
   );
 

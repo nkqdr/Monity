@@ -194,5 +194,25 @@
   "noTransactions": "You have not created any transactions yet. Press the icon in the upper right corner to add a new transaction.",
   "@noTransactions": {
     "description": "Tells the user that he hasn't created a transaction yet"
+  },
+  "sureDeleteData": "Are you sure you want to delete all saved data? Please type the following text to approve this deletion:",
+  "@sureDeleteData": {
+    "description": "Asks the user if he's sure that he wants to delete the database."
+  },
+  "invalidInput": "Invalid input",
+  "@invalidInput": {
+    "description": "Tells the user that the input was invalid"
+  },
+  "dataTitle": "Data",
+  "@dataTitle": {
+    "description": "Data title"
+  },
+  "dataSectionDescription": "Manage all the data you have ever saved in this app",
+  "@dataSectionDescription": {
+    "description": "Description for the data seciton in system settings"
+  },
+  "deleteAllData": "Delete all data",
+  "@deleteAllData": {
+    "description": "Button text for the delete all data button"
   }
 }

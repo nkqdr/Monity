@@ -20,10 +20,8 @@ class SettingNavButton extends StatelessWidget {
         onTap: () {
           if (destination != null) {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => destination as Widget),
+              MaterialPageRoute(builder: (context) => destination!),
             );
-          } else {
-            print('No destination!');
           }
         },
         child: Container(

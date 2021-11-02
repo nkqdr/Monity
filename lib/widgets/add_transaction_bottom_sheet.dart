@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 //import 'package:finance_buddy/helper/transaction.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
@@ -156,7 +157,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   Widget _getSecondPage() {
     var language = AppLocalizations.of(context)!;
     if (isLoading) {
-      return const CircularProgressIndicator();
+      return const AdaptiveProgressIndicator();
     }
     return Column(
       key: const ValueKey<int>(1),

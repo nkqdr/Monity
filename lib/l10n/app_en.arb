@@ -214,5 +214,9 @@
   "deleteAllData": "Delete all data",
   "@deleteAllData": {
     "description": "Button text for the delete all data button"
+  },
+  "usedStorage": "Used storage:",
+  "@usedStorage": {
+    "description": "Tells the user how much storage is currently used"
   }
 }

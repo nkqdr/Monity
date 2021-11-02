@@ -1,6 +1,7 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
@@ -77,8 +78,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
               ),
             ),
             if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 150,
+                child: const Center(
+                  child: AdaptiveProgressIndicator(),
+                ),
               )
             else if (transactions.isEmpty)
               SizedBox(

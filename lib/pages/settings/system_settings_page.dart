@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/adaptive_text_button.dart';
@@ -18,6 +19,20 @@ class SystemSettingsPage extends StatefulWidget {
 
 class _SystemSettingsPageState extends State<SystemSettingsPage> {
   String validationString = "";
+  late int databaseSize;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshDatabaseSize();
+  }
+
+  Future _refreshDatabaseSize() async {
+    setState(() => isLoading = true);
+    databaseSize = await FinancesDatabase.instance.getDatabaseSize();
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +56,43 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           title: language.dataTitle,
           subtitle: language.dataSectionDescription,
           children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).cardColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        language.usedStorage,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                      if (isLoading)
+                        const AdaptiveProgressIndicator()
+                      else
+                        Text(
+                          _formatBytes(databaseSize, 2),
+                          style: TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Center(
               child: AdaptiveTextButton(
                 onPressed: _handleDeleteData,
@@ -54,8 +106,17 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
   }
 
+  String _formatBytes(int bytes, int decimals) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return ((bytes / pow(1000, i)).toStringAsFixed(decimals)) +
+        ' ' +
+        suffixes[i];
+  }
+
   String _getRandomString(int length) {
-    const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+    const chars = 'AaBbCcDdEeFfGgHhiJjKkLMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
     Random _rnd = Random();
     return String.fromCharCodes(Iterable.generate(
         length, (_) => chars.codeUnitAt(_rnd.nextInt(chars.length))));
@@ -79,6 +140,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
     if (dialogResult != null) {
       await FinancesDatabase.instance.deleteDatabase();
+      _refreshDatabaseSize();
     }
   }
 }

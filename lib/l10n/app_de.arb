@@ -52,5 +52,6 @@
   "invalidInput": "Ungültige Eingabe",
   "dataTitle": "Daten",
   "dataSectionDescription": "Verwalte alle Daten, die du jemals in dieser App gespeichert hast",
-  "deleteAllData": "Alle Daten löschen"
+  "deleteAllData": "Alle Daten löschen",
+  "usedStorage": "Verwendeter Speicher:"
 }

@@ -4,6 +4,8 @@ import 'package:sqflite/sqlite_api.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
+const String databaseName = "finances.db";
+
 class FinancesDatabase {
   static final FinancesDatabase instance = FinancesDatabase._init();
   static Database? _database;
@@ -12,13 +14,23 @@ class FinancesDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB("finances.db");
+    _database = await _initDB(databaseName);
     return _database!;
+  }
+
+  Future<int> getDatabaseSize() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, databaseName);
+    File databaseFile = File(path);
+    if (await databaseFile.exists()) {
+      return await databaseFile.length();
+    }
+    return 0;
   }
 
   Future deleteDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "finances.db");
+    final path = join(dbPath, databaseName);
     File toDelete = File(path);
     if (await toDelete.exists()) {
       close();

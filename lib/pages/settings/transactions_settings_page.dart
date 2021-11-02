@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_category_bottom_sheet.dart';
@@ -27,13 +28,9 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   }
 
   Future _refreshCategories() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllTransactionCategories();
-    setState(() {
-      isLoading = false;
-    });
+    setState(() => isLoading = false);
   }
 
   @override
@@ -70,7 +67,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
             splashRadius: 18,
           ),
           children: isLoading
-              ? [const Center(child: CircularProgressIndicator())]
+              ? [const Center(child: AdaptiveProgressIndicator())]
               : [
                   ...categories.map(
                     (e) => TransactionCategoryTile(
@@ -135,7 +132,7 @@ class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
           color: Theme.of(context).cardColor,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

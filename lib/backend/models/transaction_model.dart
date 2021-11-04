@@ -1,3 +1,7 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 const String tableTransaction = "transaction_base";
 const String tableTransactionCategory = "transaction_category";
 
@@ -87,15 +91,13 @@ class Transaction {
   }
 }
 
-class TransactionCategory {
-  final int? id;
-  final String name;
-
+class TransactionCategory extends Category {
   const TransactionCategory({
-    this.id,
-    required this.name,
-  });
+    int? id,
+    required String name,
+  }) : super(id: id, name: name);
 
+  @override
   TransactionCategory copy({int? id, String? name}) {
     return TransactionCategory(
       id: id ?? this.id,
@@ -115,5 +117,23 @@ class TransactionCategory {
       id: json[TransactionCategoryFields.id] as int?,
       name: json[TransactionCategoryFields.name] as String,
     );
+  }
+
+  @override
+  Future<int> updateSelf() async {
+    return FinancesDatabase.instance.updateTransactionCategory(this);
+  }
+
+  @override
+  Future<int> deleteSelf() async {
+    if (id != null) {
+      return FinancesDatabase.instance.deleteTransactionCategory(id!);
+    }
+    return -1;
+  }
+
+  @override
+  String getDeleteMessage(AppLocalizations language) {
+    return language.sureDeleteCategory;
   }
 }

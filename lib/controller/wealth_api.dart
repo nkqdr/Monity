@@ -82,8 +82,5 @@ List<WealthEntry> wealthEntries = [
   WealthEntry(date: DateTime(2022, 11, 1), amount: 15000),
   WealthEntry(date: DateTime(2022, 12, 1), amount: 16000),
   WealthEntry(date: DateTime(2023, 2, 1), amount: 20798.52),
-  WealthEntry(date: DateTime(2023, 3, 10), amount: -30398.52),
-  WealthEntry(date: DateTime(2023, 4, 10), amount: -15398.52),
-  WealthEntry(date: DateTime(2023, 5, 10), amount: -398.52),
-  WealthEntry(date: DateTime(2023, 6, 10), amount: 3398.52),
+  WealthEntry(date: DateTime(2023, 3, 1), amount: 60798.52),
 ];

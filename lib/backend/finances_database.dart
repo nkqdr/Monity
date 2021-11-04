@@ -1,4 +1,5 @@
 import 'package:finance_buddy/backend/models/transaction_model.dart' as model;
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'dart:io';
@@ -39,6 +40,11 @@ class FinancesDatabase {
     }
   }
 
+  Future close() async {
+    final db = await instance.database;
+    db.close();
+  }
+
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
@@ -61,6 +67,21 @@ class FinancesDatabase {
       ${model.TransactionFields.date} TEXT NOT NULL,
       ${model.TransactionFields.type} INTEGER NOT NULL,
       FOREIGN KEY(${model.TransactionFields.category}) REFERENCES ${model.tableTransactionCategory}(${model.TransactionCategoryFields.id})
+    )
+    ''');
+    await db.execute('''
+    CREATE TABLE $tableInvestmentCategory (
+      ${InvestmentCategoryFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${InvestmentCategoryFields.name} TEXT UNIQUE
+    )
+    ''');
+    await db.execute('''
+    CREATE TABLE $tableInvestmentSnapshot (
+      ${InvestmentSnapshotFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${InvestmentSnapshotFields.amount} REAL NOT NULL,
+      ${InvestmentSnapshotFields.date} TEXT NOT NULL,
+      ${InvestmentSnapshotFields.categoryId} INTEGER NOT NULL,
+      FOREIGN KEY(${InvestmentSnapshotFields.categoryId}) REFERENCES ${tableInvestmentCategory}(${InvestmentCategoryFields.id})
     )
     ''');
   }
@@ -153,8 +174,49 @@ class FinancesDatabase {
     );
   }
 
-  Future close() async {
+  Future<InvestmentCategory> createInvestmentCategory(
+      InvestmentCategory category) async {
     final db = await instance.database;
-    db.close();
+    final id = await db.insert(tableInvestmentCategory, category.toJson());
+    return category.copy(id: id);
+  }
+
+  Future<InvestmentCategory?> readInvestmentCategory(int id) async {
+    final db = await instance.database;
+    final maps = await db.query(tableInvestmentCategory,
+        columns: InvestmentCategoryFields.values,
+        where: "${model.TransactionCategoryFields.id} = ?",
+        whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return InvestmentCategory.fromJson(maps.first);
+    }
+  }
+
+  Future<List<InvestmentCategory>> readAllInvestmentCategories() async {
+    final db = await instance.database;
+    final result = await db.query(tableInvestmentCategory,
+        orderBy: "${InvestmentCategoryFields.name} ASC");
+    return result.map((e) => InvestmentCategory.fromJson(e)).toList();
+  }
+
+  Future<int> updateInvestmentCategory(InvestmentCategory category) async {
+    final db = await instance.database;
+    return db.update(
+      tableInvestmentCategory,
+      category.toJson(),
+      where: '${InvestmentCategoryFields.id} = ?',
+      whereArgs: [category.id],
+    );
+  }
+
+  Future<int> deleteInvestmentCategory(int id) async {
+    final db = await instance.database;
+    await db.delete(tableInvestmentSnapshot,
+        where: "${InvestmentSnapshotFields.categoryId} = ?", whereArgs: [id]);
+    return await db.delete(
+      tableInvestmentCategory,
+      where: "${InvestmentCategoryFields.id} = ?",
+      whereArgs: [id],
+    );
   }
 }

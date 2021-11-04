@@ -6,7 +6,7 @@ const String languageKey = 'LANGUAGE';
 const String monthlyLimitKey = 'MONTHLY_LIMIT';
 
 class KeyValueDatabase {
-  static Future<void> setTheme(ThemeMode mode) async {
+  static Future setTheme(ThemeMode mode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int value =
         mode == ThemeMode.system ? 0 : (mode == ThemeMode.light ? 1 : 2);
@@ -27,7 +27,7 @@ class KeyValueDatabase {
     return mode;
   }
 
-  static Future<void> setLanguage(String? languageCode) async {
+  static Future setLanguage(String? languageCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (languageCode == null) {
       await prefs.remove(languageKey);

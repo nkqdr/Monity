@@ -1,4 +1,6 @@
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,13 +11,13 @@ enum CategoryBottomSheetMode {
   edit,
 }
 
-class TransactionCategoryBottomSheet extends StatefulWidget {
+class CategoryBottomSheet extends StatefulWidget {
   final CategoryBottomSheetMode mode;
   final String? placeholder;
   final Function(String) onSubmit;
-  final List<TransactionCategory> categories;
+  final List<Category> categories;
 
-  const TransactionCategoryBottomSheet({
+  const CategoryBottomSheet({
     Key? key,
     this.placeholder,
     required this.onSubmit,
@@ -24,12 +26,10 @@ class TransactionCategoryBottomSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TransactionCategoryBottomSheetState createState() =>
-      _TransactionCategoryBottomSheetState();
+  _CategoryBottomSheetState createState() => _CategoryBottomSheetState();
 }
 
-class _TransactionCategoryBottomSheetState
-    extends State<TransactionCategoryBottomSheet> {
+class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   final _categoryNameController = TextEditingController();
   late bool isButtonDisabled;
 

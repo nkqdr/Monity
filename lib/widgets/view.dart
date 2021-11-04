@@ -29,7 +29,7 @@ class View extends StatelessWidget {
         value: Theme.of(context).appBarTheme.systemOverlayStyle
             as SystemUiOverlayStyle,
         child: SafeArea(
-          bottom: !safeAreaBottomDisabled,
+          bottom: false, //!safeAreaBottomDisabled,
           top: !safeAreaTopDisabled,
           child: safeAreaTopDisabled
               ? Stack(
@@ -76,6 +76,22 @@ class View extends StatelessWidget {
                           ),
                         ),
                       ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).viewPadding.bottom),
+                      height: MediaQuery.of(context).viewPadding.bottom,
+                      child: ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            color: Theme.of(context)
+                                .scaffoldBackgroundColor
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 )
               : _getColumn(),

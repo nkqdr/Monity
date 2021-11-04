@@ -20,6 +20,7 @@ class SystemSettingsPage extends StatefulWidget {
 class _SystemSettingsPageState extends State<SystemSettingsPage> {
   String validationString = "";
   late int databaseSize;
+  late int transactionsCount;
   bool isLoading = false;
 
   @override
@@ -31,6 +32,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   Future _refreshDatabaseSize() async {
     setState(() => isLoading = true);
     databaseSize = await FinancesDatabase.instance.getDatabaseSize();
+    transactionsCount =
+        (await FinancesDatabase.instance.readAllTransactions()).length;
     setState(() => isLoading = false);
   }
 
@@ -56,6 +59,45 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           title: language.dataTitle,
           subtitle: language.dataSectionDescription,
           children: [
+            // Registered transactions
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).cardColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Registered transactions",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                      if (isLoading)
+                        const AdaptiveProgressIndicator()
+                      else
+                        Text(
+                          transactionsCount.toString(),
+                          style: TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Used storage
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),

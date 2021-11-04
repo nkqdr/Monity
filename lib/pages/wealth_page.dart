@@ -1,5 +1,8 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/controller/wealth_api.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/investment_tile.dart';
@@ -23,6 +26,21 @@ class _WealthPageState extends State<WealthPage> {
   double displayWealth = WealthApi.getCurrentWealth();
   VerticalLine? _indexLine;
   String? subtitle;
+  late List<InvestmentCategory> categories;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCategories();
+  }
+
+  Future _refreshCategories() async {
+    setState(() => isLoading = true);
+    categories = await FinancesDatabase.instance.readAllInvestmentCategories();
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LanguageProvider>(context);
@@ -84,13 +102,11 @@ class _WealthPageState extends State<WealthPage> {
           ),
         ),
         // Render investment categories
-        const InvestmentTile(title: 'Trade Republic'),
-        const InvestmentTile(title: 'Crypto'),
-        const InvestmentTile(title: 'MLP-Depot'),
-        const InvestmentTile(title: 'Tresor'),
-        const InvestmentTile(title: 'Girokonto'),
-        const InvestmentTile(title: 'Tagesgeldkonto'),
-        const InvestmentTile(title: 'DKB-Cash'),
+        if (isLoading)
+          const SizedBox(height: 100, child: AdaptiveProgressIndicator())
+        else
+          ...categories.map((e) => InvestmentTile(title: e.name)),
+
         const SizedBox(
           height: 50,
         ),

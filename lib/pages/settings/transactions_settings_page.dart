@@ -4,9 +4,10 @@ import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/adaptive_text_button.dart';
+import 'package:finance_buddy/widgets/category_tile.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/transaction_category_bottom_sheet.dart';
+import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               ? [const Center(child: AdaptiveProgressIndicator())]
               : [
                   ...categories.map(
-                    (e) => TransactionCategoryTile(
+                    (e) => CategoryTile(
                       category: e,
                       categories: categories,
                       refreshCallback: _refreshCategories,
@@ -190,7 +191,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
           return Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: TransactionCategoryBottomSheet(
+            child: CategoryBottomSheet(
               mode: CategoryBottomSheetMode.add,
               categories: categories,
               onSubmit: (s) {
@@ -201,110 +202,5 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
           );
         });
     _refreshCategories();
-  }
-}
-
-class TransactionCategoryTile extends StatefulWidget {
-  final TransactionCategory category;
-  final Function refreshCallback;
-  final List<TransactionCategory> categories;
-
-  const TransactionCategoryTile({
-    Key? key,
-    required this.refreshCallback,
-    required this.category,
-    required this.categories,
-  }) : super(key: key);
-
-  @override
-  State<TransactionCategoryTile> createState() =>
-      _TransactionCategoryTileState();
-}
-
-class _TransactionCategoryTileState extends State<TransactionCategoryTile> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).cardColor,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.category.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                ),
-              ),
-              Row(
-                children: [
-                  InkWell(
-                    child: const Icon(Icons.edit_rounded),
-                    onTap: _handleEdit,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  InkWell(
-                    child: const Icon(Icons.delete_rounded, color: Colors.red),
-                    onTap: _handleDelete,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future _handleEdit() async {
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: TransactionCategoryBottomSheet(
-              mode: CategoryBottomSheetMode.edit,
-              categories: widget.categories,
-              placeholder: widget.category.name,
-              onSubmit: (s) {
-                FinancesDatabase.instance
-                    .updateTransactionCategory(widget.category.copy(name: s));
-              },
-            ),
-          );
-        });
-    widget.refreshCallback();
-  }
-
-  Future _handleDelete() async {
-    var language = AppLocalizations.of(context)!;
-    var dialogResult = await showOkCancelAlertDialog(
-      context: context,
-      title: language.attention,
-      message: language.sureDeleteCategory,
-      isDestructiveAction: true,
-      okLabel: language.delete,
-      cancelLabel: language.abort,
-    );
-    if (dialogResult == OkCancelResult.ok) {
-      await FinancesDatabase.instance
-          .deleteTransactionCategory(widget.category.id!);
-      widget.refreshCallback();
-    }
   }
 }

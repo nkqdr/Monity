@@ -1,4 +1,5 @@
 import 'package:finance_buddy/pages/settings/appearance_page.dart';
+import 'package:finance_buddy/pages/settings/investments_settings_page.dart';
 import 'package:finance_buddy/pages/settings/system_settings_page.dart';
 import 'package:finance_buddy/pages/settings/transactions_settings_page.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -47,6 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         SettingNavButton(
           name: language.investments,
+          destination: const InvestmentsSettingsPage(),
         ),
         SettingNavButton(
           name: language.help,

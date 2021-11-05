@@ -139,6 +139,10 @@
   "@selectCategoryForTransaction": {
     "description": "Tells the user to select a category for this transaction"
   },
+  "selectCategoryForSnapshot": "Select a category for this snapshot:",
+  "@selectCategoryForSnapshot": {
+    "description": "Tells the user to select a category for this snapshot"
+  },
   "startTyping": "Start typing...",
   "@startTyping": {
     "description": "Indicates to the user that he can just start typing"

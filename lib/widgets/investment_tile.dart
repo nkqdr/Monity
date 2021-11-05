@@ -1,15 +1,40 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class InvestmentTile extends StatelessWidget {
-  final String title;
+class InvestmentTile extends StatefulWidget {
+  final InvestmentCategory category;
+
   const InvestmentTile({
     Key? key,
-    required this.title,
+    required this.category,
   }) : super(key: key);
+
+  @override
+  State<InvestmentTile> createState() => _InvestmentTileState();
+}
+
+class _InvestmentTileState extends State<InvestmentTile> {
+  bool isLoading = false;
+  late InvestmentSnapshot? lastSnapshot;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshSnapshot();
+  }
+
+  Future _refreshSnapshot() async {
+    setState(() => isLoading = true);
+    lastSnapshot = await FinancesDatabase.instance
+        .readLastSnapshotFor(category: widget.category);
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +64,24 @@ class InvestmentTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      widget.category.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      currencyFormat.format(100.32),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    if (isLoading)
+                      const AdaptiveProgressIndicator()
+                    else
+                      Text(
+                        lastSnapshot != null
+                            ? currencyFormat.format(lastSnapshot!.amount)
+                            : "-",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 const SizedBox(
@@ -68,13 +98,18 @@ class InvestmentTile extends StatelessWidget {
                         color: Theme.of(context).secondaryHeaderColor,
                       ),
                     ),
-                    Text(
-                      dateFormatter.format(DateTime.now()),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).secondaryHeaderColor,
+                    if (isLoading)
+                      const AdaptiveProgressIndicator()
+                    else
+                      Text(
+                        lastSnapshot != null
+                            ? dateFormatter.format(lastSnapshot!.date)
+                            : "-",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],

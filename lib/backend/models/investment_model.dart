@@ -89,6 +89,11 @@ class InvestmentSnapshot {
     required this.categoryId,
   });
 
+  @override
+  String toString() {
+    return "$id: Date-$date, Amount-$amount, Category-$categoryId";
+  }
+
   InvestmentSnapshot copy({
     int? id,
     double? amount,
@@ -106,8 +111,9 @@ class InvestmentSnapshot {
   Map<String, Object?> toJson() {
     return {
       InvestmentSnapshotFields.id: id,
+      InvestmentSnapshotFields.categoryId: categoryId,
       InvestmentSnapshotFields.amount: amount,
-      InvestmentSnapshotFields.date: date,
+      InvestmentSnapshotFields.date: date.toIso8601String(),
     };
   }
 

@@ -34,6 +34,7 @@
   "expense": "Ausgabe",
   "income": "Einnahme",
   "selectCategoryForTransaction": "Wähle eine Kategorie für diese Transaktion:",
+  "selectCategoryForSnapshot": "Wähle eine Kategorie für diesen Snapshot:",
   "startTyping": "Tippe hier...",
   "next": "Weiter",
   "enterAmountOfTransaction": "Gib den Betrag der Transaktion an:",

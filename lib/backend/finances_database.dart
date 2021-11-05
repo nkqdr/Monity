@@ -219,4 +219,43 @@ class FinancesDatabase {
       whereArgs: [id],
     );
   }
+
+  Future<List<InvestmentSnapshot>> readAllInvestmentSnapshots() async {
+    final db = await instance.database;
+    final result = await db.query(tableInvestmentSnapshot,
+        orderBy: "${InvestmentSnapshotFields.date} ASC");
+    return result.map((e) => InvestmentSnapshot.fromJson(e)).toList();
+  }
+
+  Future<InvestmentSnapshot> createInvestmentSnapshot(
+      InvestmentSnapshot snapshot) async {
+    final db = await instance.database;
+    final id = await db.insert(tableInvestmentSnapshot, snapshot.toJson());
+    return snapshot.copy(id: id);
+  }
+
+  Future<InvestmentSnapshot?> readLastSnapshotFor(
+      {required InvestmentCategory category}) async {
+    final db = await instance.database;
+    final snapshots = await db.query(tableInvestmentSnapshot,
+        where: "${InvestmentSnapshotFields.categoryId} = ?",
+        whereArgs: [category.id]);
+    if (snapshots.isEmpty) {
+      return null;
+    }
+    return InvestmentSnapshot.fromJson(snapshots.last);
+  }
+
+  Future<List<InvestmentSnapshot>> readAllLastSnapshots() async {
+    final db = await instance.database;
+    final categories = await readAllInvestmentCategories();
+    List<InvestmentSnapshot> lastSnapshots = [];
+    for (var category in categories) {
+      final lastSnapshot = await readLastSnapshotFor(category: category);
+      if (lastSnapshot != null) {
+        lastSnapshots.add(lastSnapshot);
+      }
+    }
+    return lastSnapshots;
+  }
 }

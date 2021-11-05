@@ -1,35 +1,30 @@
 import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-//import 'package:finance_buddy/helper/transaction.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:finance_buddy/widgets/multiple_choice_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AddTransactionBottomSheet extends StatefulWidget {
-  const AddTransactionBottomSheet({Key? key}) : super(key: key);
+class AddSnapshotBottomSheet extends StatefulWidget {
+  const AddSnapshotBottomSheet({Key? key}) : super(key: key);
 
   @override
-  _AddTransactionBottomSheetState createState() =>
-      _AddTransactionBottomSheetState();
+  _AddSnapshotBottomSheetState createState() => _AddSnapshotBottomSheetState();
 }
 
-class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
-  bool isExpense = false;
-  String _category = "";
-  double _amount = 0;
+class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
   int currentIndex = 0;
-  int maxIndex = 3;
+  int maxIndex = 2;
+  double _amount = 0;
+  String _category = "";
   bool isLoading = false;
-  late List<TransactionCategory> categories;
+  final _amountController = TextEditingController();
+  late List<InvestmentCategory> categories;
   late bool isButtonDisabled;
   late Widget currentContent;
-  final _amountController = TextEditingController();
-  final _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -38,31 +33,20 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     _refreshCategories();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    currentContent = _getFirstPage();
-  }
-
   Future _refreshCategories() async {
-    setState(() {
-      isLoading = true;
-    });
-    categories = await FinancesDatabase.instance.readAllTransactionCategories();
-    setState(() {
-      isLoading = false;
-    });
+    setState(() => isLoading = true);
+    categories = await FinancesDatabase.instance.readAllInvestmentCategories();
+    currentContent = _getFirstPage();
+    setState(() => isLoading = false);
   }
 
-  void _handleAddTransaction() {
+  Future _handleAddSnapshot() async {
     int category =
         categories.where((element) => element.name == _category).first.id!;
-    FinancesDatabase.instance.createTransaction(Transaction(
-      amount: _amount,
-      date: DateTime.now(),
-      type: isExpense ? TransactionType.expense : TransactionType.income,
+    FinancesDatabase.instance.createInvestmentSnapshot(InvestmentSnapshot(
       categoryId: category,
-      description: _descriptionController.text,
+      amount: _amount,
+      date: DateTime(2021, 11, 9),
     ));
   }
 
@@ -87,7 +71,11 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               );
             },
             layoutBuilder: (currentChild, _) => currentChild as Widget,
-            child: currentContent,
+            child: isLoading
+                ? const Center(
+                    child: AdaptiveProgressIndicator(),
+                  )
+                : currentContent,
           ),
           currentIndex < maxIndex ? _getPageProgress() : Container(),
         ],
@@ -112,58 +100,6 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   Widget _getFirstPage() {
     var language = AppLocalizations.of(context)!;
     return Column(
-      key: const ValueKey<int>(0),
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          child: Text(
-            language.whatKindOfTransaction,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isExpense = true;
-                    currentContent = _getSecondPage();
-                    currentIndex++;
-                  });
-                },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red)),
-                child: Text(language.expense),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    currentContent = _getSecondPage();
-                    currentIndex++;
-                  });
-                },
-                child: Text(language.income),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _getSecondPage() {
-    var language = AppLocalizations.of(context)!;
-    if (isLoading) {
-      return const AdaptiveProgressIndicator();
-    }
-    return Column(
       key: const ValueKey<int>(1),
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -171,7 +107,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            language.selectCategoryForTransaction,
+            language.selectCategoryForSnapshot,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -185,20 +121,20 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 setState(() {
                   _category = s.trim();
                   isButtonDisabled = false;
-                  currentContent = _getSecondPage();
+                  currentContent = _getFirstPage();
                 });
               },
               onValidInput: (s) {
                 setState(() {
                   isButtonDisabled = false;
                   _category = s.trim();
-                  currentContent = _getSecondPage();
+                  currentContent = _getFirstPage();
                 });
               },
               onInvalidInput: (s) {
                 setState(() {
                   isButtonDisabled = true;
-                  currentContent = _getSecondPage();
+                  currentContent = _getFirstPage();
                 });
               })
         else
@@ -220,7 +156,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 ? null
                 : () {
                     setState(() {
-                      currentContent = _getThirdPage();
+                      currentContent = _getSecondPage();
                       currentIndex++;
                     });
                   },
@@ -236,7 +172,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     );
   }
 
-  Widget _getThirdPage() {
+  Widget _getSecondPage() {
     var language = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey<int>(2),
@@ -271,7 +207,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               }
               setState(() {
                 _amount = newAmount;
-                currentContent = _getFourthPage();
+                currentContent = _getThirdPage();
                 currentIndex++;
               });
             },
@@ -282,7 +218,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     );
   }
 
-  Widget _getFourthPage() {
+  Widget _getThirdPage() {
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     var language = AppLocalizations.of(context)!;
@@ -299,18 +235,6 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-        Row(
-          children: [
-            Text(
-              language.type,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Text(isExpense ? language.expense : language.income),
-          ],
         ),
         Row(
           children: [
@@ -336,10 +260,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             Text(currencyFormat.format(_amount)),
           ],
         ),
-        CustomTextField(
-          controller: _descriptionController,
-          decoration:
-              InputDecoration.collapsed(hintText: language.optionalDescription),
+        const SizedBox(
+          height: 80,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -352,7 +274,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  _handleAddTransaction();
+                  _handleAddSnapshot();
                   Navigator.of(context).pop();
                 },
                 child: Text(language.saveButton)),

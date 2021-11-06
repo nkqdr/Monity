@@ -89,7 +89,8 @@ class _WealthChartState extends State<WealthChart> {
     }
     int digits = 0;
     int maxInt = max.ceil();
-    while (maxInt != 1) {
+    while (maxInt > 1) {
+      print("Iterating #1");
       maxInt = (maxInt / 10).floor();
       digits++;
     }

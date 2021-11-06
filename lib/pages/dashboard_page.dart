@@ -1,4 +1,7 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/pages/settings_page.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard/current_month_tile.dart';
 import 'package:finance_buddy/widgets/dashboard/expenses_tile.dart';
@@ -17,7 +20,22 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late List<InvestmentCategory> investmentCategories;
   bool keyToggle = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCategories();
+  }
+
+  Future _refreshCategories() async {
+    setState(() => isLoading = true);
+    investmentCategories =
+        await FinancesDatabase.instance.readAllInvestmentCategories();
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
                 builder: (context) => const SettingsPage(),
               ),
             );
+            _refreshCategories();
             setState(() => keyToggle = !keyToggle);
           },
         ),
@@ -51,39 +70,25 @@ class _DashboardState extends State<Dashboard> {
             const PerformanceTile(),
           ],
         ),
-        // DashboardTile(
-        //   title: language.wealthTitle,
-        //   subtitle: currencyFormat.format(WealthApi.getCurrentWealth()),
-        //   subtitleStyle: const TextStyle(
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        //   child: Column(
-        //     children: const [
-        //       SizedBox(
-        //         height: 40,
-        //       ),
-        //       SizedBox(
-        //         height: 180,
-        //         child: WealthChart(),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        const DashboardTile(
-          title: 'Trade Republic',
-        ),
-        const DashboardTile(
-          title: 'Crypto',
-        ),
-        const DashboardTile(
-          title: 'MLP-Depot',
-        ),
-        DashboardTile(
-          title: language.cashFlow,
-        ),
-        const IncomeTile(),
-        const ExpensesTile(),
+        if (isLoading)
+          const SizedBox(
+            height: 200,
+            child: Center(
+              child: AdaptiveProgressIndicator(),
+            ),
+          )
+        else
+          Column(
+            children: [
+              ...investmentCategories
+                  .map((e) => DashboardTile(
+                        title: e.name,
+                      ))
+                  .toList(),
+              const IncomeTile(),
+              const ExpensesTile(),
+            ],
+          ),
         const SizedBox(
           height: 50,
         ),

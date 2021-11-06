@@ -45,7 +45,7 @@ class _WealthPageState extends State<WealthPage> {
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     snapshots = await FinancesDatabase.instance.readAllInvestmentSnapshots();
     _setChartData();
-    displayWealth = yValues.last;
+    displayWealth = _getCurrentWealth();
     wealthChartKey = !wealthChartKey;
     setState(() => isLoading = false);
   }
@@ -96,7 +96,7 @@ class _WealthPageState extends State<WealthPage> {
                       child: WealthChart(
                         key: ValueKey<bool>(wealthChartKey),
                         divisor: _getDivisor(),
-                        currentWealth: yValues.last,
+                        currentWealth: _getCurrentWealth(),
                         spots: mapIndexed(xValues, (index, item) {
                           return FlSpot(
                               index.toDouble(), yValues[index] / _getDivisor());
@@ -137,6 +137,10 @@ class _WealthPageState extends State<WealthPage> {
     );
   }
 
+  double _getCurrentWealth() {
+    return yValues.isEmpty ? 0 : yValues.last;
+  }
+
   Iterable<E> mapIndexed<E, T>(
       Iterable<T> items, E Function(int index, T item) f) sync* {
     var index = 0;
@@ -157,6 +161,7 @@ class _WealthPageState extends State<WealthPage> {
     int digits = 0;
     int maxInt = max.ceil();
     while (maxInt > 1) {
+      print("Iterating #2");
       maxInt = (maxInt / 10).floor();
       digits++;
     }
@@ -184,7 +189,9 @@ class _WealthPageState extends State<WealthPage> {
       List<InvestmentSnapshot> relevantList = [];
       for (var list in snapshotsInCategories.values) {
         List<InvestmentSnapshot> listCopy = List.from(list);
-        listCopy.removeWhere((e) => e.date.isAfter(uniqueDates[i]));
+        listCopy.removeWhere((e) =>
+            DateTime(e.date.year, e.date.month, e.date.day)
+                .isAfter(uniqueDates[i]));
         if (listCopy.isNotEmpty) {
           relevantList.add(listCopy.last);
         }
@@ -223,7 +230,7 @@ class _WealthPageState extends State<WealthPage> {
       setState(() {
         subtitle = null;
         _indexLine = null;
-        displayWealth = yValues.last;
+        displayWealth = _getCurrentWealth();
       });
       return;
     }

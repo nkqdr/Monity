@@ -29,16 +29,14 @@ class _WealthPageState extends State<WealthPage> {
   String? subtitle;
   late List<InvestmentCategory> categories;
   late List<InvestmentSnapshot> snapshots;
-  late List<InvestmentSnapshot> lastSnapshots;
-  List<List<InvestmentSnapshot>> lastSnapshotsForDateEachCategory = [];
-  late List<FlSpot> spots;
+  late List<double> yValues;
+  late List<DateTime> xValues;
   bool isLoading = false;
   bool wealthChartKey = false;
 
   @override
   void initState() {
     super.initState();
-
     _refreshCategories();
   }
 
@@ -46,10 +44,9 @@ class _WealthPageState extends State<WealthPage> {
     setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     snapshots = await FinancesDatabase.instance.readAllInvestmentSnapshots();
-    lastSnapshots = await FinancesDatabase.instance.readAllLastSnapshots();
-    displayWealth = _getCurrentWealth();
+    _setChartData();
+    displayWealth = yValues.last;
     wealthChartKey = !wealthChartKey;
-    spots = _getChartSpots();
     setState(() => isLoading = false);
   }
 
@@ -99,8 +96,11 @@ class _WealthPageState extends State<WealthPage> {
                       child: WealthChart(
                         key: ValueKey<bool>(wealthChartKey),
                         divisor: _getDivisor(),
-                        currentWealth: _getCurrentWealth(),
-                        spots: spots,
+                        currentWealth: yValues.last,
+                        spots: mapIndexed(xValues, (index, item) {
+                          return FlSpot(
+                              index.toDouble(), yValues[index] / _getDivisor());
+                        }).toList(),
                         snapshots: snapshots,
                         indexLine: _indexLine,
                         touchHandler: (e, v) {
@@ -137,38 +137,40 @@ class _WealthPageState extends State<WealthPage> {
     );
   }
 
-  double _getCurrentWealth() {
-    if (lastSnapshots.isEmpty) return 0;
-    double amount = 0;
-    for (var snapshot in lastSnapshots) {
-      amount += snapshot.amount;
+  Iterable<E> mapIndexed<E, T>(
+      Iterable<T> items, E Function(int index, T item) f) sync* {
+    var index = 0;
+
+    for (final item in items) {
+      yield f(index, item);
+      index = index + 1;
     }
-    return amount;
   }
 
   num _getDivisor() {
     double max = 0;
-    for (var item in snapshots) {
-      if (item.amount > max) {
-        max = item.amount;
+    for (var item in yValues) {
+      if (item > max) {
+        max = item;
       }
     }
     int digits = 0;
     int maxInt = max.ceil();
-    while (maxInt != 0) {
+    while (maxInt > 1) {
       maxInt = (maxInt / 10).floor();
       digits++;
     }
     return pow(10, digits - 1);
   }
 
-  List<FlSpot> _getChartSpots() {
+  void _setChartData() {
+    // Get the unique dates as x values
     var uniqueDates = snapshots
         .map((e) => e.date)
         .map((e) => DateTime(e.year, e.month, e.day))
         .toSet()
         .toList();
-    List<double> yValues = [];
+    // Create a map with category ids as keys and the list of all snapshots for these categories as their values
     Map<int, List<InvestmentSnapshot>> snapshotsInCategories = {};
     for (var e in snapshots) {
       if (snapshotsInCategories.containsKey(e.categoryId)) {
@@ -177,51 +179,22 @@ class _WealthPageState extends State<WealthPage> {
         snapshotsInCategories.putIfAbsent(e.categoryId, () => [e]);
       }
     }
+    List<double> values = List.filled(uniqueDates.length, 0);
     for (var i = 0; i < uniqueDates.length; i++) {
-      List<InvestmentSnapshot> lastSnapshotsEachCategory = [];
+      List<InvestmentSnapshot> relevantList = [];
       for (var list in snapshotsInCategories.values) {
-        list.sort((e1, e2) => e1.date.compareTo(e2.date));
-        var snapshot = _getCurrentSnapshot(uniqueDates[i], list);
-        if (snapshot != null) {
-          lastSnapshotsEachCategory.add(snapshot);
+        List<InvestmentSnapshot> listCopy = List.from(list);
+        listCopy.removeWhere((e) => e.date.isAfter(uniqueDates[i]));
+        if (listCopy.isNotEmpty) {
+          relevantList.add(listCopy.last);
         }
       }
-      var amounts = lastSnapshotsEachCategory.map((e) => e.amount);
-      lastSnapshotsEachCategory.sort((e1, e2) => e1.date.compareTo(e2.date));
-      lastSnapshotsForDateEachCategory.add(lastSnapshotsEachCategory);
-      yValues.add(amounts.reduce((a, b) => a + b));
+      values[i] = relevantList.map((e) => e.amount).reduce((a, b) => a + b);
     }
-    List<FlSpot> spots = [];
-    for (var i = 0; i < uniqueDates.length; i++) {
-      spots.add(FlSpot(i.toDouble(), yValues[i] / _getDivisor()));
-    }
-    print(spots);
-    print(lastSnapshotsForDateEachCategory);
-    return spots;
-  }
-
-  InvestmentSnapshot? _getCurrentSnapshot(
-      DateTime date, List<InvestmentSnapshot> snapshots) {
-    int i = 0;
-    while (i < snapshots.length - 1 && snapshots[i].date.isBefore(date)) {
-      i++;
-    }
-
-    if (snapshots[i].date.isBefore(date) ||
-        (snapshots[i].date.year == date.year &&
-            snapshots[i].date.month == date.month &&
-            snapshots[i].date.day == date.day)) {
-      print("SNAPSHOTS FOR $date : ${snapshots[i]} - WITH I=$i");
-      return snapshots[i];
-    } else if (i > 0 &&
-        (snapshots[i - 1].date.isBefore(date) ||
-            (snapshots[i - 1].date.year == date.year &&
-                snapshots[i - 1].date.month == date.month &&
-                snapshots[i - 1].date.day == date.day))) {
-      print("SNAPSHOTS FOR $date : ${snapshots[i - 1]} - WITH I=${i - 1}");
-      return snapshots[i - 1];
-    }
-    return null;
+    setState(() {
+      yValues = values;
+      xValues = uniqueDates;
+    });
   }
 
   Future _handleAddSnapshot() async {
@@ -250,7 +223,7 @@ class _WealthPageState extends State<WealthPage> {
       setState(() {
         subtitle = null;
         _indexLine = null;
-        displayWealth = _getCurrentWealth();
+        displayWealth = yValues.last;
       });
       return;
     }
@@ -262,10 +235,8 @@ class _WealthPageState extends State<WealthPage> {
         HapticFeedback.mediumImpact();
         setState(() {
           displayWealth = value * _getDivisor();
-          subtitle = dateFormat.format(lastSnapshotsForDateEachCategory[
-                  response.lineBarSpots?[0].x.toInt() as int]
-              .last
-              .date);
+          subtitle = dateFormat
+              .format(xValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,
             color: Theme.of(context).secondaryHeaderColor,

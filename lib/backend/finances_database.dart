@@ -81,7 +81,7 @@ class FinancesDatabase {
       ${InvestmentSnapshotFields.amount} REAL NOT NULL,
       ${InvestmentSnapshotFields.date} TEXT NOT NULL,
       ${InvestmentSnapshotFields.categoryId} INTEGER NOT NULL,
-      FOREIGN KEY(${InvestmentSnapshotFields.categoryId}) REFERENCES ${tableInvestmentCategory}(${InvestmentCategoryFields.id})
+      FOREIGN KEY(${InvestmentSnapshotFields.categoryId}) REFERENCES $tableInvestmentCategory(${InvestmentCategoryFields.id})
     )
     ''');
   }
@@ -247,7 +247,6 @@ class FinancesDatabase {
   }
 
   Future<List<InvestmentSnapshot>> readAllLastSnapshots() async {
-    final db = await instance.database;
     final categories = await readAllInvestmentCategories();
     List<InvestmentSnapshot> lastSnapshots = [];
     for (var category in categories) {

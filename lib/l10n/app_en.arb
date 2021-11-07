@@ -262,5 +262,17 @@
   "needToSetLimit": "In order to utilize this functionality, you have to set a monthly limit in the settings.",
   "@needToSetLimit": {
     "description": "Tells the user to set a monthly limit in order to use this functionality"
+  },
+  "investmentCategoriesTitle": "Your investment categories",
+  "@investmentCategoriesTitle": {
+    "description": "Title for the section of investment categories"
+  },
+  "investmentCategoriesDescription": "Here you can add all of your investment categories, so that you can later add snapshots to these categories",
+  "@investmentCategoriesDescription": {
+    "description": "Description for the section of investment categories"
+  },
+  "registeredTransactions": "Registered transactions",
+  "@registeredTransactions": {
+    "description": "Title for registered transactions tile"
   }
 }

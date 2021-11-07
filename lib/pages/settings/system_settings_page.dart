@@ -76,7 +76,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Registered transactions",
+                        language.registeredTransactions,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,

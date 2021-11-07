@@ -52,9 +52,8 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
         fixedAppBar: true,
         children: [
           CustomSection(
-            title: "Your Investment categories",
-            subtitle:
-                "Here you can add all of your investment categories, so that you can later add snapshots to these categories",
+            title: language.investmentCategoriesTitle,
+            subtitle: language.investmentCategoriesDescription,
             trailing: InkWell(
               borderRadius: BorderRadius.circular(20),
               child: const Icon(

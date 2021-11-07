@@ -1,4 +1,3 @@
-import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math';
@@ -27,17 +26,8 @@ class WealthChart extends StatefulWidget {
 }
 
 class _WealthChartState extends State<WealthChart> {
-  //late List<FlSpot> spots;
-
-  @override
-  void initState() {
-    super.initState();
-    //spots = _getChartSpots();
-  }
-
   @override
   Widget build(BuildContext context) {
-    //var spots = _getChartSpots();
     return LineChart(
       LineChartData(
         backgroundColor: Theme.of(context).cardColor,
@@ -108,7 +98,9 @@ class _WealthChartState extends State<WealthChart> {
 
   double _getMinYValue() {
     var minValue = _getMinValue();
-    return minValue >= 0 ? 0 : (minValue + (minValue * 0.1)) / widget.divisor;
+    return minValue >= 0
+        ? minValue / widget.divisor
+        : (minValue + (minValue * 0.1)) / widget.divisor;
   }
 
   double _getMinValue() {

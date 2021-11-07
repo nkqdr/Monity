@@ -1,5 +1,3 @@
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';

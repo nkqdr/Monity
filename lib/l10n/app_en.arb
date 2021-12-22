@@ -286,5 +286,25 @@
   "deleteTransaction": "Delete Transaction",
   "@deleteTransaction": {
     "description": "Text that appears on the delete transaction popup"
+  },
+  "filterTransactions": "Filter transactions",
+  "@filterTransactions": {
+    "description": "Dialog title for month filter"
+  },
+  "selectMonthDescription": "Select the month that you want to have displayed here.",
+  "@selectMonthDescription": {
+    "description": "Description for the transaction filter popup."
+  },
+  "thisMonth": "This month",
+  "@edit": {
+    "description": "Menu option for this month"
+  },
+  "thisYear": "This year",
+  "@edit": {
+    "description": "Menu option for this year"
+  },
+  "maxTime": "Max",
+  "@edit": {
+    "description": "Menu option for max time"
   }
 }

@@ -70,5 +70,10 @@
   "registeredTransactions": "Gespeicherte Transaktionen",
   "edit": "Bearbeiten",
   "sureDeleteTransaction": "Bist du sicher dass du diese Transaktion löschen willst? Dabei werden keine weiteren Daten gelöscht.",
-  "deleteTransaction": "Transaktion löschen"
+  "deleteTransaction": "Transaktion löschen",
+  "selectMonthDescription": "Wähle einen Monat, den du angezeigt haben willst.",
+  "filterTransactions": "Transaktionen filtern",
+  "thisMonth": "Dieser Monat",
+  "ThisYear": "Dieses Jahr",
+  "maxTime": "Max"
 }

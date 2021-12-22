@@ -128,10 +128,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
   }
 
   Future _handleFilterTransactions(DateFormat dateFormatter) async {
+    var language = AppLocalizations.of(context)!;
     var result = await showConfirmationDialog(
         context: context,
-        title: "Select Filter",
-        message: "Select a filter that should be applied to this list.",
+        title: language.filterTransactions,
+        message: language.selectMonthDescription,
         actions: [
           ...months.reversed.map((e) => AlertDialogAction(
               key: e.toString(), label: dateFormatter.format(e)))

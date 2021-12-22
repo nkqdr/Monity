@@ -7,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// import 'add_transaction_bottom_sheet.dart';
+
 class TransactionTile extends StatefulWidget {
   final Transaction transaction;
   final TransactionCategory category;
@@ -33,14 +35,14 @@ class _TransactionTileState extends State<TransactionTile> {
       padding: const EdgeInsets.only(top: 15.0),
       child: AdaptiveContextMenu(
         actions: [
-          CupertinoContextMenuAction(
-            child: Text(language.edit),
-            trailingIcon: CupertinoIcons.pencil,
-            onPressed: () {
-              Navigator.pop(context);
-              _handleEditTransaction();
-            },
-          ),
+          // CupertinoContextMenuAction(
+          //   child: Text(language.edit),
+          //   trailingIcon: CupertinoIcons.pencil,
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //     _handleEditTransaction();
+          //   },
+          // ),
           CupertinoContextMenuAction(
             child: Text(language.delete),
             isDestructiveAction: true,
@@ -137,5 +139,19 @@ class _TransactionTileState extends State<TransactionTile> {
     }
   }
 
-  _handleEditTransaction() {}
+  // _handleEditTransaction() async {
+  //   await showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20.0),
+  //       ),
+  //       builder: (context) {
+  //         return Padding(
+  //           padding: EdgeInsets.only(
+  //               bottom: MediaQuery.of(context).viewInsets.bottom),
+  //           child: const AddTransactionBottomSheet(),
+  //         );
+  //       });
+  // }
 }

@@ -67,5 +67,8 @@
   "needToSetLimit": "Um diese Funktion nutzen zu können, musst du erst ein monatliches Limit in den Einstellungen setzen.",
   "investmentCategoriesTitle": "Deine Investitionskategorien",
   "investmentCategoriesDescription": "Hier kannst du alle deine Investitionskategorien hinzufügen, so dass du später Schnappschüsse zu diesen Kategorien hinzufügen kannst",
-  "registeredTransactions": "Gespeicherte Transaktionen"
+  "registeredTransactions": "Gespeicherte Transaktionen",
+  "edit": "Bearbeiten",
+  "sureDeleteTransaction": "Bist du sicher dass du diese Transaktion löschen willst? Dabei werden keine weiteren Daten gelöscht.",
+  "deleteTransaction": "Transaktion löschen"
 }

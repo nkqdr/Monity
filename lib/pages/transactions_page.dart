@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
@@ -23,15 +24,16 @@ class _TransactionsPageState extends State<TransactionsPage> {
   late List<DateTime> months;
   late List<Transaction> transactions;
   late List<TransactionCategory> transactionCategories;
+  late DateTime selectedMonth;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _refreshTransactions();
+    _refreshTransactions(true);
   }
 
-  Future _refreshTransactions() async {
+  Future _refreshTransactions([bool init = false]) async {
     setState(() => isLoading = true);
     transactions = await FinancesDatabase.instance.readAllTransactions();
     months = transactions
@@ -40,6 +42,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
         .toList();
     transactionCategories =
         await FinancesDatabase.instance.readAllTransactionCategories();
+    if (init) {
+      selectedMonth = months.last;
+    }
     setState(() => isLoading = false);
   }
 
@@ -63,7 +68,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
             Icons.filter_alt_rounded,
           ),
           splashRadius: 18,
-          onPressed: () {},
+          onPressed: () => _handleFilterTransactions(dateFormatter),
         ),
         right: IconButton(
           icon: const Icon(
@@ -100,19 +105,18 @@ class _TransactionsPageState extends State<TransactionsPage> {
             ),
           )
         else
-          ...months.map((date) {
-            return CustomSection(
-              title: dateFormatter.format(date),
-              children: _getTransactionsFor(date).map((e) {
-                return TransactionTile(
-                  transaction: e,
-                  category: transactionCategories
-                      .where((c) => c.id == e.categoryId)
-                      .first,
-                );
-              }).toList(),
-            );
-          }),
+          CustomSection(
+            title: dateFormatter.format(selectedMonth),
+            children: _getTransactionsFor(selectedMonth).map((e) {
+              return TransactionTile(
+                transaction: e,
+                refreshFunction: _refreshTransactions,
+                category: transactionCategories
+                    .where((c) => c.id == e.categoryId)
+                    .first,
+              );
+            }).toList(),
+          ),
       ],
     );
   }
@@ -121,6 +125,22 @@ class _TransactionsPageState extends State<TransactionsPage> {
     return transactions
         .where((e) => e.date.year == date.year && e.date.month == date.month)
         .toList();
+  }
+
+  Future _handleFilterTransactions(DateFormat dateFormatter) async {
+    var result = await showConfirmationDialog(
+        context: context,
+        title: "Select Filter",
+        message: "Select a filter that should be applied to this list.",
+        actions: [
+          ...months.reversed.map((e) => AlertDialogAction(
+              key: e.toString(), label: dateFormatter.format(e)))
+        ]);
+    if (result != null) {
+      setState(() {
+        selectedMonth = DateTime.parse(result);
+      });
+    }
   }
 
   void _handleAddTransaction() async {

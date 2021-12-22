@@ -274,5 +274,17 @@
   "registeredTransactions": "Registered transactions",
   "@registeredTransactions": {
     "description": "Title for registered transactions tile"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Menu option for editing something"
+  },
+  "sureDeleteTransaction": "Are you sure you want to delete this transaction? No additional data will be deleted.",
+  "@sureDeleteTransaction": {
+    "description": "Asks the user if he's sure that he wants to delete the selected transaction."
+  },
+  "deleteTransaction": "Delete Transaction",
+  "@deleteTransaction": {
+    "description": "Text that appears on the delete transaction popup"
   }
 }

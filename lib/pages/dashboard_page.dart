@@ -82,7 +82,7 @@ class _DashboardState extends State<Dashboard> {
         else
           Column(
             children: [
-              const CashFlowTile(),
+              // const CashFlowTile(),
               PieChartDashboardTile(
                 title: language.income,
                 type: TransactionType.income,

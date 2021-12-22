@@ -10,7 +10,7 @@
   "currentMonthOverview": "Übersicht des Monats",
   "performanceTitle": "Performance",
   "cashFlow": "Geldumlauf",
-  "income": "Einnahmen",
+  "income_plural": "Einnahmen",
   "expenses": "Ausgaben",
   "investments": "Geldanlagen",
   "lastChange": "Letzte Änderung:",
@@ -74,6 +74,7 @@
   "selectMonthDescription": "Wähle einen Monat, den du angezeigt haben willst.",
   "filterTransactions": "Transaktionen filtern",
   "thisMonth": "Dieser Monat",
-  "ThisYear": "Dieses Jahr",
-  "maxTime": "Max"
+  "thisYear": "Dieses Jahr",
+  "maxTime": "Max",
+  "descriptionDetailTitle": "Beschreibung:"
 }

@@ -43,8 +43,8 @@
   "@cashFlow": {
     "description": "Title for cash flow tile"
   },
-  "income": "Income",
-  "@income": {
+  "income_plural": "Income",
+  "@income_plural": {
     "description": "Title for income tile"
   },
   "expenses": "Expenses",
@@ -296,15 +296,19 @@
     "description": "Description for the transaction filter popup."
   },
   "thisMonth": "This month",
-  "@edit": {
+  "@thisMonth": {
     "description": "Menu option for this month"
   },
   "thisYear": "This year",
-  "@edit": {
+  "@thisYear": {
     "description": "Menu option for this year"
   },
   "maxTime": "Max",
-  "@edit": {
+  "@maxTime": {
     "description": "Menu option for max time"
+  },
+  "descriptionDetailTitle": "Description:",
+  "@descriptionDetailTitle": {
+    "description": "Title for the description detail."
   }
 }

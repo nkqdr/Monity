@@ -84,7 +84,7 @@ class _DashboardState extends State<Dashboard> {
             children: [
               // const CashFlowTile(),
               PieChartDashboardTile(
-                title: language.income,
+                title: language.income_plural,
                 type: TransactionType.income,
                 colorTheme: PieChartColors.green,
               ),

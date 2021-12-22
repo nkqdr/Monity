@@ -1,7 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/widgets/adaptive_context_menu.dart';
+import 'package:finance_buddy/widgets/transaction_context_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,9 @@ class _TransactionTileState extends State<TransactionTile> {
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
-      child: AdaptiveContextMenu(
+      child: TransactionContextMenu(
+        transaction: widget.transaction,
+        transactionCategory: widget.category,
         actions: [
           // CupertinoContextMenuAction(
           //   child: Text(language.edit),
@@ -54,8 +56,12 @@ class _TransactionTileState extends State<TransactionTile> {
           ),
         ],
         child: Material(
+          borderRadius: BorderRadius.circular(20),
           child: Container(
-            color: Colors.black,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: SizedBox(

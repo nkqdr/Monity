@@ -27,6 +27,7 @@ class CustomThemes {
       ),
     ),
     cupertinoOverrideTheme: const CupertinoThemeData(
+      brightness: Brightness.dark,
       textTheme: CupertinoTextThemeData(), // This is required
     ),
   );

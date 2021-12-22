@@ -7,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'custom_cupertino_context_menu_action.dart';
+
 // import 'add_transaction_bottom_sheet.dart';
 
 class TransactionTile extends StatefulWidget {
@@ -45,7 +47,7 @@ class _TransactionTileState extends State<TransactionTile> {
           //     _handleEditTransaction();
           //   },
           // ),
-          CupertinoContextMenuAction(
+          CustomCupertinoContextMenuAction(
             child: Text(language.delete),
             isDestructiveAction: true,
             trailingIcon: CupertinoIcons.delete,

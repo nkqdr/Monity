@@ -1,7 +1,6 @@
 import 'package:finance_buddy/backend/models/transaction_model.dart' as model;
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 

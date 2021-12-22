@@ -89,15 +89,15 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
           child: const Icon(Icons.more_horiz),
           itemBuilder: (context) => [
             PopupMenuItem(
-              child: Center(child: Text(language.thisMonth)),
+              child: Text(language.thisMonth),
               value: 0,
             ),
             PopupMenuItem(
-              child: Center(child: Text(language.thisYear)),
+              child: Text(language.thisYear),
               value: 1,
             ),
             PopupMenuItem(
-              child: Center(child: Text(language.maxTime)),
+              child: Text(language.maxTime),
               value: 2,
             ),
           ],

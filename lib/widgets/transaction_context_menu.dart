@@ -28,7 +28,7 @@ class TransactionContextMenu extends StatelessWidget {
     DateFormat dateFormatter;
     if (provider.locale == null) {
       dateFormatter =
-          DateFormat.yMMMM(Localizations.localeOf(context).toString());
+          DateFormat.yMMMd(Localizations.localeOf(context).toString());
     } else {
       dateFormatter = DateFormat.yMMMd(provider.locale!.languageCode);
     }
@@ -37,12 +37,14 @@ class TransactionContextMenu extends StatelessWidget {
         return Material(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width - 40,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width - 40,
+            height: transaction.description != ""
+                ? MediaQuery.of(context).size.height / 2
+                : MediaQuery.of(context).size.height / 5,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -79,7 +81,9 @@ class TransactionContextMenu extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     Text(
-                      language.descriptionDetailTitle,
+                      transaction.description != ""
+                          ? language.descriptionDetailTitle
+                          : "",
                       style: TextStyle(
                           color: Theme.of(context).secondaryHeaderColor,
                           fontWeight: FontWeight.bold,
@@ -90,6 +94,7 @@ class TransactionContextMenu extends StatelessWidget {
                       transaction.description ?? "",
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
+                    const SizedBox(height: 60),
                   ],
                 ),
               ),

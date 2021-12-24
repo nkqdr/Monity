@@ -177,6 +177,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       setState(() {
         selectedMonth = DateTime.parse(result);
       });
+      _refreshTransactions();
     }
   }
 

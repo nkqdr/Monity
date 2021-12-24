@@ -96,26 +96,37 @@ class DashboardTileFillAll implements DashboardTileFill {
         title != null
             ? Padding(
                 padding: const EdgeInsets.only(top: 15, left: 15),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: titleStyle,
+                    Flexible(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: titleStyle,
+                          ),
+                          subtitle != null
+                              ? Text(
+                                  subtitle,
+                                  style: subtitleStyle ??
+                                      TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
-                    subtitle != null
-                        ? Text(
-                            subtitle,
-                            style: subtitleStyle ??
-                                TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).secondaryHeaderColor,
-                                ),
-                          )
-                        : Container(),
+                    sideWidget ?? Container(),
                   ],
-                ))
+                ),
+              )
             : Container(),
       ],
     );

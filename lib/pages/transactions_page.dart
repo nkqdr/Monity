@@ -43,7 +43,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
     transactionCategories =
         await FinancesDatabase.instance.readAllTransactionCategories();
     if (init) {
-      selectedMonth = months.last;
+      selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
     setState(() => isLoading = false);
   }

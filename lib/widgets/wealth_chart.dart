@@ -67,7 +67,9 @@ class _WealthChartState extends State<WealthChart> {
   }
 
   Color _getLineColor() {
-    return widget.currentWealth < 0 ? Colors.red : Colors.green;
+    var firstValue =
+        widget.spots.isEmpty ? 0 : widget.spots[0].y * widget.divisor;
+    return widget.currentWealth < firstValue ? Colors.red : Colors.green;
   }
 
   double _getMaxLineChartValue() {
@@ -88,9 +90,11 @@ class _WealthChartState extends State<WealthChart> {
   }
 
   HorizontalLine? _getZeroLine() {
-    return _getMinYValue() < 0
+    var firstValue = widget.spots.isEmpty ? 0 : widget.spots[0].y;
+
+    return _getMinYValue() < firstValue
         ? HorizontalLine(
-            y: 0,
+            y: widget.spots[0].y,
             color: Theme.of(context).secondaryHeaderColor,
           )
         : null;
@@ -98,16 +102,18 @@ class _WealthChartState extends State<WealthChart> {
 
   double _getMinYValue() {
     var minValue = _getMinValue();
-    return minValue >= 0
-        ? minValue / widget.divisor
-        : (minValue + (minValue * 0.1)) / widget.divisor;
+    var firstValue = widget.spots.isEmpty ? 0.0 : widget.spots[0].y;
+    var returnValue = minValue >= firstValue
+        ? firstValue //minValue / widget.divisor
+        : (minValue + (minValue * 0.5)); // / widget.divisor;
+    return returnValue;
   }
 
   double _getMinValue() {
     double min = double.maxFinite;
-    for (var item in widget.snapshots) {
-      if (item.amount < min) {
-        min = item.amount;
+    for (var item in widget.spots.skip(1)) {
+      if (item.y < min) {
+        min = item.y;
       }
     }
     return min;

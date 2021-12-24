@@ -31,6 +31,8 @@ class _WealthPageState extends State<WealthPage> {
   late List<InvestmentSnapshot> snapshots;
   late List<double> yValues;
   late List<DateTime> xValues;
+  late List<FlSpot> dataPoints;
+  int dataIndex = 0;
   bool isLoading = false;
   bool wealthChartKey = false;
 
@@ -40,11 +42,43 @@ class _WealthPageState extends State<WealthPage> {
     _refreshCategories();
   }
 
+  Future _refreshDataPoints() async {
+    var now = DateTime.now();
+    List<FlSpot> newDataPoints = [];
+    switch (dataIndex) {
+      case 0:
+        for (var i = 0; i < xValues.length; i++) {
+          if (xValues[i].year == now.year && xValues[i].month == now.month) {
+            newDataPoints.add(FlSpot(
+                newDataPoints.length.toDouble(), yValues[i] / _getDivisor()));
+          }
+        }
+        break;
+      case 1:
+        for (var i = 0; i < xValues.length; i++) {
+          if (xValues[i].year == now.year) {
+            newDataPoints.add(FlSpot(
+                newDataPoints.length.toDouble(), yValues[i] / _getDivisor()));
+          }
+        }
+        break;
+      default:
+        newDataPoints = mapIndexed(xValues, (index, item) {
+          return FlSpot(index.toDouble(), yValues[index] / _getDivisor());
+        }).toList();
+    }
+    setState(() {
+      dataPoints = newDataPoints;
+    });
+  }
+
   Future _refreshCategories() async {
     setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     snapshots = await FinancesDatabase.instance.readAllInvestmentSnapshots();
+    dataPoints = [];
     _setChartData();
+    _refreshDataPoints();
     displayWealth = _getCurrentWealth();
     wealthChartKey = !wealthChartKey;
     setState(() => isLoading = false);
@@ -86,6 +120,39 @@ class _WealthPageState extends State<WealthPage> {
                 titleColor: Theme.of(context).colorScheme.onBackground,
                 titleSize: 24,
                 subtitle: subtitle,
+                sideWidget: Container(
+                  margin: const EdgeInsets.only(right: 15),
+                  child: PopupMenuButton(
+                    color: Colors.black,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.0),
+                      ),
+                    ),
+                    child: const Icon(Icons.more_horiz),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text(language.thisMonth),
+                        value: 0,
+                      ),
+                      PopupMenuItem(
+                        child: Text(language.thisYear),
+                        value: 1,
+                      ),
+                      PopupMenuItem(
+                        child: Text(language.maxTime),
+                        value: 2,
+                      ),
+                    ],
+                    enableFeedback: true,
+                    onSelected: (index) {
+                      setState(() {
+                        dataIndex = index as int;
+                      });
+                      _refreshDataPoints();
+                    },
+                  ),
+                ),
                 child: Column(
                   children: [
                     const SizedBox(
@@ -97,10 +164,7 @@ class _WealthPageState extends State<WealthPage> {
                         key: ValueKey<bool>(wealthChartKey),
                         divisor: _getDivisor(),
                         currentWealth: _getCurrentWealth(),
-                        spots: mapIndexed(xValues, (index, item) {
-                          return FlSpot(
-                              index.toDouble(), yValues[index] / _getDivisor());
-                        }).toList(),
+                        spots: dataPoints,
                         snapshots: snapshots,
                         indexLine: _indexLine,
                         touchHandler: (e, v) {
@@ -240,10 +304,27 @@ class _WealthPageState extends State<WealthPage> {
 
       if (value != null && value * _getDivisor() != displayWealth) {
         HapticFeedback.mediumImpact();
+        List<DateTime> currentXValues;
+        switch (dataIndex) {
+          case 0:
+            currentXValues = xValues
+                .where((element) =>
+                    element.month == DateTime.now().month &&
+                    element.year == DateTime.now().year)
+                .toList();
+            break;
+          case 1:
+            currentXValues = xValues
+                .where((element) => element.year == DateTime.now().year)
+                .toList();
+            break;
+          default:
+            currentXValues = xValues;
+        }
         setState(() {
           displayWealth = value * _getDivisor();
-          subtitle = dateFormat
-              .format(xValues[response.lineBarSpots?[0].x.toInt() as int]);
+          subtitle = dateFormat.format(
+              currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,
             color: Theme.of(context).secondaryHeaderColor,

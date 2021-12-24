@@ -24,77 +24,82 @@ class View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: Theme.of(context).appBarTheme.systemOverlayStyle
-            as SystemUiOverlayStyle,
-        child: SafeArea(
-          bottom: false, //!safeAreaBottomDisabled,
-          top: !safeAreaTopDisabled,
-          child: safeAreaTopDisabled
-              ? Stack(
-                  children: [
-                    ListView(
-                      children: fixedAppBar
-                          ? [
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).viewPadding.top + 21,
-                              ),
-                              ...children
-                            ]
-                          : [
-                              appBar ?? Container(),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              ...children
-                            ],
-                    ),
-                    if (fixedAppBar)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                          child: Container(
-                            height: MediaQuery.of(context).viewPadding.top + 48,
-                            color: appBarBackgroundColor ??
-                                Theme.of(context)
-                                    .scaffoldBackgroundColor
-                                    .withOpacity(0.5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: Theme.of(context).appBarTheme.systemOverlayStyle
+              as SystemUiOverlayStyle,
+          child: SafeArea(
+            bottom: false, //!safeAreaBottomDisabled,
+            top: !safeAreaTopDisabled,
+            child: safeAreaTopDisabled
+                ? Stack(
+                    children: [
+                      ListView(
+                        children: fixedAppBar
+                            ? [
                                 SizedBox(
-                                  height: safeAreaTopDisabled
-                                      ? MediaQuery.of(context).viewPadding.top
-                                      : 0,
+                                  height:
+                                      MediaQuery.of(context).viewPadding.top +
+                                          21,
                                 ),
+                                ...children
+                              ]
+                            : [
                                 appBar ?? Container(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ...children
                               ],
+                      ),
+                      if (fixedAppBar)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                            child: Container(
+                              height:
+                                  MediaQuery.of(context).viewPadding.top + 48,
+                              color: appBarBackgroundColor ??
+                                  Theme.of(context)
+                                      .scaffoldBackgroundColor
+                                      .withOpacity(0.5),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: safeAreaTopDisabled
+                                        ? MediaQuery.of(context).viewPadding.top
+                                        : 0,
+                                  ),
+                                  appBar ?? Container(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).viewPadding.bottom),
+                        height: MediaQuery.of(context).viewPadding.bottom,
+                        child: ClipRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            child: Container(
+                              color: Theme.of(context)
+                                  .scaffoldBackgroundColor
+                                  .withOpacity(0.5),
                             ),
                           ),
                         ),
                       ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height -
-                              MediaQuery.of(context).viewPadding.bottom),
-                      height: MediaQuery.of(context).viewPadding.bottom,
-                      child: ClipRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Container(
-                            color: Theme.of(context)
-                                .scaffoldBackgroundColor
-                                .withOpacity(0.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : _getColumn(),
+                    ],
+                  )
+                : _getColumn(),
+          ),
         ),
       ),
     );

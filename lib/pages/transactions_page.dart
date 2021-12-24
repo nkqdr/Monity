@@ -110,8 +110,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
             ),
           )
         else
-          ListView(
-            shrinkWrap: true,
+          Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -132,7 +131,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 }).toList(),
               ),
             ],
-          )
+          ),
       ],
     );
   }

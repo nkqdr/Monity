@@ -6,17 +6,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'custom_cupertino_context_menu_action.dart';
+
 class TransactionContextMenu extends StatelessWidget {
   final Widget child;
-  final List<Widget> actions;
   final Transaction transaction;
   final TransactionCategory transactionCategory;
+  final Function() handleDelete;
   const TransactionContextMenu({
     Key? key,
     required this.transactionCategory,
     required this.transaction,
     required this.child,
-    required this.actions,
+    required this.handleDelete,
   }) : super(key: key);
 
   @override
@@ -102,7 +104,25 @@ class TransactionContextMenu extends StatelessWidget {
           ),
         );
       },
-      actions: actions,
+      actions: [
+        // CupertinoContextMenuAction(
+        //   child: Text(language.edit),
+        //   trailingIcon: CupertinoIcons.pencil,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //     _handleEditTransaction();
+        //   },
+        // ),
+        CustomCupertinoContextMenuAction(
+          child: Text(language.delete),
+          isDestructiveAction: true,
+          trailingIcon: CupertinoIcons.delete,
+          onPressed: () {
+            Navigator.pop(context);
+            handleDelete();
+          },
+        ),
+      ],
       child: SingleChildScrollView(
         child: child,
       ),

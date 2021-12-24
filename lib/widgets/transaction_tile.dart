@@ -7,8 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'custom_cupertino_context_menu_action.dart';
-
 // import 'add_transaction_bottom_sheet.dart';
 
 class TransactionTile extends StatefulWidget {
@@ -30,7 +28,6 @@ class TransactionTile extends StatefulWidget {
 class _TransactionTileState extends State<TransactionTile> {
   @override
   Widget build(BuildContext context) {
-    var language = AppLocalizations.of(context)!;
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     return Padding(
@@ -38,25 +35,7 @@ class _TransactionTileState extends State<TransactionTile> {
       child: TransactionContextMenu(
         transaction: widget.transaction,
         transactionCategory: widget.category,
-        actions: [
-          // CupertinoContextMenuAction(
-          //   child: Text(language.edit),
-          //   trailingIcon: CupertinoIcons.pencil,
-          //   onPressed: () {
-          //     Navigator.pop(context);
-          //     _handleEditTransaction();
-          //   },
-          // ),
-          CustomCupertinoContextMenuAction(
-            child: Text(language.delete),
-            isDestructiveAction: true,
-            trailingIcon: CupertinoIcons.delete,
-            onPressed: () {
-              Navigator.pop(context);
-              _handleDeleteTransaction();
-            },
-          ),
-        ],
+        handleDelete: _handleDeleteTransaction,
         child: Material(
           borderRadius: BorderRadius.circular(20),
           child: Container(

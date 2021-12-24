@@ -82,7 +82,6 @@ class _DashboardState extends State<Dashboard> {
         else
           Column(
             children: [
-              // const CashFlowTile(),
               PieChartDashboardTile(
                 title: language.income_plural,
                 type: TransactionType.income,
@@ -93,11 +92,12 @@ class _DashboardState extends State<Dashboard> {
                 type: TransactionType.expense,
                 colorTheme: PieChartColors.red,
               ),
-              ...investmentCategories
-                  .map((e) => DashboardTile(
-                        title: e.name,
-                      ))
-                  .toList(),
+              const CashFlowTile(),
+              // ...investmentCategories
+              //     .map((e) => DashboardTile(
+              //           title: e.name,
+              //         ))
+              //     .toList(),
             ],
           ),
         const SizedBox(

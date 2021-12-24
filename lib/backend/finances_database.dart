@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/models/transaction_model.dart' as model;
 import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:finance_buddy/helper/types.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -255,5 +256,10 @@ class FinancesDatabase {
       }
     }
     return lastSnapshots;
+  }
+
+  Future<List<WealthDataPoint>> getAllWealthDatapoints() async {
+    // TODO: Implement this
+    return [];
   }
 }

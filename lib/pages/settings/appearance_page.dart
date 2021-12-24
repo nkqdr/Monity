@@ -39,8 +39,8 @@ class _AppearancePageState extends State<AppearancePage> {
       children: [
         CustomSection(
           title: language.theme,
-          titleSize: 18,
-          titlePadding: 10,
+          //titleSize: 18,
+          //titlePadding: 10,
           children: [
             MultipleChoiceSetting(
               title: language.system,
@@ -67,8 +67,8 @@ class _AppearancePageState extends State<AppearancePage> {
         ),
         CustomSection(
           title: language.language,
-          titleSize: 18,
-          titlePadding: 10,
+          //titleSize: 18,
+          //titlePadding: 10,
           children: [
             MultipleChoiceSetting(
               title: 'System',
@@ -90,6 +90,22 @@ class _AppearancePageState extends State<AppearancePage> {
               onTap: () {
                 setLanguage('de');
               },
+            ),
+          ],
+        ),
+        CustomSection(
+          title: "Hidden Elements",
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: Text(
+                  "No hidden elements.",
+                  style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

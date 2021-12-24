@@ -2,7 +2,9 @@ import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
+import 'package:finance_buddy/widgets/dashboard/current_month_context_menu.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -39,68 +41,75 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     var language = AppLocalizations.of(context)!;
-    return DashboardTile(
-      title: language.currentMonthOverview,
-      width: DashboardTileWidth.half,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 60, left: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: isLoading
-              ? const [AdaptiveProgressIndicator()]
-              : remainingAmount != null
-                  ? [
-                      Text(
-                        language.remainingDays,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        _getCurrentDaysRemaining(),
-                        style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        language.remainingBudget,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        remainingAmount! >= 0
-                            ? "+" + currencyFormat.format(remainingAmount)
-                            : currencyFormat.format(remainingAmount),
-                        style: TextStyle(
-                          color:
-                              remainingAmount! >= 0 ? Colors.green : Colors.red,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]
-                  : [
-                      Text(
-                        language.needToSetLimit,
-                        style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
-                        ),
-                      )
-                    ],
+    return CurrentMonthContextMenu(
+      daysRemaining: int.parse(_getCurrentDaysRemaining()),
+      child: Material(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: DashboardTile(
+          title: language.currentMonthOverview,
+          width: DashboardTileWidth.half,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, left: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: isLoading
+                  ? const [AdaptiveProgressIndicator()]
+                  : remainingAmount != null
+                      ? [
+                          Text(
+                            language.remainingDays,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            _getCurrentDaysRemaining(),
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            language.remainingBudget,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            remainingAmount! >= 0
+                                ? "+" + currencyFormat.format(remainingAmount)
+                                : currencyFormat.format(remainingAmount),
+                            style: TextStyle(
+                              color: remainingAmount! >= 0
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ]
+                      : [
+                          Text(
+                            language.needToSetLimit,
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          )
+                        ],
+            ),
+          ),
         ),
       ),
     );

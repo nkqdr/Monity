@@ -32,7 +32,7 @@ class _WealthPageState extends State<WealthPage> {
   late List<double> yValues;
   late List<DateTime> xValues;
   late List<FlSpot> dataPoints;
-  int dataIndex = 0;
+  int dataIndex = 1;
   bool isLoading = false;
   bool wealthChartKey = false;
 
@@ -46,14 +46,6 @@ class _WealthPageState extends State<WealthPage> {
     var now = DateTime.now();
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
-      case 0:
-        for (var i = 0; i < xValues.length; i++) {
-          if (xValues[i].year == now.year && xValues[i].month == now.month) {
-            newDataPoints.add(FlSpot(
-                newDataPoints.length.toDouble(), yValues[i] / _getDivisor()));
-          }
-        }
-        break;
       case 1:
         for (var i = 0; i < xValues.length; i++) {
           if (xValues[i].year == now.year) {
@@ -131,10 +123,6 @@ class _WealthPageState extends State<WealthPage> {
                     ),
                     child: const Icon(Icons.more_horiz),
                     itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text(language.thisMonth),
-                        value: 0,
-                      ),
                       PopupMenuItem(
                         child: Text(language.thisYear),
                         value: 1,
@@ -305,21 +293,12 @@ class _WealthPageState extends State<WealthPage> {
       if (value != null && value * _getDivisor() != displayWealth) {
         HapticFeedback.mediumImpact();
         List<DateTime> currentXValues;
-        switch (dataIndex) {
-          case 0:
-            currentXValues = xValues
-                .where((element) =>
-                    element.month == DateTime.now().month &&
-                    element.year == DateTime.now().year)
-                .toList();
-            break;
-          case 1:
-            currentXValues = xValues
-                .where((element) => element.year == DateTime.now().year)
-                .toList();
-            break;
-          default:
-            currentXValues = xValues;
+        if (dataIndex == 1) {
+          currentXValues = xValues
+              .where((element) => element.year == DateTime.now().year)
+              .toList();
+        } else {
+          currentXValues = xValues;
         }
         setState(() {
           displayWealth = value * _getDivisor();

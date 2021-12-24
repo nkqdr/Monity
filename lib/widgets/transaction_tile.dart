@@ -34,7 +34,7 @@ class _TransactionTileState extends State<TransactionTile> {
     var currencyFormat =
         NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
+      padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
       child: TransactionContextMenu(
         transaction: widget.transaction,
         transactionCategory: widget.category,
@@ -63,6 +63,11 @@ class _TransactionTileState extends State<TransactionTile> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Theme.of(context).scaffoldBackgroundColor,
+              // border: Border.all(
+              //     color: widget.transaction.type == TransactionType.income
+              //         ? Colors.green.withOpacity(1)
+              //         : Colors.red.withOpacity(1),
+              //     width: 1),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),

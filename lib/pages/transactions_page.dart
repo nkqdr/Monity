@@ -8,6 +8,7 @@ import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/transaction_tile.dart';
 import 'package:finance_buddy/widgets/view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,6 +27,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
   late List<TransactionCategory> transactionCategories;
   late DateTime selectedMonth;
   bool isLoading = false;
+  late List<Transaction> currentTransactions;
+  late List<Transaction> displayedTransactions;
 
   @override
   void initState() {
@@ -45,6 +48,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
     if (init) {
       selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
+    currentTransactions = _getTransactionsFor(selectedMonth);
+    displayedTransactions = currentTransactions;
     setState(() => isLoading = false);
   }
 
@@ -105,20 +110,52 @@ class _TransactionsPageState extends State<TransactionsPage> {
             ),
           )
         else
-          CustomSection(
-            title: dateFormatter.format(selectedMonth),
-            children: _getTransactionsFor(selectedMonth).map((e) {
-              return TransactionTile(
-                transaction: e,
-                refreshFunction: _refreshTransactions,
-                category: transactionCategories
-                    .where((c) => c.id == e.categoryId)
-                    .first,
-              );
-            }).toList(),
-          ),
+          ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: CupertinoSearchTextField(
+                  onChanged: _filterTransactions,
+                ),
+              ),
+              CustomSection(
+                title: dateFormatter.format(selectedMonth),
+                children: displayedTransactions.map((e) {
+                  return TransactionTile(
+                    transaction: e,
+                    refreshFunction: _refreshTransactions,
+                    category: transactionCategories
+                        .where((c) => c.id == e.categoryId)
+                        .first,
+                  );
+                }).toList(),
+              ),
+            ],
+          )
       ],
     );
+  }
+
+  void _filterTransactions(String searchValue) {
+    List<Transaction> newCurrentTransactions = currentTransactions.where((e) {
+      if (e.description != null) {
+        return e.description!
+                .toLowerCase()
+                .contains(searchValue.toLowerCase()) ||
+            transactionCategories
+                .where((c) => c.id == e.categoryId)
+                .first
+                .name
+                .toLowerCase()
+                .contains(searchValue.toLowerCase());
+      } else {
+        return true;
+      }
+    }).toList();
+    setState(() {
+      displayedTransactions = newCurrentTransactions;
+    });
   }
 
   List<Transaction> _getTransactionsFor(DateTime date) {

@@ -1,6 +1,7 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/pages/wealth_category_page.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

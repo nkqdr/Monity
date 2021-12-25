@@ -2,6 +2,7 @@ import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/pages/wealth_category_page.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -176,8 +177,17 @@ class _WealthPageState extends State<WealthPage> {
         if (isLoading)
           const SizedBox(height: 100, child: AdaptiveProgressIndicator())
         else
-          ...categories.map((e) => InvestmentTile(
-                category: e,
+          ...categories.map((e) => GestureDetector(
+                onTap: () async {
+                  await Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                    return WealthCategoryPage(category: e);
+                  }));
+                  _refreshCategories();
+                },
+                child: InvestmentTile(
+                  category: e,
+                ),
               )),
 
         const SizedBox(

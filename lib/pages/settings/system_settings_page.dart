@@ -20,6 +20,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   String validationString = "";
   late int databaseSize;
   late int transactionsCount;
+  late int snapshotCount;
   bool isLoading = false;
 
   @override
@@ -33,6 +34,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     databaseSize = await FinancesDatabase.instance.getDatabaseSize();
     transactionsCount =
         (await FinancesDatabase.instance.readAllTransactions()).length;
+    snapshotCount =
+        (await FinancesDatabase.instance.readAllInvestmentSnapshots()).length;
     setState(() => isLoading = false);
   }
 
@@ -86,6 +89,44 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                       else
                         Text(
                           transactionsCount.toString(),
+                          style: TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Registered snapshots
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).cardColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        language.registeredSnapshots,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                      if (isLoading)
+                        const AdaptiveProgressIndicator()
+                      else
+                        Text(
+                          snapshotCount.toString(),
                           style: TextStyle(
                             color: Theme.of(context).secondaryHeaderColor,
                             fontWeight: FontWeight.bold,

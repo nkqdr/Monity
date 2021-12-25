@@ -2,6 +2,7 @@ import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart'
 import 'package:finance_buddy/widgets/pie_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class PieChartTileContextMenu extends StatefulWidget {
@@ -35,6 +36,7 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
 
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     var currencyFormat =
         NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2);
     return CupertinoContextMenu(
@@ -110,7 +112,7 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
       },
       actions: [
         CustomCupertinoContextMenuAction(
-          child: const Text("Hide"),
+          child: Text(language.hide),
           trailingIcon: CupertinoIcons.eye_slash,
           onPressed: () {
             Navigator.pop(context);

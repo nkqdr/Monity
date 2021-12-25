@@ -41,10 +41,19 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
   }
 
   Future _handleAddSnapshot() async {
-    int category =
-        categories.where((element) => element.name == _category).first.id!;
+    InvestmentCategory category =
+        categories.where((element) => element.name == _category).first;
+    InvestmentSnapshot? lastSnapshot =
+        await FinancesDatabase.instance.readLastSnapshotFor(category: category);
+    if (lastSnapshot != null &&
+        lastSnapshot.date.day == DateTime.now().day &&
+        lastSnapshot.date.month == DateTime.now().month &&
+        lastSnapshot.date.year == DateTime.now().year) {
+      await FinancesDatabase.instance
+          .deleteInvestmentSnapshot(lastSnapshot.id!);
+    }
     FinancesDatabase.instance.createInvestmentSnapshot(InvestmentSnapshot(
-      categoryId: category,
+      categoryId: category.id!,
       amount: _amount,
       date: DateTime.now(),
     ));

@@ -152,12 +152,15 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                               ? Colors.red
                                               : Colors.green,
                                           width: 4)),
-                                  child: Icon(
-                                    Icons.attach_money_rounded,
-                                    color: Theme.of(context).cardColor,
-                                    size: 88,
-                                  ),
-                                )
+                                  child: Center(
+                                    child: Text(
+                                      "${((widget.remainingAmount! / widget.monthlyLimit!) * 100).toStringAsFixed(0)}%",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 35,
+                                      ),
+                                    ),
+                                  ))
                               : Container(),
                         ],
                       ),
@@ -171,7 +174,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
       },
       actions: [
         CustomCupertinoContextMenuAction(
-          child: const Text("Hide"),
+          child: Text(language.hide),
           trailingIcon: CupertinoIcons.eye_slash,
           onPressed: () {
             Navigator.pop(context);

@@ -275,6 +275,10 @@
   "@registeredTransactions": {
     "description": "Title for registered transactions tile"
   },
+  "registeredSnapshots": "Registered snapshots",
+  "@registeredSnapshots": {
+    "description": "Title for registered snapshots tile"
+  },
   "edit": "Edit",
   "@edit": {
     "description": "Menu option for editing something"
@@ -286,6 +290,14 @@
   "deleteTransaction": "Delete Transaction",
   "@deleteTransaction": {
     "description": "Text that appears on the delete transaction popup"
+  },
+  "sureDeleteSnapshot": "Are you sure you want to delete this snapshot? No additional data will be deleted.",
+  "@sureDeleteSnapshot": {
+    "description": "Asks the user if he's sure that he wants to delete the selected snapshot."
+  },
+  "deleteSnapshot": "Delete Snapshot",
+  "@deleteSnapshot": {
+    "description": "Text that appears on the delete snapshot popup"
   },
   "filterTransactions": "Filter transactions",
   "@filterTransactions": {
@@ -314,5 +326,13 @@
   "others": "Others",
   "@others": {
     "description": "Summary of small values in pie chart."
+  },
+  "hide": "Hide",
+  "@hide": {
+    "description": "Option to hide a dashboard tile."
+  },
+  "noSnapshotsYet": "You have not yet saved any snapshots for this category.",
+  "@noSnapshotsYet": {
+    "description": "Message for an empty snapshot category page."
   }
 }

@@ -220,6 +220,22 @@ class FinancesDatabase {
     );
   }
 
+  Future<int> deleteInvestmentSnapshot(int id) async {
+    final db = await instance.database;
+    return await db.delete(tableInvestmentSnapshot,
+        where: "${InvestmentSnapshotFields.id} = ?", whereArgs: [id]);
+  }
+
+  Future<List<InvestmentSnapshot>> readInvestmentSnapshotFor(int id) async {
+    final db = await instance.database;
+    final result = await db.query(
+      tableInvestmentSnapshot,
+      where: "${InvestmentSnapshotFields.categoryId} = ?",
+      whereArgs: [id],
+    );
+    return result.map((e) => InvestmentSnapshot.fromJson(e)).toList();
+  }
+
   Future<List<InvestmentSnapshot>> readAllInvestmentSnapshots() async {
     final db = await instance.database;
     final result = await db.query(tableInvestmentSnapshot,

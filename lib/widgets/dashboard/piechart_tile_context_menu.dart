@@ -37,7 +37,6 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
   Widget build(BuildContext context) {
     var currencyFormat =
         NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2);
-
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         return Material(

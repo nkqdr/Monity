@@ -16,7 +16,7 @@ class CurrentMonthTile extends StatefulWidget {
 }
 
 class _CurrentMonthTileState extends State<CurrentMonthTile> {
-  late double? monthlyLimit;
+  double? monthlyLimit;
   double? remainingAmount;
   bool isLoading = false;
 
@@ -42,6 +42,8 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     var language = AppLocalizations.of(context)!;
     return CurrentMonthContextMenu(
       daysRemaining: int.parse(_getCurrentDaysRemaining()),
+      remainingAmount: remainingAmount,
+      monthlyLimit: monthlyLimit,
       child: DashboardTile(
         title: language.currentMonthOverview,
         width: DashboardTileWidth.half,

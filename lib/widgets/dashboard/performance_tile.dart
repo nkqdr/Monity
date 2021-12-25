@@ -46,7 +46,9 @@ class _PerformanceTileState extends State<PerformanceTile> {
             .last
             .value;
         var currentDifference = lastDataPoint - firstDataPoint;
-        // TODO: Set current performance
+        setState(() {
+          currentPerformance = currentDifference / firstDataPoint;
+        });
         break;
       case 1:
         double firstDataPoint = dataPoints
@@ -58,11 +60,15 @@ class _PerformanceTileState extends State<PerformanceTile> {
             .last
             .value;
         var currentDifference = lastDataPoint - firstDataPoint;
-        // TODO: Set current performance
+        setState(() {
+          currentPerformance = currentDifference / firstDataPoint;
+        });
         break;
       default:
         var currentDifference = dataPoints.last.value - dataPoints.first.value;
-      // TODO: Set current performance
+        setState(() {
+          currentPerformance = currentDifference / dataPoints.first.value;
+        });
     }
   }
 

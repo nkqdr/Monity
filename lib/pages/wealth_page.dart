@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
@@ -25,13 +26,12 @@ class WealthPage extends StatefulWidget {
 
 class _WealthPageState extends State<WealthPage> {
   late double displayWealth;
+  late num divisor;
   VerticalLine? _indexLine;
   String? subtitle;
   late List<InvestmentCategory> categories;
-  late List<InvestmentSnapshot> snapshots;
-  late List<double> yValues;
-  late List<DateTime> xValues;
-  late List<FlSpot> dataPoints;
+  late List<WealthDataPoint> allDataPoints;
+  late List<FlSpot> displayedDataPoints;
   int dataIndex = 1;
   bool isLoading = false;
   bool wealthChartKey = false;
@@ -47,29 +47,28 @@ class _WealthPageState extends State<WealthPage> {
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
       case 1:
-        for (var i = 0; i < xValues.length; i++) {
-          if (xValues[i].year == now.year) {
-            newDataPoints.add(FlSpot(
-                newDataPoints.length.toDouble(), yValues[i] / _getDivisor()));
-          }
-        }
+        newDataPoints = mapIndexed(
+            allDataPoints.where((e) => e.time.year == now.year).toList(),
+            (index, WealthDataPoint item) =>
+                FlSpot(index.toDouble(), item.value / divisor)).toList();
         break;
       default:
-        newDataPoints = mapIndexed(xValues, (index, item) {
-          return FlSpot(index.toDouble(), yValues[index] / _getDivisor());
+        newDataPoints =
+            mapIndexed(allDataPoints, (index, WealthDataPoint item) {
+          return FlSpot(index.toDouble(), item.value / divisor);
         }).toList();
     }
     setState(() {
-      dataPoints = newDataPoints;
+      displayedDataPoints = newDataPoints;
     });
   }
 
   Future _refreshCategories() async {
     setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
-    snapshots = await FinancesDatabase.instance.readAllInvestmentSnapshots();
-    dataPoints = [];
-    _setChartData();
+    displayedDataPoints = [];
+    allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
+    _setDivisor();
     _refreshDataPoints();
     displayWealth = _getCurrentWealth();
     wealthChartKey = !wealthChartKey;
@@ -150,10 +149,9 @@ class _WealthPageState extends State<WealthPage> {
                       height: 180,
                       child: WealthChart(
                         key: ValueKey<bool>(wealthChartKey),
-                        divisor: _getDivisor(),
+                        divisor: divisor,
                         currentWealth: _getCurrentWealth(),
-                        spots: dataPoints,
-                        snapshots: snapshots,
+                        spots: displayedDataPoints,
                         indexLine: _indexLine,
                         touchHandler: (e, v) {
                           _handleChartTouch(e, v, dateFormatter);
@@ -190,7 +188,7 @@ class _WealthPageState extends State<WealthPage> {
   }
 
   double _getCurrentWealth() {
-    return yValues.isEmpty ? 0 : yValues.last;
+    return allDataPoints.isEmpty ? 0 : allDataPoints.last.value;
   }
 
   Iterable<E> mapIndexed<E, T>(
@@ -203,9 +201,9 @@ class _WealthPageState extends State<WealthPage> {
     }
   }
 
-  num _getDivisor() {
+  void _setDivisor() {
     double max = 0;
-    for (var item in yValues) {
+    for (var item in allDataPoints.map((e) => e.value)) {
       if (item > max) {
         max = item;
       }
@@ -213,46 +211,11 @@ class _WealthPageState extends State<WealthPage> {
     int digits = 0;
     int maxInt = max.ceil();
     while (maxInt > 1) {
-      print("Iterating #2");
       maxInt = (maxInt / 10).floor();
       digits++;
     }
-    return pow(10, digits - 1);
-  }
-
-  void _setChartData() {
-    // Get the unique dates as x values
-    var uniqueDates = snapshots
-        .map((e) => e.date)
-        .map((e) => DateTime(e.year, e.month, e.day))
-        .toSet()
-        .toList();
-    // Create a map with category ids as keys and the list of all snapshots for these categories as their values
-    Map<int, List<InvestmentSnapshot>> snapshotsInCategories = {};
-    for (var e in snapshots) {
-      if (snapshotsInCategories.containsKey(e.categoryId)) {
-        snapshotsInCategories.update(e.categoryId, (value) => [...value, e]);
-      } else {
-        snapshotsInCategories.putIfAbsent(e.categoryId, () => [e]);
-      }
-    }
-    List<double> values = List.filled(uniqueDates.length, 0);
-    for (var i = 0; i < uniqueDates.length; i++) {
-      List<InvestmentSnapshot> relevantList = [];
-      for (var list in snapshotsInCategories.values) {
-        List<InvestmentSnapshot> listCopy = List.from(list);
-        listCopy.removeWhere((e) =>
-            DateTime(e.date.year, e.date.month, e.date.day)
-                .isAfter(uniqueDates[i]));
-        if (listCopy.isNotEmpty) {
-          relevantList.add(listCopy.last);
-        }
-      }
-      values[i] = relevantList.map((e) => e.amount).reduce((a, b) => a + b);
-    }
     setState(() {
-      yValues = values;
-      xValues = uniqueDates;
+      divisor = pow(10, digits - 1);
     });
   }
 
@@ -290,18 +253,19 @@ class _WealthPageState extends State<WealthPage> {
     if (response != null && response.lineBarSpots != null) {
       var value = response.lineBarSpots?[0].y;
 
-      if (value != null && value * _getDivisor() != displayWealth) {
+      if (value != null && value * divisor != displayWealth) {
         HapticFeedback.mediumImpact();
         List<DateTime> currentXValues;
         if (dataIndex == 1) {
-          currentXValues = xValues
+          currentXValues = allDataPoints
+              .map((e) => e.time)
               .where((element) => element.year == DateTime.now().year)
               .toList();
         } else {
-          currentXValues = xValues;
+          currentXValues = allDataPoints.map((e) => e.time).toList();
         }
         setState(() {
-          displayWealth = value * _getDivisor();
+          displayWealth = value * divisor;
           subtitle = dateFormat.format(
               currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(

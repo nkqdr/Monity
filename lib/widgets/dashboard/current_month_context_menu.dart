@@ -64,7 +64,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
       },
       actions: [
         CustomCupertinoContextMenuAction(
-          child: Text("Hide"),
+          child: const Text("Hide"),
           trailingIcon: CupertinoIcons.eye_slash,
           onPressed: () {
             Navigator.pop(context);

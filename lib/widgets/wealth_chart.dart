@@ -1,4 +1,3 @@
-import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ class WealthChart extends StatefulWidget {
   final VerticalLine? indexLine;
   final void Function(FlTouchEvent, LineTouchResponse?)? touchHandler;
   final num divisor;
-  final List<InvestmentSnapshot> snapshots;
   final double currentWealth;
   final List<FlSpot> spots;
 
@@ -17,7 +15,6 @@ class WealthChart extends StatefulWidget {
     this.touchHandler,
     required this.spots,
     required this.divisor,
-    required this.snapshots,
     required this.currentWealth,
   }) : super(key: key);
 
@@ -26,6 +23,13 @@ class WealthChart extends StatefulWidget {
 }
 
 class _WealthChartState extends State<WealthChart> {
+  late double maxLineChartValue;
+  @override
+  void initState() {
+    super.initState();
+    _setMaxLineChartValue();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LineChart(
@@ -34,7 +38,7 @@ class _WealthChartState extends State<WealthChart> {
         minX: 0,
         maxX: widget.spots.length - 1,
         minY: _getMinYValue(),
-        maxY: _getMaxLineChartValue() + 1,
+        maxY: maxLineChartValue + 1,
         extraLinesData: ExtraLinesData(
           verticalLines: widget.indexLine != null
               ? [widget.indexLine as VerticalLine]
@@ -72,7 +76,7 @@ class _WealthChartState extends State<WealthChart> {
     return widget.currentWealth < firstValue ? Colors.red : Colors.green;
   }
 
-  double _getMaxLineChartValue() {
+  void _setMaxLineChartValue() {
     double max = 0;
     for (var item in widget.spots) {
       if (item.y > max) {
@@ -82,11 +86,12 @@ class _WealthChartState extends State<WealthChart> {
     int digits = 0;
     int maxInt = max.ceil();
     while (maxInt > 1) {
-      print("Iterating #1");
       maxInt = (maxInt / 10).floor();
       digits++;
     }
-    return max / pow(10, digits - 1);
+    setState(() {
+      maxLineChartValue = max / pow(10, digits - 1);
+    });
   }
 
   HorizontalLine? _getZeroLine() {

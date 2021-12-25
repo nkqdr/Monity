@@ -39,26 +39,30 @@ class DashboardTile extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            child: Container(
-              height: height ?? 220,
-              width: width == DashboardTileWidth.half
-                  ? screenSize.width * 0.5 - 20
-                  : screenSize.width,
-              color: Theme.of(context).cardColor,
-              child: fill.getChildFill(
-                  context,
-                  child,
-                  sideWidget,
-                  title,
-                  subtitle,
-                  subtitleStyle,
-                  TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: titleSize ?? 16,
-                    color: titleColor ?? Theme.of(context).secondaryHeaderColor,
-                  )),
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: Container(
+                height: height ?? 220,
+                width: width == DashboardTileWidth.half
+                    ? screenSize.width * 0.5 - 20
+                    : screenSize.width,
+                color: Theme.of(context).cardColor,
+                child: fill.getChildFill(
+                    context,
+                    child,
+                    sideWidget,
+                    title,
+                    subtitle,
+                    subtitleStyle,
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: titleSize ?? 16,
+                      color:
+                          titleColor ?? Theme.of(context).secondaryHeaderColor,
+                    )),
+              ),
             ),
           ),
         ),

@@ -13,6 +13,7 @@ class TransactionContextMenu extends StatelessWidget {
   final Transaction transaction;
   final TransactionCategory transactionCategory;
   final Function() handleDelete;
+
   const TransactionContextMenu({
     Key? key,
     required this.transactionCategory,
@@ -105,14 +106,6 @@ class TransactionContextMenu extends StatelessWidget {
         );
       },
       actions: [
-        // CupertinoContextMenuAction(
-        //   child: Text(language.edit),
-        //   trailingIcon: CupertinoIcons.pencil,
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //     _handleEditTransaction();
-        //   },
-        // ),
         CustomCupertinoContextMenuAction(
           child: Text(language.delete),
           isDestructiveAction: true,
@@ -122,6 +115,14 @@ class TransactionContextMenu extends StatelessWidget {
             handleDelete();
           },
         ),
+        // CupertinoContextMenuAction(
+        //   child: Text(language.edit),
+        //   trailingIcon: CupertinoIcons.pencil,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //     _handleEditTransaction();
+        //   },
+        // ),
       ],
       child: SingleChildScrollView(
         child: child,

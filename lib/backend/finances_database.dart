@@ -259,7 +259,40 @@ class FinancesDatabase {
   }
 
   Future<List<WealthDataPoint>> getAllWealthDatapoints() async {
-    // TODO: Implement this
-    return [];
+    List<WealthDataPoint> result = [];
+    var snapshots = await readAllInvestmentSnapshots();
+    // Get the unique dates as x values
+    var uniqueDates = snapshots
+        .map((e) => e.date)
+        .map((e) => DateTime(e.year, e.month, e.day))
+        .toSet()
+        .toList();
+    // Create a map with category ids as keys and the list of all snapshots for these categories as their values
+    Map<int, List<InvestmentSnapshot>> snapshotsInCategories = {};
+    for (var e in snapshots) {
+      if (snapshotsInCategories.containsKey(e.categoryId)) {
+        snapshotsInCategories.update(e.categoryId, (value) => [...value, e]);
+      } else {
+        snapshotsInCategories.putIfAbsent(e.categoryId, () => [e]);
+      }
+    }
+    List<double> values = List.filled(uniqueDates.length, 0);
+    for (var i = 0; i < uniqueDates.length; i++) {
+      List<InvestmentSnapshot> relevantList = [];
+      for (var list in snapshotsInCategories.values) {
+        List<InvestmentSnapshot> listCopy = List.from(list);
+        listCopy.removeWhere((e) =>
+            DateTime(e.date.year, e.date.month, e.date.day)
+                .isAfter(uniqueDates[i]));
+        if (listCopy.isNotEmpty) {
+          relevantList.add(listCopy.last);
+        }
+      }
+      values[i] = relevantList.map((e) => e.amount).reduce((a, b) => a + b);
+    }
+    for (var i = 0; i < uniqueDates.length; i++) {
+      result.add(WealthDataPoint(time: uniqueDates[i], value: values[i]));
+    }
+    return result;
   }
 }

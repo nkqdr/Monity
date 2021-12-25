@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/pie_chart.dart';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 
 class PieChartDashboardTile extends StatefulWidget {
@@ -114,6 +115,7 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
   }
 
   Future<List<PieChartDatapoint>> _buildDatapoints() async {
+    var language = AppLocalizations.of(context)!;
     Map<int, List<Transaction>> transactionsByCategory = {};
     for (var transaction in _transactions) {
       transactionsByCategory.putIfAbsent(transaction.categoryId, () => []);
@@ -129,14 +131,32 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
               0, (previousValue, element) => previousValue + element.amount));
     }
     assert(transactionsByCategory.keys.length == datapointMap.keys.length);
+    var sortedKeys = datapointMap.keys.toList(growable: false)
+      ..sort((k1, k2) => datapointMap[k1]!.compareTo(datapointMap[k2] as num));
+    LinkedHashMap sortedMap = LinkedHashMap.fromIterable(sortedKeys.reversed,
+        key: (k) => k, value: (k) => datapointMap[k]);
     List<PieChartDatapoint> datapoints = [];
-    for (var category in datapointMap.keys) {
-      datapoints.add(
-        PieChartDatapoint(
-          name: category.name,
-          amount: datapointMap[category]!,
-        ),
-      );
+    bool builtOthers = false;
+    for (var category in sortedMap.keys) {
+      if (datapoints.length < 5) {
+        datapoints.add(
+          PieChartDatapoint(
+            name: category.name,
+            amount: datapointMap[category]!,
+          ),
+        );
+      } else {
+        if (!builtOthers) {
+          builtOthers = true;
+          datapoints.add(PieChartDatapoint(
+              name: language.others, amount: datapointMap[category]!));
+        }
+        var prevValue = datapoints.last.amount;
+        datapoints.removeLast();
+        datapoints.add(PieChartDatapoint(
+            name: language.others,
+            amount: prevValue + datapointMap[category]!));
+      }
     }
     return datapoints;
   }

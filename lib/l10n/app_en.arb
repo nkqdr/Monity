@@ -310,5 +310,9 @@
   "descriptionDetailTitle": "Description:",
   "@descriptionDetailTitle": {
     "description": "Title for the description detail."
+  },
+  "others": "Others",
+  "@others": {
+    "description": "Summary of small values in pie chart."
   }
 }

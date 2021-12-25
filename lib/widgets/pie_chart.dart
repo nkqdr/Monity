@@ -49,7 +49,8 @@ class PieChart extends StatelessWidget {
     Key? key,
     required this.dataset,
     this.colorScheme,
-  }) : super(key: key);
+  })  : assert(dataset.length <= 6),
+        super(key: key);
 
   double _getSum() {
     double value = 0;
@@ -62,9 +63,6 @@ class PieChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var usedColorScheme = colorScheme ?? PieChartColors.blue;
-    dataset.sort((a, b) {
-      return a.amount.compareTo(b.amount) * -1;
-    });
     assert(usedColorScheme.length >= 6);
     var sum = _getSum();
     var currencyFormat = sum < currencyFormatThreshhold

@@ -46,7 +46,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
     FinancesDatabase.instance.createInvestmentSnapshot(InvestmentSnapshot(
       categoryId: category,
       amount: _amount,
-      date: DateTime(2021, 12, 31),
+      date: DateTime.now(),
     ));
   }
 

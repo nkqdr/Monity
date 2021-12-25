@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/widgets/dashboard/piechart_tile_context_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
@@ -28,6 +29,7 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
   int dataIndex = 0; // 0 = This month, 1 = This year, 2 = max
   late List<Transaction> _transactions;
   late List<PieChartDatapoint> _datapoints;
+  late List<PieChartDatapoint> _allDataPoints;
 
   @override
   void initState() {
@@ -59,56 +61,66 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    return DashboardTile(
+    if (isLoading) {
+      return const AdaptiveProgressIndicator();
+    }
+    return PieChartTileContextMenu(
       title: widget.title,
-      subtitle: dataIndex == 0
+      timeInterval: dataIndex == 0
           ? language.thisMonth
           : (dataIndex == 1 ? language.thisYear : language.maxTime),
-      subtitleStyle: const TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-      height: 250,
-      fill: const DashboardTileFillLeaveTitle(),
-      child: isLoading
-          ? const Center(
-              child: AdaptiveProgressIndicator(),
-            )
-          : PieChart(
-              colorScheme: widget.colorTheme,
-              dataset: _datapoints,
+      dataPoints: _allDataPoints,
+      child: DashboardTile(
+        title: widget.title,
+        subtitle: dataIndex == 0
+            ? language.thisMonth
+            : (dataIndex == 1 ? language.thisYear : language.maxTime),
+        subtitleStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+        height: 250,
+        fill: const DashboardTileFillLeaveTitle(),
+        child: isLoading
+            ? const Center(
+                child: AdaptiveProgressIndicator(),
+              )
+            : PieChart(
+                colorScheme: widget.colorTheme,
+                dataset: _datapoints,
+              ),
+        sideWidget: Container(
+          margin: const EdgeInsets.only(right: 15),
+          child: PopupMenuButton(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
             ),
-      sideWidget: Container(
-        margin: const EdgeInsets.only(right: 15),
-        child: PopupMenuButton(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
+            child: const Icon(Icons.more_horiz),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: Text(language.thisMonth),
+                value: 0,
+              ),
+              PopupMenuItem(
+                child: Text(language.thisYear),
+                value: 1,
+              ),
+              PopupMenuItem(
+                child: Text(language.maxTime),
+                value: 2,
+              ),
+            ],
+            enableFeedback: true,
+            onSelected: (index) {
+              setState(() {
+                dataIndex = index as int;
+              });
+              _refreshTransactions();
+            },
           ),
-          child: const Icon(Icons.more_horiz),
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text(language.thisMonth),
-              value: 0,
-            ),
-            PopupMenuItem(
-              child: Text(language.thisYear),
-              value: 1,
-            ),
-            PopupMenuItem(
-              child: Text(language.maxTime),
-              value: 2,
-            ),
-          ],
-          enableFeedback: true,
-          onSelected: (index) {
-            setState(() {
-              dataIndex = index as int;
-            });
-            _refreshTransactions();
-          },
         ),
       ),
     );
@@ -133,8 +145,14 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
     assert(transactionsByCategory.keys.length == datapointMap.keys.length);
     var sortedKeys = datapointMap.keys.toList(growable: false)
       ..sort((k1, k2) => datapointMap[k1]!.compareTo(datapointMap[k2] as num));
-    LinkedHashMap sortedMap = LinkedHashMap.fromIterable(sortedKeys.reversed,
-        key: (k) => k, value: (k) => datapointMap[k]);
+    LinkedHashMap<TransactionCategory, double> sortedMap =
+        LinkedHashMap.fromIterable(sortedKeys.reversed,
+            key: (k) => k, value: (k) => datapointMap[k]!);
+
+    _allDataPoints = sortedMap.keys
+        .map((TransactionCategory e) =>
+            PieChartDatapoint(name: e.name, amount: sortedMap[e]!))
+        .toList();
     List<PieChartDatapoint> datapoints = [];
     bool builtOthers = false;
     for (var category in sortedMap.keys) {

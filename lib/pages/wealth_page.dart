@@ -114,7 +114,7 @@ class _WealthPageState extends State<WealthPage> {
                 sideWidget: Container(
                   margin: const EdgeInsets.only(right: 15),
                   child: PopupMenuButton(
-                    color: Colors.black,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(20.0),

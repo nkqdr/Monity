@@ -82,5 +82,15 @@
   "descriptionDetailTitle": "Beschreibung:",
   "others": "Andere",
   "hide": "Ausblenden",
-  "noSnapshotsYet": "Du hast für diese Geldanlage noch keine Einträge hinzugefügt."
+  "noSnapshotsYet": "Du hast für diese Geldanlage noch keine Einträge hinzugefügt.",
+  "backup": "Backup",
+  "backupDescription": "Erstellen Sie Backups und wenden Sie sie nach Belieben an. Dies wird Ihnen helfen, diese App zwischen Geräten zu übertragen.",
+  "generateBackup": "Backup erstellen",
+  "loadBackup": "Backup laden",
+  "typeNameOfBackup": "Bitte geben Sie einen Dateinamen für Ihr Backup ein.",
+  "fileAlreadyExists": "Es existiert bereits eine Backup-Datei mit diesem Namen.",
+  "backupRestoredSuccessfully": "Das ausgewählte Backup wurde erfolgreich wiederhergestellt.",
+  "backupRestoreError": "Das ausgewählte Backup kann nicht wiederhergestellt werden. Bitte stellen Sie sicher, dass Sie ein gültiges Backup auswählen.",
+  "databaseAlreadyExistsError": "Das ausgewählte Backup kann nicht wiederhergestellt werden, da Sie bereits Daten gespeichert haben. Bitte stellen Sie sicher, dass Sie alle vorhandenen Daten löschen, bevor Sie ein Backup laden.",
+  "savedTo": "Eine Backup-Datei wurde im Dokumentenverzeichnis dieser Anwendung gespeichert."
 }

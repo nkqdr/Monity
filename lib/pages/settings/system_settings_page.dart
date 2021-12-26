@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:finance_buddy/backend/database_manager.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -8,6 +12,9 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -184,8 +191,113 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             )
           ],
         ),
+        CustomSection(
+          title: language.backup,
+          subtitle: language.backupDescription,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AdaptiveTextButton(
+                  onPressed: _handleGenerateBackup,
+                  text: language.generateBackup,
+                ),
+                AdaptiveTextButton(
+                  onPressed: _handleLoadBackup,
+                  text: language.loadBackup,
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
+  }
+
+  Future _handleLoadBackup() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    var language = AppLocalizations.of(context)!;
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      print(file.path);
+      if (file.path.split("/").last.split(".").last !=
+          DatabaseManager.instance.saveFileType) {
+        await showOkAlertDialog(
+          context: context,
+          title: language.attention,
+          message: language.backupRestoreError,
+        );
+        return;
+      }
+      String backup = file.readAsStringSync();
+      try {
+        await DatabaseManager.instance.restoreBackup(backup);
+      } catch (e) {
+        await showOkAlertDialog(
+          context: context,
+          title: language.attention,
+          message: language.databaseAlreadyExistsError,
+        );
+        return;
+      }
+      await showOkAlertDialog(
+        context: context,
+        title: language.attention,
+        message: language.backupRestoredSuccessfully,
+      );
+      _refreshDatabaseSize();
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  Future<List<String>> _listofFiles() async {
+    var directory = (await getApplicationDocumentsDirectory()).path;
+    List<FileSystemEntity> files = Directory("$directory/").listSync();
+    return files.map((e) => e.path.split("/").last).toList();
+  }
+
+  Future _handleGenerateBackup() async {
+    // String? outputFile = await FilePicker.platform.saveFile(
+    //   dialogTitle: 'Please select an output file:',
+    //   fileName: 'output-file.pdf',
+    // );
+
+    // if (outputFile == null) {
+    //   // User canceled the picker
+    // }
+    var language = AppLocalizations.of(context)!;
+    List<String> files = await _listofFiles();
+    List<String> relevantFileNames = files
+        .where(
+            (e) => e.split(".").last == DatabaseManager.instance.saveFileType)
+        .map((e) => e.split(".").first)
+        .toList();
+    var dialogResult = await showTextInputDialog(
+      context: context,
+      title: language.attention,
+      message: language.typeNameOfBackup,
+      isDestructiveAction: false,
+      okLabel: language.saveButton,
+      cancelLabel: language.abort,
+      textFields: [
+        DialogTextField(validator: (s) {
+          return !relevantFileNames.contains(s)
+              ? null
+              : language.fileAlreadyExists;
+        })
+      ],
+    );
+    if (dialogResult != null) {
+      var result =
+          await DatabaseManager.instance.generateBackup(isEncrypted: true);
+      await DatabaseManager.instance.saveBackup(result, dialogResult.first);
+      await showOkAlertDialog(
+        context: context,
+        title: language.attention,
+        message: language.savedTo,
+      );
+    }
   }
 
   String _formatBytes(int bytes, int decimals) {

@@ -334,5 +334,45 @@
   "noSnapshotsYet": "You have not yet saved any snapshots for this category.",
   "@noSnapshotsYet": {
     "description": "Message for an empty snapshot category page."
+  },
+  "backup": "Backup",
+  "@backup": {
+    "description": "Section title for backup section."
+  },
+  "backupDescription": "Generate backups and apply them as you want. This will help you transfer this app between devices.",
+  "@backupDescription": {
+    "description": "Description for the backup section."
+  },
+  "generateBackup": "Generate backup",
+  "@generateBackup": {
+    "description": "Button text for generating backup."
+  },
+  "loadBackup": "Load backup",
+  "@loadBackup": {
+    "description": "Button text for loading backup."
+  },
+  "typeNameOfBackup": "Please enter a file name for your backup.",
+  "@typeNameOfBackup": {
+    "description": "Dialog description to type the name of the backup file."
+  },
+  "fileAlreadyExists": "A backup file with this name already exists.",
+  "@fileAlreadyExists": {
+    "description": "Dialog message if file alread exists."
+  },
+  "backupRestoredSuccessfully": "The selected backup has been restored successfully.",
+  "@backupRestoredSuccessfully": {
+    "description": "Message for when the backup has been restored."
+  },
+  "backupRestoreError": "The selected backup cannot be restored. Please make sure to select a valid backup.",
+  "@backupRestoreError": {
+    "description": "Message for when the backup could not be restored."
+  },
+  "databaseAlreadyExistsError": "The selected backup cannot be restored because you already have saved data. Please make sure to delete all existing data before loading a backup.",
+  "@databaseAlreadyExistsError": {
+    "description": "Message for when the backup could not be restored because the database already exists."
+  },
+  "savedTo": "A backup file has been saved to this applications documents directory.",
+  "@savedTo": {
+    "description": "Message for when the backup has been saved."
   }
 }

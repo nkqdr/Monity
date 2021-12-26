@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
-const String databaseName = "finances.db";
+const String databaseName = ".finances.db";
 
 class FinancesDatabase {
   static final FinancesDatabase instance = FinancesDatabase._init();

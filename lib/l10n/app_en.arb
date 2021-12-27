@@ -75,7 +75,7 @@
   "@transactionsSettings": {
     "description": "Transactions string used inside settings"
   },
-  "help": "Help",
+  "help": "About",
   "@help": {
     "description": "Help string used inside settings"
   },

@@ -11,6 +11,7 @@ class HelpPage extends StatefulWidget {
 }
 
 class _HelpPageState extends State<HelpPage> {
+  static const String appVersion = "1.0";
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
@@ -28,7 +29,31 @@ class _HelpPageState extends State<HelpPage> {
         ),
       ),
       fixedAppBar: true,
-      children: const [Center(child: Text("Help Page"))],
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 50,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.asset('assets/icon.png'),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text("Version $appVersion"),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text("© 2021, Niklas Kuder"),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

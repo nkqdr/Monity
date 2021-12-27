@@ -46,8 +46,9 @@ class _InvestmentTileState extends State<InvestmentTile> {
     } else {
       dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
     }
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),

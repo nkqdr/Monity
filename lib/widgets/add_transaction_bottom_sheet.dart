@@ -283,8 +283,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Widget _getFourthPage() {
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey<int>(3),

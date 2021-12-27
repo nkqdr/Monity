@@ -42,8 +42,9 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     return View(
       appBar: CustomAppBar(
         title: language.transactionsSettings,

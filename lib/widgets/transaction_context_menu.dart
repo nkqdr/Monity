@@ -26,8 +26,9 @@ class TransactionContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     final provider = Provider.of<LanguageProvider>(context);
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     DateFormat dateFormatter;
     if (provider.locale == null) {
       dateFormatter =

@@ -204,8 +204,9 @@ class HorizontalBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var currencyFormat =
-        NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2);
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     return Container(
       decoration: BoxDecoration(
         color: type == TransactionType.expense ? Colors.red : Colors.green,

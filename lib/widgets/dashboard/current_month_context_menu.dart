@@ -29,8 +29,9 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    var currencyFormat =
-        NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2);
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         animation.addListener(() {

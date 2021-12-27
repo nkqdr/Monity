@@ -105,8 +105,9 @@ class _CashFlowTileState extends State<CashFlowTile> {
     } else {
       dateFormat = DateFormat.yMMMMd(provider.locale!.languageCode);
     }
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     return DashboardTile(
       subtitle: titleNum != null
           ? currencyFormat.format(titleNum)

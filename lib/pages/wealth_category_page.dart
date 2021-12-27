@@ -50,8 +50,9 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
     } else {
       dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
     }
-    var currencyFormat =
-        NumberFormat.currency(locale: "de_DE", decimalDigits: 2, symbol: "€");
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(
+        locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(

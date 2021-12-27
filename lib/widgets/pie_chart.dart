@@ -65,10 +65,13 @@ class PieChart extends StatelessWidget {
     var usedColorScheme = colorScheme ?? PieChartColors.blue;
     assert(usedColorScheme.length >= 6);
     var sum = _getSum();
+    Locale locale = Localizations.localeOf(context);
     var currencyFormat = sum < currencyFormatThreshhold
-        ? NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2)
+        ? NumberFormat.simpleCurrency(
+            locale: locale.toString(), decimalDigits: 2)
         : NumberFormat.compactCurrency(
-            locale: "de_DE", decimalDigits: 2, symbol: "€");
+            locale: locale.toString(), decimalDigits: 2);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

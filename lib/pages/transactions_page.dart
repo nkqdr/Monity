@@ -49,7 +49,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
     currentTransactions = _getTransactionsFor(selectedMonth);
-    displayedTransactions = currentTransactions;
+    displayedTransactions = currentTransactions.reversed.toList();
     setState(() => isLoading = false);
   }
 

@@ -117,7 +117,7 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
                                       Text(
                                         (e.time.year - DateTime.now().year)
                                                 .toString() +
-                                            " ${language.years}:",
+                                            " ${(e.time.year - DateTime.now().year) == 1 ? language.year : language.years}:",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,

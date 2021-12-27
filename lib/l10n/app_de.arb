@@ -85,7 +85,7 @@
   "noSnapshotsYet": "Du hast für diese Geldanlage noch keine Einträge hinzugefügt.",
   "backup": "Backup",
   "backupDescription": "Erstellen Sie Backups und wenden Sie sie nach Belieben an. Dies wird Ihnen helfen, diese App zwischen Geräten zu übertragen.",
-  "generateBackup": "Backup erstellen",
+  "generateBackup": "Neues Backup",
   "loadBackup": "Backup laden",
   "typeNameOfBackup": "Bitte geben Sie einen Dateinamen für Ihr Backup ein.",
   "fileAlreadyExists": "Es existiert bereits eine Backup-Datei mit diesem Namen.",
@@ -95,5 +95,6 @@
   "savedTo": "Eine Backup-Datei wurde im Dokumentenverzeichnis dieser Anwendung gespeichert.",
   "noTransactionsPieChart": "Für den ausgewählten Zeitraum gibt es keine Transaktionen.",
   "predictionOfWealth": "Hier sehen Sie eine Prognose Ihres Vermögens, wenn Sie Ihre letzte Jahresperformance aufrecht erhalten:",
-  "years": "Jahre"
+  "years": "Jahre",
+  "year": "Jahr"
 }

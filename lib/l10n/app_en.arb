@@ -343,11 +343,11 @@
   "@backupDescription": {
     "description": "Description for the backup section."
   },
-  "generateBackup": "Generate backup",
+  "generateBackup": "New Backup",
   "@generateBackup": {
     "description": "Button text for generating backup."
   },
-  "loadBackup": "Load backup",
+  "loadBackup": "Load Backup",
   "@loadBackup": {
     "description": "Button text for loading backup."
   },
@@ -386,5 +386,9 @@
   "years": "Years",
   "@years": {
     "description": "Years."
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Year."
   }
 }

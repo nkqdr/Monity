@@ -93,22 +93,22 @@ class _AppearancePageState extends State<AppearancePage> {
             ),
           ],
         ),
-        CustomSection(
-          title: "Hidden Elements",
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Center(
-                child: Text(
-                  "No hidden elements.",
-                  style: TextStyle(
-                    color: Theme.of(context).secondaryHeaderColor,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        // CustomSection(
+        //   title: "Hidden Elements",
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.only(top: 20.0),
+        //       child: Center(
+        //         child: Text(
+        //           "No hidden elements.",
+        //           style: TextStyle(
+        //             color: Theme.of(context).secondaryHeaderColor,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

@@ -33,9 +33,6 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
         NumberFormat.simpleCurrency(locale: "de_DE", decimalDigits: 2);
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
-        if (widget.monthlyLimit == null || widget.remainingAmount == null) {
-          return Container();
-        }
         animation.addListener(() {
           if (animation.status == AnimationStatus.reverse) {
             showRemainingGraphic = false;
@@ -49,47 +46,37 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
           borderRadius: BorderRadius.circular(20),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
-            height: MediaQuery.of(context).size.height / 3,
+            height: max(MediaQuery.of(context).size.height / 3, 280),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      language.currentMonthOverview,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    language.currentMonthOverview,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  widget.monthlyLimit != null
+                      ? Flexible(
+                          fit: FlexFit.loose,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                language.remainingDays +
-                                    " ${widget.daysRemaining}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).secondaryHeaderColor,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    language.remainingBudget,
+                                    language.remainingDays +
+                                        " ${widget.daysRemaining}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -97,77 +84,104 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                           .secondaryHeaderColor,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 5,
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        language.remainingBudget,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .secondaryHeaderColor,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      showRemainingGraphic
+                                          ? Text(
+                                              widget.remainingAmount! >= 0
+                                                  ? "+" +
+                                                      currencyFormat.format(
+                                                          widget
+                                                              .remainingAmount)
+                                                  : currencyFormat.format(
+                                                      widget.remainingAmount),
+                                              style: TextStyle(
+                                                color:
+                                                    widget.remainingAmount! >= 0
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
                                   ),
-                                  showRemainingGraphic
-                                      ? Text(
-                                          widget.remainingAmount! >= 0
-                                              ? "+" +
-                                                  currencyFormat.format(
-                                                      widget.remainingAmount)
-                                              : currencyFormat.format(
-                                                  widget.remainingAmount),
-                                          style: TextStyle(
-                                            color: widget.remainingAmount! >= 0
-                                                ? Colors.green
-                                                : Colors.red,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      : Container(),
                                 ],
                               ),
+                              showRemainingGraphic
+                                  ? Container(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                                  40) /
+                                              3,
+                                      height: max(
+                                          MediaQuery.of(context).size.height /
+                                                  4 -
+                                              20,
+                                          180),
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.green,
+                                              Theme.of(context).cardColor
+                                            ],
+                                            stops: widget.remainingAmount! <= 0
+                                                ? [0, 0]
+                                                : [
+                                                    (widget.remainingAmount! /
+                                                        widget.monthlyLimit!),
+                                                    (widget.remainingAmount! /
+                                                        widget.monthlyLimit!)
+                                                  ],
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color:
+                                                  widget.remainingAmount! <= 0
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                              width: 4)),
+                                      child: Center(
+                                        child: Text(
+                                          "${(max((widget.remainingAmount! / widget.monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 35,
+                                          ),
+                                        ),
+                                      ))
+                                  : Container(),
                             ],
                           ),
-                          showRemainingGraphic
-                              ? Container(
-                                  width:
-                                      (MediaQuery.of(context).size.width - 40) /
-                                          3,
-                                  height:
-                                      MediaQuery.of(context).size.height / 4 -
-                                          20,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.green,
-                                          Theme.of(context).cardColor
-                                        ],
-                                        stops: widget.remainingAmount! <= 0
-                                            ? [0, 0]
-                                            : [
-                                                (widget.remainingAmount! /
-                                                    widget.monthlyLimit!),
-                                                (widget.remainingAmount! /
-                                                    widget.monthlyLimit!)
-                                              ],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: widget.remainingAmount! <= 0
-                                              ? Colors.red
-                                              : Colors.green,
-                                          width: 4)),
-                                  child: Center(
-                                    child: Text(
-                                      "${(max((widget.remainingAmount! / widget.monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 35,
-                                      ),
-                                    ),
-                                  ))
-                              : Container(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                        )
+                      : Center(
+                          child: Text(
+                            language.noMonthlyLimit,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
+                        ),
+                ],
+              )),
             ),
           ),
         );

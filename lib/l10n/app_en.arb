@@ -390,5 +390,9 @@
   "year": "Year",
   "@year": {
     "description": "Year."
+  },
+  "notEnoughSnapshots": "You have not yet saved enough snapshots in your 'Wealth' tab.",
+  "@notEnoughSnapshots": {
+    "description": "Message that appears in the performance detail view when user has not saved enough snapshots."
   }
 }

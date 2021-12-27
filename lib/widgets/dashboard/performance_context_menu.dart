@@ -34,11 +34,19 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
   Future _calculateWealthPredictions() async {
     List<WealthDataPoint> allDataPoints =
         await FinancesDatabase.instance.getAllWealthDatapoints();
+    if (allDataPoints.isEmpty) {
+      predictions = [];
+      return;
+    }
     WealthDataPoint oneYearAgo = allDataPoints.lastWhere(
         (e) => e.time.isBefore(DateTime(
             DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)),
-        orElse: () => allDataPoints.first);
-    WealthDataPoint currentWealth = allDataPoints.last;
+        orElse: () => allDataPoints.isEmpty
+            ? WealthDataPoint(time: DateTime.now(), value: 0)
+            : allDataPoints.first);
+    WealthDataPoint currentWealth = allDataPoints.isEmpty
+        ? WealthDataPoint(time: DateTime.now(), value: 0)
+        : allDataPoints.last;
     var difference = currentWealth.value - oneYearAgo.value;
     var percentageDiff = difference / oneYearAgo.value;
     predictions = [];
@@ -104,7 +112,7 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
                             ),
                           ),
                         ),
-                      if (showTable)
+                      if (showTable && predictions.isNotEmpty)
                         ...predictions.map((e) => Column(
                               children: [
                                 Padding(
@@ -143,7 +151,18 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
                                 //   color: Theme.of(context).secondaryHeaderColor,
                                 // ),
                               ],
-                            ))
+                            )),
+                      if (predictions.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Center(
+                            child: Text(language.notEnoughSnapshots,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                )),
+                          ),
+                        ),
                     ],
                   ),
                 )),

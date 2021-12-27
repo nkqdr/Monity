@@ -58,6 +58,9 @@ class _CashFlowTileState extends State<CashFlowTile> {
       default:
         transactions = allTransactions;
     }
+    if (transactions.isEmpty) {
+      return;
+    }
     DateTime currentTime = transactions.first.date;
     List<double> days = [];
     List<DateTime> newDates = [];

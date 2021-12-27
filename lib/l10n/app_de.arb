@@ -96,5 +96,6 @@
   "noTransactionsPieChart": "Für den ausgewählten Zeitraum gibt es keine Transaktionen.",
   "predictionOfWealth": "Hier sehen Sie eine Prognose Ihres Vermögens, wenn Sie Ihre letzte Jahresperformance aufrecht erhalten:",
   "years": "Jahre",
-  "year": "Jahr"
+  "year": "Jahr",
+  "notEnoughSnapshots": "Sie haben noch nicht genügend Einträge in der Sektion 'Vermögen' gespeichert."
 }

@@ -42,7 +42,7 @@ class View extends StatelessWidget {
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).viewPadding.top +
-                                          21,
+                                          30,
                                 ),
                                 ...children
                               ]

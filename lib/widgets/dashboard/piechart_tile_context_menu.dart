@@ -85,7 +85,11 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
             width: MediaQuery.of(context).size.width - 40,
             height: MediaQuery.of(context).size.height / 3,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(
+                top: 20.0,
+                left: 20.0,
+                right: 20.0,
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,

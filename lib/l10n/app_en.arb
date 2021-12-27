@@ -378,5 +378,13 @@
   "noTransactionsPieChart": "There are no transactions for the selected time period.",
   "@noTransactionsPieChart": {
     "description": "Message for pie chart tile when no transactions are available."
+  },
+  "predictionOfWealth": "Here you can see a forecast of your wealth if you maintain your last year's performance:",
+  "@predictionOfWealth": {
+    "description": "Message the wealth prediction table."
+  },
+  "years": "Years",
+  "@years": {
+    "description": "Years."
   }
 }

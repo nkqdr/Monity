@@ -8,7 +8,6 @@ import '../custom_cupertino_context_menu_action.dart';
 
 class CurrentMonthContextMenu extends StatefulWidget {
   final Widget child;
-  final List<Widget> actions;
   final int daysRemaining;
   final double? remainingAmount;
   final double? monthlyLimit;
@@ -18,7 +17,6 @@ class CurrentMonthContextMenu extends StatefulWidget {
     required this.monthlyLimit,
     required this.remainingAmount,
     required this.daysRemaining,
-    this.actions = const [],
   }) : super(key: key);
 
   @override

@@ -12,9 +12,7 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -219,7 +217,6 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     var language = AppLocalizations.of(context)!;
     if (result != null) {
       File file = File(result.files.single.path!);
-      print(file.path);
       if (file.path.split("/").last.split(".").last !=
           DatabaseManager.instance.saveFileType) {
         await showOkAlertDialog(

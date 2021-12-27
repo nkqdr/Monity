@@ -21,7 +21,6 @@ class DatabaseManager {
   ];
 
   Future<String> generateBackup({bool isEncrypted = true}) async {
-    print('GENERATE BACKUP');
     var dbs = await FinancesDatabase.instance.database;
     List data = [];
     List<Map<String, dynamic>> listMaps = [];
@@ -56,7 +55,6 @@ class DatabaseManager {
       }
     }
     await batch.commit(continueOnError: false, noResult: true);
-    print('RESTORE BACKUP');
   }
 
   Future saveBackup(String backup, String fileName) async {

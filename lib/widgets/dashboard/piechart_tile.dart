@@ -64,12 +64,14 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
     if (isLoading) {
       return const AdaptiveProgressIndicator();
     }
+
     return PieChartTileContextMenu(
       title: widget.title,
       timeInterval: dataIndex == 0
           ? language.thisMonth
           : (dataIndex == 1 ? language.thisYear : language.maxTime),
       dataPoints: _allDataPoints,
+      transactionType: widget.type,
       child: DashboardTile(
         title: widget.title,
         subtitle: dataIndex == 0
@@ -85,10 +87,22 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
             ? const Center(
                 child: AdaptiveProgressIndicator(),
               )
-            : PieChart(
-                colorScheme: widget.colorTheme,
-                dataset: _datapoints,
-              ),
+            : (_transactions.isEmpty
+                ? Expanded(
+                    child: Center(
+                      child: Text(
+                        language.noTransactionsPieChart,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                    ),
+                  )
+                : PieChart(
+                    colorScheme: widget.colorTheme,
+                    dataset: _datapoints,
+                  )),
         sideWidget: Container(
           margin: const EdgeInsets.only(right: 15),
           child: PopupMenuButton(

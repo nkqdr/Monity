@@ -92,5 +92,6 @@
   "backupRestoredSuccessfully": "Das ausgewählte Backup wurde erfolgreich wiederhergestellt.",
   "backupRestoreError": "Das ausgewählte Backup kann nicht wiederhergestellt werden. Bitte stellen Sie sicher, dass Sie ein gültiges Backup auswählen.",
   "databaseAlreadyExistsError": "Das ausgewählte Backup kann nicht wiederhergestellt werden, da Sie bereits Daten gespeichert haben. Bitte stellen Sie sicher, dass Sie alle vorhandenen Daten löschen, bevor Sie ein Backup laden.",
-  "savedTo": "Eine Backup-Datei wurde im Dokumentenverzeichnis dieser Anwendung gespeichert."
+  "savedTo": "Eine Backup-Datei wurde im Dokumentenverzeichnis dieser Anwendung gespeichert.",
+  "noTransactionsPieChart": "Für den ausgewählten Zeitraum gibt es keine Transaktionen."
 }

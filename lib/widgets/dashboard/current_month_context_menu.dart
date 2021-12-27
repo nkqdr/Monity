@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -154,7 +156,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                           width: 4)),
                                   child: Center(
                                     child: Text(
-                                      "${((widget.remainingAmount! / widget.monthlyLimit!) * 100).toStringAsFixed(0)}%",
+                                      "${(max((widget.remainingAmount! / widget.monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 35,

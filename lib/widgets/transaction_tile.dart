@@ -95,15 +95,20 @@ class _TransactionTileState extends State<TransactionTile> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        widget.transaction.description ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Theme.of(context).secondaryHeaderColor,
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Text(
+                            widget.transaction.description ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
                         ),
                       ),
                     ),

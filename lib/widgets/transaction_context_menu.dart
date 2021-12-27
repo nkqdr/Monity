@@ -54,10 +54,12 @@ class TransactionContextMenu extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          transactionCategory.name,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: Text(
+                            transactionCategory.name,
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Text(
                           dateFormatter.format(transaction.date),

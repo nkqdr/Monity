@@ -72,13 +72,17 @@ class _TransactionTileState extends State<TransactionTile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                widget.category.name,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 200),
+                                child: Text(
+                                  widget.category.name,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 currencyFormat

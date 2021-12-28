@@ -167,7 +167,10 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
                           ],
                         ),
                       ),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                   ],
                 ),
               ),

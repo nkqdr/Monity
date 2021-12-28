@@ -12,7 +12,7 @@ class CustomBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      //height: height,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(
@@ -23,7 +23,12 @@ class CustomBottomSheet extends StatelessWidget {
           BoxShadow(blurRadius: 10),
         ],
       ),
-      child: Padding(padding: const EdgeInsets.all(20.0), child: child),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Wrap(
+          children: [child],
+        ),
+      ),
     );
   }
 }

@@ -198,7 +198,15 @@ class PieChartCategory extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Flexible(child: Text(text)),
+          Flexible(
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 100, maxWidth: 100),
+              child: Text(
+                text,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
         ],
       ),
     );

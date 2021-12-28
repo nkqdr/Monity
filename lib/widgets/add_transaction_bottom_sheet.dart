@@ -89,6 +89,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             layoutBuilder: (currentChild, _) => currentChild as Widget,
             child: currentContent,
           ),
+          const SizedBox(
+            height: 20,
+          ),
           currentIndex < maxIndex ? _getPageProgress() : Container(),
         ],
       ),
@@ -322,7 +325,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               ),
             ),
             const SizedBox(width: 10),
-            Text(_category),
+            Flexible(child: Text(_category)),
           ],
         ),
         Row(

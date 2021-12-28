@@ -36,11 +36,13 @@ class _CategoryTileState extends State<CategoryTile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.category.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
+              Flexible(
+                child: Text(
+                  widget.category.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
                 ),
               ),
               Row(

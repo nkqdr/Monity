@@ -75,15 +75,17 @@ class PieChart extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            for (var category in dataset)
-              PieChartCategory(
-                  text: category.name,
-                  color: usedColorScheme[dataset.indexOf(category)] as Color)
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              for (var category in dataset)
+                PieChartCategory(
+                    text: category.name,
+                    color: usedColorScheme[dataset.indexOf(category)] as Color)
+            ],
+          ),
         ),
         SizedBox(
           height: 170,
@@ -196,7 +198,7 @@ class PieChartCategory extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Text(text),
+          Flexible(child: Text(text)),
         ],
       ),
     );

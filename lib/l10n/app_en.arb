@@ -391,12 +391,48 @@
   "@years": {
     "description": "Years."
   },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Continue."
+  },
   "year": "Year",
   "@year": {
     "description": "Year."
   },
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish."
+  },
+  "showIntroduction": "Show introduction",
+  "@showIntroduction": {
+    "description": "Show introduction."
+  },
   "notEnoughSnapshots": "You have not yet saved enough snapshots in your 'Wealth' tab.",
   "@notEnoughSnapshots": {
     "description": "Message that appears in the performance detail view when user has not saved enough snapshots."
+  },
+  "introductionTitle": "Introduction",
+  "@introductionTitle": {
+    "description": "Introduction."
+  },
+  "transactionsIntroduction": "Our transaction system will help you keep track of your income and expenses. Here you can create as many categories as you like to which you can later add individual transactions. \nPopular categories are for example 'Rent', 'Food' and 'Free time'. To make the necessary settings, go to Settings > Transactions in the app.",
+  "@transactionsIntroduction": {
+    "description": "Introduction text that explains transactions to the user."
+  },
+  "transactionsViewIntroduction": "On the transaction page you can see an overview of all entered transactions in a selected month. These transactions always consist of a category, an amount and a type (income or expense). \nAt the top you can filter the list of transactions as you wish.",
+  "@transactionsViewIntroduction": {
+    "description": "Introduction text that explains transactions to the user."
+  },
+  "investmentIntroduction": "Our investment overview helps you keep track of the sum of all your investments and savings. To do this, you first need to define any number of financial investments. Only one name is needed for these financial investments. Common names for financial investments are for example 'Brokerage', 'Savings' or 'Safe'. \nTo define these investments, go to Settings > Investments.",
+  "@investmentIntroduction": {
+    "description": "Introduction text that explains investments to the user."
+  },
+  "investmentViewIntroduction": "In the wealth overview you will now see all your financial investments listed and you can add new entries as you wish. \nFor each day, a maximum of one data point can be created in the graph. All you have to do is to enter the current state of the investment at any time. \nOf course, the more entries, the more accurate the graph.",
+  "@investmentViewIntroduction": {
+    "description": "Introduction text that explains investments to the user."
+  },
+  "dashboardIntroduction": "The Dashboard is your home page. Various statistics are displayed here, which better illustrate the data entered. Moreover, predictions are also made based on your past savings performance and you can always see how much money is left in your budget and how long the current month will last.",
+  "@dashboardIntroduction": {
+    "description": "Introduction text that explains dashboard to the user."
   }
 }

@@ -9,21 +9,25 @@ import 'package:provider/provider.dart';
 
 void main() async {
   Paint.enableDithering = true;
+  bool? firstStartUp = await KeyValueDatabase.getFirstStartup();
   ThemeMode mode = await KeyValueDatabase.getTheme();
   Locale? locale = await KeyValueDatabase.getLocale();
   runApp(MyApp(
     initialTheme: mode,
     selectedLocale: locale,
+    shouldShowInstructions: firstStartUp ?? true,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final ThemeMode initialTheme;
   final Locale? selectedLocale;
+  final bool shouldShowInstructions;
 
   const MyApp({
     Key? key,
     required this.initialTheme,
+    required this.shouldShowInstructions,
     this.selectedLocale,
   }) : super(key: key);
 
@@ -44,12 +48,15 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               title: 'Pocket Accountant',
               themeMode: themeProvider.themeMode,
+              debugShowCheckedModeBanner: false,
               locale: languageProvider.locale,
               theme: CustomThemes.lightTheme,
               darkTheme: CustomThemes.darkTheme,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const HomePage(),
+              home: HomePage(
+                showInstructions: shouldShowInstructions,
+              ),
             );
           },
         );

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const String appearanceKey = 'APPEARANCE';
 const String languageKey = 'LANGUAGE';
 const String monthlyLimitKey = 'MONTHLY_LIMIT';
+const String firstStartupKey = 'IS_FIRST_START_UP';
 
 class KeyValueDatabase {
   static Future setTheme(ThemeMode mode) async {
@@ -63,5 +64,20 @@ class KeyValueDatabase {
   static Future deleteMonthlyLimit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(monthlyLimitKey);
+  }
+
+  static Future setFirstStartup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(firstStartupKey, false);
+  }
+
+  static Future<bool?> getFirstStartup() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var limit = prefs.getBool(firstStartupKey);
+    if (limit == null) {
+      return null;
+    }
+    return limit;
   }
 }

@@ -64,17 +64,20 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
               hintText: widget.placeholder ?? language.newCategoryNameHint,
             ),
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: isButtonDisabled ? null : _handleSubmit,
-              style: isButtonDisabled
-                  ? ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).secondaryHeaderColor))
-                  : null,
-              child: Text(widget.mode == CategoryBottomSheetMode.add
-                  ? language.addCategoryButton
-                  : language.saveButton),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: isButtonDisabled ? null : _handleSubmit,
+                style: isButtonDisabled
+                    ? ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).secondaryHeaderColor))
+                    : null,
+                child: Text(widget.mode == CategoryBottomSheetMode.add
+                    ? language.addCategoryButton
+                    : language.saveButton),
+              ),
             ),
           ),
         ],

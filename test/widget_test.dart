@@ -13,7 +13,10 @@ import 'package:finance_buddy/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(initialTheme: ThemeMode.system));
+    await tester.pumpWidget(const MyApp(
+      initialTheme: ThemeMode.system,
+      shouldShowInstructions: false,
+    ));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

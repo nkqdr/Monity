@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:finance_buddy/pages/instructions_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +10,11 @@ import 'pages/transactions_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final bool showInstructions;
+  const HomePage({
+    Key? key,
+    required this.showInstructions,
+  }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,8 +24,60 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 1;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.showInstructions) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _showInstructions();
+      });
+    }
+  }
+
+  Future _showInstructions() async {
+    double topInsets = (MediaQuery.of(context).viewPadding.top);
+    await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.grey[900],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).cardColor,
+                  Theme.of(context).scaffoldBackgroundColor,
+                ],
+              ),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+              boxShadow: const [
+                BoxShadow(blurRadius: 10),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: topInsets + 10,
+                left: 20,
+                right: 20,
+              ),
+              child: const InstructionsPage(),
+            ),
+          );
+        });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+
     return Scaffold(
       extendBody: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(

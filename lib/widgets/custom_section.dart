@@ -28,8 +28,8 @@ class CustomSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:
-              EdgeInsets.only(top: 30, left: 15.0, bottom: titlePadding ?? 0),
+          padding: EdgeInsets.only(
+              top: 30, left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

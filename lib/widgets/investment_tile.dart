@@ -78,8 +78,13 @@ class _InvestmentTileState extends State<InvestmentTile> {
                         lastSnapshot != null
                             ? currencyFormat.format(lastSnapshot!.amount)
                             : "-",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
+                          color: lastSnapshot != null
+                              ? (lastSnapshot!.amount < 0
+                                  ? Theme.of(context).errorColor
+                                  : Theme.of(context).hintColor)
+                              : null,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

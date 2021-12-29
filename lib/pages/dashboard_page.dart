@@ -21,22 +21,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late List<InvestmentCategory> investmentCategories;
   bool keyToggle = false;
   bool isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshCategories();
-  }
-
-  Future _refreshCategories() async {
-    setState(() => isLoading = true);
-    investmentCategories =
-        await FinancesDatabase.instance.readAllInvestmentCategories();
-    setState(() => isLoading = false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +41,6 @@ class _DashboardState extends State<Dashboard> {
                 builder: (context) => const SettingsPage(),
               ),
             );
-            _refreshCategories();
             setState(() => keyToggle = !keyToggle);
           },
         ),

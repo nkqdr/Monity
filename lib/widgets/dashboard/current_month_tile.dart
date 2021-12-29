@@ -41,6 +41,14 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
+    if (isLoading) {
+      return const DashboardTile(
+        width: DashboardTileWidth.half,
+        child: Center(
+          child: AdaptiveProgressIndicator(),
+        ),
+      );
+    }
     return CurrentMonthContextMenu(
       daysRemaining: int.parse(_getCurrentDaysRemaining()),
       remainingAmount: remainingAmount,
@@ -52,62 +60,59 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
           padding: const EdgeInsets.only(top: 60, left: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: isLoading
-                ? const [AdaptiveProgressIndicator()]
-                : remainingAmount != null
-                    ? [
-                        Text(
-                          language.remainingDays,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          _getCurrentDaysRemaining(),
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          language.remainingBudget,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          remainingAmount! >= 0
-                              ? "+" + currencyFormat.format(remainingAmount)
-                              : currencyFormat.format(remainingAmount),
-                          style: TextStyle(
-                            color: remainingAmount! >= 0
-                                ? Colors.green
-                                : Colors.red,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ]
-                    : [
-                        Text(
-                          language.needToSetLimit,
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                          ),
-                        )
-                      ],
+            children: remainingAmount != null
+                ? [
+                    Text(
+                      language.remainingDays,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      _getCurrentDaysRemaining(),
+                      style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      language.remainingBudget,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      remainingAmount! >= 0
+                          ? "+" + currencyFormat.format(remainingAmount)
+                          : currencyFormat.format(remainingAmount),
+                      style: TextStyle(
+                        color:
+                            remainingAmount! >= 0 ? Colors.green : Colors.red,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]
+                : [
+                    Text(
+                      language.needToSetLimit,
+                      style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    )
+                  ],
           ),
         ),
       ),

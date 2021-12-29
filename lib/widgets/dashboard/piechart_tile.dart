@@ -62,7 +62,11 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     if (isLoading) {
-      return const AdaptiveProgressIndicator();
+      return const DashboardTile(
+        child: Center(
+          child: AdaptiveProgressIndicator(),
+        ),
+      );
     }
 
     return PieChartTileContextMenu(

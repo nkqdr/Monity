@@ -66,6 +66,7 @@ class _WealthPageState extends State<WealthPage> {
 
   Future _refreshCategories() async {
     setState(() => isLoading = true);
+
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     displayedDataPoints = [];
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
@@ -105,8 +106,10 @@ class _WealthPageState extends State<WealthPage> {
       safeAreaBottomDisabled: true,
       children: [
         isLoading
-            ? const Center(
-                child: AdaptiveProgressIndicator(),
+            ? const DashboardTile(
+                child: Center(
+                  child: AdaptiveProgressIndicator(),
+                ),
               )
             : DashboardTile(
                 title: currencyFormat.format(displayWealth),

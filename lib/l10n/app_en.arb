@@ -375,6 +375,10 @@
   "@savedTo": {
     "description": "Message for when the backup has been saved."
   },
+  "savedToAndroid": "A backup file has been saved to this applications documents directory: ",
+  "@savedToAndroid": {
+    "description": "Message for when the backup has been saved."
+  },
   "noTransactionsPieChart": "There are no transactions for the selected time period.",
   "@noTransactionsPieChart": {
     "description": "Message for pie chart tile when no transactions are available."

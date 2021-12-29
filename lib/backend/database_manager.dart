@@ -57,15 +57,30 @@ class DatabaseManager {
     await batch.commit(continueOnError: false, noResult: true);
   }
 
-  Future saveBackup(String backup, String fileName) async {
+  Future<String> saveBackup(String backup, String fileName) async {
+    // Directory(await getFilePath(fileName, onlyDirectory: true)).createSync();
+    File(await getFilePath(fileName)).create();
     File file = File(await getFilePath(fileName));
     file.writeAsString(backup);
+    return file.path;
   }
 
-  Future<String> getFilePath(String fileName) async {
-    Directory appDocumentsDirectory = await getApplicationDocumentsDirectory();
-    String appDocumentsPath = appDocumentsDirectory.path;
-    String filePath = '$appDocumentsPath/$fileName.$saveFileType';
-    return filePath;
+  Future<String> getFilePath(String fileName,
+      {bool onlyDirectory = false}) async {
+    String appDocumentsPath = "";
+    if (Platform.isIOS) {
+      Directory appDocumentsDirectory =
+          await getApplicationDocumentsDirectory();
+      appDocumentsPath = appDocumentsDirectory.path;
+    } else {
+      appDocumentsPath = (await getExternalStorageDirectories(
+              type: StorageDirectory.documents))!
+          .first
+          .path;
+    }
+    if (onlyDirectory) {
+      return appDocumentsPath;
+    }
+    return '$appDocumentsPath/$fileName.$saveFileType';
   }
 }

@@ -86,7 +86,7 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
             height: MediaQuery.of(context).size.height / 3,
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 20.0,
+                //top: 20.0,
                 left: 20.0,
                 right: 20.0,
               ),
@@ -94,25 +94,28 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                    Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                        Text(
-                          widget.timeInterval,
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
+                          Text(
+                            widget.timeInterval,
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     if (widget.dataPoints.isEmpty)
                       Padding(
@@ -222,10 +225,10 @@ class HorizontalBar extends StatelessWidget {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            type == TransactionType.expense ? Colors.red : Colors.green,
             type == TransactionType.expense
                 ? Colors.red[900] as Color
                 : Colors.green[900] as Color,
+            type == TransactionType.expense ? Colors.red : Colors.green,
           ],
         ),
       ),
@@ -239,6 +242,7 @@ class HorizontalBar extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),

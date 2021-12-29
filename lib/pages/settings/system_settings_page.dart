@@ -13,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -249,8 +250,21 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   }
 
   Future<List<String>> _listofFiles() async {
-    var directory = (await getApplicationDocumentsDirectory()).path;
-    List<FileSystemEntity> files = Directory("$directory/").listSync();
+    String directory = "";
+    if (Platform.isIOS) {
+      directory = (await getApplicationDocumentsDirectory()).path;
+    } else {
+      directory = (await getExternalStorageDirectories(
+              type: StorageDirectory.documents))!
+          .first
+          .path;
+    }
+    List<FileSystemEntity> files;
+    try {
+      files = Directory("$directory/").listSync();
+    } catch (e) {
+      files = [];
+    }
     return files.map((e) => e.path.split("/").last).toList();
   }
 
@@ -288,13 +302,33 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (dialogResult != null) {
       var result =
           await DatabaseManager.instance.generateBackup(isEncrypted: true);
-      await DatabaseManager.instance.saveBackup(result, dialogResult.first);
-      await showOkAlertDialog(
-        context: context,
-        title: language.attention,
-        message: language.savedTo,
-      );
+      if (Platform.isAndroid) {
+        var status = await Permission.storage.status;
+        if (status.isDenied ||
+            status.isRestricted ||
+            status.isPermanentlyDenied) {
+          var permResult = await Permission.storage.request();
+          if (permResult.isGranted) {
+            _finishSaving(result, dialogResult.first);
+          }
+          return;
+        }
+      }
+      _finishSaving(result, dialogResult.first);
     }
+  }
+
+  Future _finishSaving(String result, String fileName) async {
+    var language = AppLocalizations.of(context)!;
+    String filePath =
+        await DatabaseManager.instance.saveBackup(result, fileName);
+    await showOkAlertDialog(
+      context: context,
+      title: language.attention,
+      message: Platform.isIOS
+          ? language.savedTo
+          : language.savedToAndroid + "\n" + filePath,
+    );
   }
 
   String _formatBytes(int bytes, int decimals) {

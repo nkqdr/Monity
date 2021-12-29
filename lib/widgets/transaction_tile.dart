@@ -41,7 +41,22 @@ class _TransactionTileState extends State<TransactionTile> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).scaffoldBackgroundColor,
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    // (widget.transaction.type == TransactionType.income
+                    //     ? Colors.green[600] as Color
+                    //     : Colors.red[600] as Color),
+                    Theme.of(context).scaffoldBackgroundColor,
+                    (widget.transaction.type == TransactionType.income
+                        ? Colors.green[600] as Color
+                        : Colors.red[600] as Color),
+                  ],
+                  stops: const [
+                    0.1,
+                    1
+                  ]),
               // border: Border.all(
               //     color: widget.transaction.type == TransactionType.income
               //         ? Colors.green.withOpacity(1)
@@ -57,15 +72,15 @@ class _TransactionTileState extends State<TransactionTile> {
                   children: [
                     Row(
                       children: [
-                        SizedBox(
-                          width: 10,
-                          child: Container(
-                            color: widget.transaction.type ==
-                                    TransactionType.income
-                                ? Colors.green
-                                : Colors.red,
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 10,
+                        //   child: Container(
+                        //     color: widget.transaction.type ==
+                        //             TransactionType.income
+                        //         ? Colors.green
+                        //         : Colors.red,
+                        //   ),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: Column(
@@ -89,6 +104,7 @@ class _TransactionTileState extends State<TransactionTile> {
                                     .format(widget.transaction.amount),
                                 style: TextStyle(
                                   fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                   color: widget.transaction.type ==
                                           TransactionType.income
                                       ? Theme.of(context).hintColor
@@ -111,7 +127,11 @@ class _TransactionTileState extends State<TransactionTile> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              color: Theme.of(context).secondaryHeaderColor,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .color!
+                                  .withOpacity(0.8),
                             ),
                           ),
                         ),

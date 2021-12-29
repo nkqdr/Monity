@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  Paint.enableDithering = true;
   ThemeMode mode = await KeyValueDatabase.getTheme();
   Locale? locale = await KeyValueDatabase.getLocale();
   runApp(MyApp(

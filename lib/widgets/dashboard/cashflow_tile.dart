@@ -260,7 +260,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
         maxX: widget.spots.length - 1,
         minY: -widget.maxValue,
         maxY: widget.maxValue,
-        backgroundColor: Theme.of(context).cardColor,
+        backgroundColor: Colors.transparent,
         extraLinesData: ExtraLinesData(
           horizontalLines: [
             HorizontalLine(

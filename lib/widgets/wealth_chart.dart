@@ -34,7 +34,7 @@ class _WealthChartState extends State<WealthChart> {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        backgroundColor: Theme.of(context).cardColor,
+        backgroundColor: Colors.transparent,
         minX: 0,
         maxX: widget.spots.length - 1,
         minY: _getMinYValue(),

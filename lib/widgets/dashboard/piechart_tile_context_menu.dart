@@ -218,6 +218,16 @@ class HorizontalBar extends StatelessWidget {
         //   topRight: Radius.circular(10),
         //   bottomRight: Radius.circular(10),
         // ),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            type == TransactionType.expense ? Colors.red : Colors.green,
+            type == TransactionType.expense
+                ? Colors.red[900] as Color
+                : Colors.green[900] as Color,
+          ],
+        ),
       ),
       height: 40,
       width: min(

@@ -41,28 +41,36 @@ class DashboardTile extends StatelessWidget {
           margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
           child: Material(
             borderRadius: BorderRadius.circular(20),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: Container(
-                height: height ?? 220,
-                width: width == DashboardTileWidth.half
-                    ? screenSize.width * 0.5 - 20
-                    : screenSize.width,
+            child: Container(
+              height: height ?? 220,
+              width: width == DashboardTileWidth.half
+                  ? screenSize.width * 0.5 - 20
+                  : screenSize.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
                 color: Theme.of(context).cardColor,
-                child: fill.getChildFill(
-                    context,
-                    child,
-                    sideWidget,
-                    title,
-                    subtitle,
-                    subtitleStyle,
-                    TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: titleSize ?? 16,
-                      color:
-                          titleColor ?? Theme.of(context).secondaryHeaderColor,
-                    )),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).scaffoldBackgroundColor,
+                    Theme.of(context).cardColor,
+                  ],
+                  stops: const [0.0, 0.5],
+                ),
               ),
+              child: fill.getChildFill(
+                  context,
+                  child,
+                  sideWidget,
+                  title,
+                  subtitle,
+                  subtitleStyle,
+                  TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: titleSize ?? 16,
+                    color: titleColor ?? Theme.of(context).secondaryHeaderColor,
+                  )),
             ),
           ),
         ),

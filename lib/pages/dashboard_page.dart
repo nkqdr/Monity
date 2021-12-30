@@ -1,5 +1,3 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/pages/settings_page.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';

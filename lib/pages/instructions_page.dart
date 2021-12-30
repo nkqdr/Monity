@@ -23,7 +23,8 @@ class _InstructionsPageState extends State<InstructionsPage> {
           _getCurrentPage(),
           Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewPadding.bottom, top: 30),
+                bottom: MediaQuery.of(context).viewPadding.bottom + 30,
+                top: 30),
             child: AdaptiveFilledButton(
               child: Text(
                 pageIndex < 2 ? language.continueText : language.finish,

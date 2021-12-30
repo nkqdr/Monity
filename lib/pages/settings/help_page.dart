@@ -4,7 +4,6 @@ import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HelpPage extends StatefulWidget {
   const HelpPage({Key? key}) : super(key: key);
@@ -14,7 +13,7 @@ class HelpPage extends StatefulWidget {
 }
 
 class _HelpPageState extends State<HelpPage> {
-  static const String appVersion = "1.0";
+  static const String appVersion = "1.0.2";
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
@@ -43,10 +42,13 @@ class _HelpPageState extends State<HelpPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Center(
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: Image.asset('assets/icon.png'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.asset('assets/icon.png'),
+                ),
               ),
             ),
             const Padding(
@@ -56,10 +58,6 @@ class _HelpPageState extends State<HelpPage> {
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
               child: Text("© 2021, Niklas Kuder"),
-            ),
-            AdaptiveTextButton(
-              text: "niklas-kuder.de",
-              onPressed: _openWebsite,
             ),
           ],
         ),
@@ -75,7 +73,33 @@ class _HelpPageState extends State<HelpPage> {
             onPressed: _showInstructions,
           ),
         ),
+        const SizedBox(height: 5),
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+          ),
+          child: AdaptiveTextButton(
+            text: language.showAdditionalLicenses,
+            onPressed: _showLicenses,
+          ),
+        ),
       ],
+    );
+  }
+
+  void _showLicenses() {
+    showLicensePage(
+      context: context,
+      applicationName: "Monity",
+      applicationVersion: appVersion,
+      applicationIcon: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: SizedBox(
+          width: 100,
+          height: 100,
+          child: Image.asset('assets/icon.png'),
+        ),
+      ),
     );
   }
 
@@ -118,9 +142,9 @@ class _HelpPageState extends State<HelpPage> {
         });
   }
 
-  Future _openWebsite() async {
-    if (!await launch('https://niklas-kuder.de')) {
-      return;
-    }
-  }
+  // Future _openWebsite() async {
+  //   if (!await launch('https://niklas-kuder.de')) {
+  //     return;
+  //   }
+  // }
 }

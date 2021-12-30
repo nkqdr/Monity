@@ -407,6 +407,10 @@
   "@showIntroduction": {
     "description": "Show introduction."
   },
+  "showAdditionalLicenses": "Additional licenses",
+  "@showAdditionalLicenses": {
+    "description": "Show introduction."
+  },
   "notEnoughSnapshots": "You have not yet saved enough snapshots in your 'Wealth' tab.",
   "@notEnoughSnapshots": {
     "description": "Message that appears in the performance detail view when user has not saved enough snapshots."

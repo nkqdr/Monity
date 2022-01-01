@@ -34,32 +34,26 @@ class _PerformanceTileState extends State<PerformanceTile> {
     }
     switch (dataIndex) {
       case 0:
-        double firstDataPoint = dataPoints
+        List<WealthDataPoint> relevantDPs = dataPoints
             .where((e) =>
                 e.time.year == DateTime.now().year &&
                 e.time.month == DateTime.now().month)
-            .first
-            .value;
-        double lastDataPoint = dataPoints
-            .where((e) =>
-                e.time.year == DateTime.now().year &&
-                e.time.month == DateTime.now().month)
-            .last
-            .value;
+            .toList();
+        double firstDataPoint =
+            relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
+        double lastDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.last.value;
         var currentDifference = lastDataPoint - firstDataPoint;
         setState(() {
           currentPerformance = currentDifference / firstDataPoint;
         });
         break;
       case 1:
-        double firstDataPoint = dataPoints
+        List<WealthDataPoint> relevantDPs = dataPoints
             .where((e) => e.time.year == DateTime.now().year)
-            .first
-            .value;
-        double lastDataPoint = dataPoints
-            .where((e) => e.time.year == DateTime.now().year)
-            .last
-            .value;
+            .toList();
+        double firstDataPoint =
+            relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
+        double lastDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.last.value;
         var currentDifference = lastDataPoint - firstDataPoint;
         setState(() {
           currentPerformance = currentDifference / firstDataPoint;

@@ -31,6 +31,12 @@ class _WealthChartState extends State<WealthChart> {
   }
 
   @override
+  void didUpdateWidget(covariant WealthChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _setMaxLineChartValue();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
@@ -83,6 +89,7 @@ class _WealthChartState extends State<WealthChart> {
         max = item.y;
       }
     }
+    print("Max: " + max.toString());
     int digits = 0;
     int maxInt = max.ceil();
     while (maxInt > 1) {
@@ -116,7 +123,7 @@ class _WealthChartState extends State<WealthChart> {
 
   double _getMinValue() {
     double min = double.maxFinite;
-    for (var item in widget.spots.skip(1)) {
+    for (var item in widget.spots) {
       if (item.y < min) {
         min = item.y;
       }

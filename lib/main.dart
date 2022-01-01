@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, _) {
             final themeProvider = Provider.of<ThemeProvider>(context);
             return MaterialApp(
-              title: 'Monee',
+              title: 'Monity',
               themeMode: themeProvider.themeMode,
               debugShowCheckedModeBanner: false,
               locale: languageProvider.locale,

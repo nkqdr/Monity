@@ -195,6 +195,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
             child: const AddTransactionBottomSheet(),
           );
         });
+    if (DateTime.now().isAfter(selectedMonth)) {
+      selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
+    }
     _refreshTransactions();
   }
 }

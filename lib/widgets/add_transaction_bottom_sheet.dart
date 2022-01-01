@@ -45,13 +45,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   }
 
   Future _refreshCategories() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
     categories = await FinancesDatabase.instance.readAllTransactionCategories();
-    setState(() {
-      isLoading = false;
-    });
+    setState(() => isLoading = false);
   }
 
   void _handleAddTransaction() {

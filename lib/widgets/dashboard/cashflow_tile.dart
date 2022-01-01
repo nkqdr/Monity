@@ -59,6 +59,9 @@ class _CashFlowTileState extends State<CashFlowTile> {
         transactions = allTransactions;
     }
     if (transactions.isEmpty) {
+      setState(() {
+        dataPoints = [];
+      });
       return;
     }
     DateTime currentTime = transactions.first.date;
@@ -164,7 +167,14 @@ class _CashFlowTileState extends State<CashFlowTile> {
                   touchHandler: (e, v) => _handleChartTouch(e, v, dateFormat),
                   indexLine: _indexLine,
                 )
-              : Container(),
+              : Center(
+                  child: Text(
+                    language.noDatapointsForSelectedPeriod,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor),
+                  ),
+                ),
         ),
       ),
     );

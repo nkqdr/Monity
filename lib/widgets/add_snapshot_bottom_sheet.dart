@@ -55,7 +55,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
     FinancesDatabase.instance.createInvestmentSnapshot(InvestmentSnapshot(
       categoryId: category.id!,
       amount: _amount,
-      date: DateTime(2021, 12, 14),
+      date: DateTime.now(),
     ));
   }
 
@@ -85,6 +85,9 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                     child: AdaptiveProgressIndicator(),
                   )
                 : currentContent,
+          ),
+          const SizedBox(
+            height: 20,
           ),
           currentIndex < maxIndex ? _getPageProgress() : Container(),
         ],
@@ -191,7 +194,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            language.enterAmountOfTransaction,
+            language.enterBalanceForInvestment,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,

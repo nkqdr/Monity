@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
 
 class WealthPage extends StatefulWidget {
   const WealthPage({Key? key}) : super(key: key);
@@ -27,9 +26,8 @@ class WealthPage extends StatefulWidget {
 
 class _WealthPageState extends State<WealthPage> {
   late double displayWealth;
-  late num divisor;
   VerticalLine? _indexLine;
-  String? subtitle;
+  String subtitle = "";
   late List<InvestmentCategory> categories;
   late List<WealthDataPoint> allDataPoints;
   late List<FlSpot> displayedDataPoints;
@@ -44,6 +42,7 @@ class _WealthPageState extends State<WealthPage> {
   }
 
   Future _refreshDataPoints() async {
+    var language = AppLocalizations.of(context)!;
     var now = DateTime.now();
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
@@ -51,16 +50,17 @@ class _WealthPageState extends State<WealthPage> {
         newDataPoints = mapIndexed(
             allDataPoints.where((e) => e.time.year == now.year).toList(),
             (index, WealthDataPoint item) =>
-                FlSpot(index.toDouble(), item.value / divisor)).toList();
+                FlSpot(index.toDouble(), item.value)).toList();
         break;
       default:
         newDataPoints =
             mapIndexed(allDataPoints, (index, WealthDataPoint item) {
-          return FlSpot(index.toDouble(), item.value / divisor);
+          return FlSpot(index.toDouble(), item.value);
         }).toList();
     }
     setState(() {
       displayedDataPoints = newDataPoints;
+      subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
     });
   }
 
@@ -70,7 +70,6 @@ class _WealthPageState extends State<WealthPage> {
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     displayedDataPoints = [];
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
-    _setDivisor();
     _refreshDataPoints();
     displayWealth = _getCurrentWealth();
     wealthChartKey = !wealthChartKey;
@@ -114,6 +113,8 @@ class _WealthPageState extends State<WealthPage> {
             : DashboardTile(
                 title: currencyFormat.format(displayWealth),
                 titleColor: Theme.of(context).colorScheme.onBackground,
+                fill: const DashboardTileFillLeaveTitle(),
+                height: 250,
                 titleSize: 24,
                 subtitle: subtitle,
                 sideWidget: Container(
@@ -145,25 +146,16 @@ class _WealthPageState extends State<WealthPage> {
                     },
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    SizedBox(
-                      height: 180,
-                      child: WealthChart(
-                        key: ValueKey<bool>(wealthChartKey),
-                        divisor: divisor,
-                        currentWealth: _getCurrentWealth(),
-                        spots: displayedDataPoints,
-                        indexLine: _indexLine,
-                        touchHandler: (e, v) {
-                          _handleChartTouch(e, v, dateFormatter);
-                        },
-                      ),
-                    ),
-                  ],
+                child: Expanded(
+                  child: WealthChart(
+                    key: ValueKey<bool>(wealthChartKey),
+                    currentWealth: _getCurrentWealth(),
+                    spots: displayedDataPoints,
+                    indexLine: _indexLine,
+                    touchHandler: (e, v) {
+                      _handleChartTouch(e, v, dateFormatter);
+                    },
+                  ),
                 ),
               ),
         Padding(
@@ -215,24 +207,6 @@ class _WealthPageState extends State<WealthPage> {
     }
   }
 
-  void _setDivisor() {
-    double max = 0;
-    for (var item in allDataPoints.map((e) => e.value)) {
-      if (item > max) {
-        max = item;
-      }
-    }
-    int digits = 0;
-    int maxInt = max.ceil();
-    while (maxInt > 1) {
-      maxInt = (maxInt / 10).floor();
-      digits++;
-    }
-    setState(() {
-      divisor = pow(10, digits - 1);
-    });
-  }
-
   Future _handleAddSnapshot() async {
     await showModalBottomSheet(
         context: context,
@@ -252,12 +226,13 @@ class _WealthPageState extends State<WealthPage> {
 
   void _handleChartTouch(
       FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
+    var language = AppLocalizations.of(context)!;
     if (event is FlTapUpEvent ||
         event is FlPanCancelEvent ||
         event is FlPanEndEvent ||
         event is FlLongPressEnd) {
       setState(() {
-        subtitle = null;
+        subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
         _indexLine = null;
         displayWealth = _getCurrentWealth();
       });
@@ -267,7 +242,7 @@ class _WealthPageState extends State<WealthPage> {
     if (response != null && response.lineBarSpots != null) {
       var value = response.lineBarSpots?[0].y;
 
-      if (value != null && value * divisor != displayWealth) {
+      if (value != null && value != displayWealth) {
         HapticFeedback.mediumImpact();
         List<DateTime> currentXValues;
         if (dataIndex == 1) {
@@ -279,7 +254,7 @@ class _WealthPageState extends State<WealthPage> {
           currentXValues = allDataPoints.map((e) => e.time).toList();
         }
         setState(() {
-          displayWealth = value * divisor;
+          displayWealth = value;
           subtitle = dateFormat.format(
               currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(

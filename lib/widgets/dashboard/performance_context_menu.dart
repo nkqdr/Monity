@@ -20,8 +20,9 @@ class PerformanceContextMenu extends StatefulWidget {
 }
 
 class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
+  static const double numberFormatThreshold = 1000000000000;
   static const List<int> predictionDistances = [1, 5, 25];
-  late List<WealthDataPoint> predictions;
+  late List<WealthDataPoint> predictions = [];
   bool showDescription = false;
   bool showTable = true;
 
@@ -49,7 +50,6 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
         : allDataPoints.last;
     var difference = currentWealth.value - oneYearAgo.value;
     var percentageDiff = difference / oneYearAgo.value;
-    predictions = [];
     for (var distance in predictionDistances) {
       double predictionValue = currentWealth.value *
           pow((100 + (percentageDiff * 100)) / 100, distance);
@@ -63,8 +63,17 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    NumberFormat currencyFormat;
+    if (predictions.isEmpty) {
+      currencyFormat = NumberFormat.compactCurrency(
+          locale: locale.toString(), decimalDigits: 2);
+    } else {
+      currencyFormat = predictions.last.value < numberFormatThreshold
+          ? NumberFormat.simpleCurrency(
+              locale: locale.toString(), decimalDigits: 2)
+          : NumberFormat.compactSimpleCurrency(
+              locale: locale.toString(), decimalDigits: 2);
+    }
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         animation.addListener(() {

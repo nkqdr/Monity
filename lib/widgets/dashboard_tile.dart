@@ -165,6 +165,7 @@ class DashboardTileFillLeaveTitle implements DashboardTileFill {
                 padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       mainAxisSize: MainAxisSize.min,

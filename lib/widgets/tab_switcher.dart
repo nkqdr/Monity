@@ -68,46 +68,31 @@ class _TabSwitcherState extends State<TabSwitcher> {
             ),
           ).toList(),
         ),
-        Row(
+        Stack(
           children: [
-            Expanded(
-              flex: currentIndex,
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                    ),
-                    color: Theme.of(context)
-                        .secondaryHeaderColor
-                        .withOpacity(0.4)),
-              ),
+            Container(
+              height: 2,
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
+                  color:
+                      Theme.of(context).secondaryHeaderColor.withOpacity(0.4)),
             ),
-            Expanded(
-              flex: 1,
-              child: AnimatedContainer(
-                duration: const Duration(seconds: 2),
-                curve: Curves.fastOutSlowIn,
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 100),
+              left: (MediaQuery.of(context).size.width - 30) /
+                  widget.tabs.length *
+                  currentIndex,
+              child: Container(
                 height: 2,
+                width: (MediaQuery.of(context).size.width - 30) /
+                    widget.tabs.length,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Theme.of(context).secondaryHeaderColor,
                 ),
-              ),
-            ),
-            Expanded(
-              flex: widget.tabs.length - currentIndex - 1,
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                    color: Theme.of(context)
-                        .secondaryHeaderColor
-                        .withOpacity(0.4)),
               ),
             ),
           ],

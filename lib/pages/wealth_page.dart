@@ -47,9 +47,30 @@ class _WealthPageState extends State<WealthPage> {
     var now = DateTime.now();
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
+      case 0:
+        newDataPoints = mapIndexed(
+            allDataPoints
+                .where((e) => e.time.isAfter(DateTime(DateTime.now().year,
+                    DateTime.now().month - 1, DateTime.now().day)))
+                .toList(),
+            (index, WealthDataPoint item) =>
+                FlSpot(index.toDouble(), item.value)).toList();
+        break;
       case 1:
         newDataPoints = mapIndexed(
-            allDataPoints.where((e) => e.time.year == now.year).toList(),
+            allDataPoints
+                .where((e) => e.time.isAfter(DateTime(DateTime.now().year - 1,
+                    DateTime.now().month, DateTime.now().day)))
+                .toList(),
+            (index, WealthDataPoint item) =>
+                FlSpot(index.toDouble(), item.value)).toList();
+        break;
+      case 2:
+        newDataPoints = mapIndexed(
+            allDataPoints
+                .where((e) => e.time.isAfter(DateTime(DateTime.now().year - 5,
+                    DateTime.now().month, DateTime.now().day)))
+                .toList(),
             (index, WealthDataPoint item) =>
                 FlSpot(index.toDouble(), item.value)).toList();
         break;
@@ -173,6 +194,10 @@ class _WealthPageState extends State<WealthPage> {
                 onPressed: _tabSwitcherCallback,
               ),
               TabElement(
+                title: "5 " + language.years,
+                onPressed: _tabSwitcherCallback,
+              ),
+              TabElement(
                 title: language.maxTime,
                 onPressed: _tabSwitcherCallback,
               ),
@@ -252,7 +277,7 @@ class _WealthPageState extends State<WealthPage> {
 
   void _handleChartTouch(
       FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
-    var language = AppLocalizations.of(context)!;
+    //var language = AppLocalizations.of(context)!;
     if (event is FlTapUpEvent ||
         event is FlPanCancelEvent ||
         event is FlPanEndEvent ||
@@ -271,14 +296,45 @@ class _WealthPageState extends State<WealthPage> {
       if (value != null && value != displayWealth) {
         HapticFeedback.mediumImpact();
         List<DateTime> currentXValues;
-        if (dataIndex == 1) {
-          currentXValues = allDataPoints
-              .map((e) => e.time)
-              .where((element) => element.year == DateTime.now().year)
-              .toList();
-        } else {
-          currentXValues = allDataPoints.map((e) => e.time).toList();
+        switch (dataIndex) {
+          case 0:
+            currentXValues = allDataPoints
+                .map((e) => e.time)
+                .where((element) => element.isAfter(DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month - 1,
+                    DateTime.now().day)))
+                .toList();
+            break;
+          case 1:
+            currentXValues = allDataPoints
+                .map((e) => e.time)
+                .where((element) => element.isAfter(DateTime(
+                    DateTime.now().year - 1,
+                    DateTime.now().month,
+                    DateTime.now().day)))
+                .toList();
+            break;
+          case 2:
+            currentXValues = allDataPoints
+                .map((e) => e.time)
+                .where((element) => element.isAfter(DateTime(
+                    DateTime.now().year - 5,
+                    DateTime.now().month,
+                    DateTime.now().day)))
+                .toList();
+            break;
+          default:
+            currentXValues = allDataPoints.map((e) => e.time).toList();
         }
+        // if (dataIndex == 1) {
+        //   currentXValues = allDataPoints
+        //       .map((e) => e.time)
+        //       .where((element) => element.year == DateTime.now().year)
+        //       .toList();
+        // } else {
+        //   currentXValues = allDataPoints.map((e) => e.time).toList();
+        // }
         setState(() {
           displayWealth = value;
           subtitle = dateFormat.format(

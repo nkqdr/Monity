@@ -16,6 +16,7 @@ class DashboardTile extends StatelessWidget {
   final Widget? sideWidget;
   final Color? titleColor;
   final double? titleSize;
+  final Color? backgroundColor;
 
   const DashboardTile({
     Key? key,
@@ -28,6 +29,7 @@ class DashboardTile extends StatelessWidget {
     this.titleColor,
     this.titleSize,
     this.sideWidget,
+    this.backgroundColor,
     this.fill = const DashboardTileFillAll(),
   }) : super(key: key);
 
@@ -48,16 +50,18 @@ class DashboardTile extends StatelessWidget {
                   : screenSize.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).cardColor,
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).scaffoldBackgroundColor,
-                    Theme.of(context).cardColor,
-                  ],
-                  stops: const [0.0, 0.5],
-                ),
+                color: backgroundColor, // Theme.of(context).cardColor,
+                gradient: backgroundColor != null
+                    ? null
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Theme.of(context).scaffoldBackgroundColor,
+                          Theme.of(context).cardColor,
+                        ],
+                        stops: const [0.0, 0.5],
+                      ),
               ),
               child: fill.getChildFill(
                   context,

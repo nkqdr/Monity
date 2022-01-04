@@ -407,6 +407,10 @@
   "@year": {
     "description": "Year."
   },
+  "month": "Month",
+  "@month": {
+    "description": "Month."
+  },
   "finish": "Finish",
   "@finish": {
     "description": "Finish."

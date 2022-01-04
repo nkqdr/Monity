@@ -8,6 +8,7 @@ import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/investment_tile.dart';
+import 'package:finance_buddy/widgets/tab_switcher.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:finance_buddy/widgets/wealth_chart.dart';
 import 'package:flutter/services.dart';
@@ -60,7 +61,7 @@ class _WealthPageState extends State<WealthPage> {
     }
     setState(() {
       displayedDataPoints = newDataPoints;
-      subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
+      //subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
     });
   }
 
@@ -114,38 +115,39 @@ class _WealthPageState extends State<WealthPage> {
                 title: currencyFormat.format(displayWealth),
                 titleColor: Theme.of(context).colorScheme.onBackground,
                 fill: const DashboardTileFillLeaveTitle(),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 height: 250,
                 titleSize: 24,
                 subtitle: subtitle,
-                sideWidget: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: PopupMenuButton(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20.0),
-                      ),
-                    ),
-                    child: const Icon(Icons.more_horiz),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text(language.thisYear),
-                        value: 1,
-                      ),
-                      PopupMenuItem(
-                        child: Text(language.maxTime),
-                        value: 2,
-                      ),
-                    ],
-                    enableFeedback: true,
-                    onSelected: (index) {
-                      setState(() {
-                        dataIndex = index as int;
-                      });
-                      _refreshDataPoints();
-                    },
-                  ),
-                ),
+                // sideWidget: Container(
+                //   margin: const EdgeInsets.only(right: 15),
+                //   child: PopupMenuButton(
+                //     color: Theme.of(context).scaffoldBackgroundColor,
+                //     shape: const RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.all(
+                //         Radius.circular(20.0),
+                //       ),
+                //     ),
+                //     child: const Icon(Icons.more_horiz),
+                //     itemBuilder: (context) => [
+                //       PopupMenuItem(
+                //         child: Text(language.thisYear),
+                //         value: 1,
+                //       ),
+                //       PopupMenuItem(
+                //         child: Text(language.maxTime),
+                //         value: 2,
+                //       ),
+                //     ],
+                //     enableFeedback: true,
+                //     onSelected: (index) {
+                //       setState(() {
+                //         dataIndex = index as int;
+                //       });
+                //       _refreshDataPoints();
+                //     },
+                //   ),
+                // ),
                 child: Expanded(
                   child: WealthChart(
                     key: ValueKey<bool>(wealthChartKey),
@@ -158,6 +160,25 @@ class _WealthPageState extends State<WealthPage> {
                   ),
                 ),
               ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: TabSwitcher(
+            tabs: [
+              TabElement(
+                title: language.month,
+                onPressed: _tabSwitcherCallback,
+              ),
+              TabElement(
+                title: language.year,
+                onPressed: _tabSwitcherCallback,
+              ),
+              TabElement(
+                title: language.maxTime,
+                onPressed: _tabSwitcherCallback,
+              ),
+            ],
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 15.0, top: 15),
           child: Text(
@@ -191,6 +212,11 @@ class _WealthPageState extends State<WealthPage> {
         ),
       ],
     );
+  }
+
+  void _tabSwitcherCallback(int index) {
+    setState(() => dataIndex = index);
+    _refreshDataPoints();
   }
 
   double _getCurrentWealth() {
@@ -232,7 +258,7 @@ class _WealthPageState extends State<WealthPage> {
         event is FlPanEndEvent ||
         event is FlLongPressEnd) {
       setState(() {
-        subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
+        subtitle = ""; // dataIndex == 1 ? language.thisYear : language.maxTime;
         _indexLine = null;
         displayWealth = _getCurrentWealth();
       });

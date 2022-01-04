@@ -18,6 +18,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+const double sidePadding = 15.0;
+
 class WealthPage extends StatefulWidget {
   const WealthPage({Key? key}) : super(key: key);
 
@@ -43,15 +45,14 @@ class _WealthPageState extends State<WealthPage> {
   }
 
   Future _refreshDataPoints() async {
-    var language = AppLocalizations.of(context)!;
     var now = DateTime.now();
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
       case 0:
         newDataPoints = mapIndexed(
             allDataPoints
-                .where((e) => e.time.isAfter(DateTime(DateTime.now().year,
-                    DateTime.now().month - 1, DateTime.now().day)))
+                .where((e) =>
+                    e.time.isAfter(DateTime(now.year, now.month - 1, now.day)))
                 .toList(),
             (index, WealthDataPoint item) =>
                 FlSpot(index.toDouble(), item.value)).toList();
@@ -59,8 +60,8 @@ class _WealthPageState extends State<WealthPage> {
       case 1:
         newDataPoints = mapIndexed(
             allDataPoints
-                .where((e) => e.time.isAfter(DateTime(DateTime.now().year - 1,
-                    DateTime.now().month, DateTime.now().day)))
+                .where((e) =>
+                    e.time.isAfter(DateTime(now.year - 1, now.month, now.day)))
                 .toList(),
             (index, WealthDataPoint item) =>
                 FlSpot(index.toDouble(), item.value)).toList();
@@ -68,8 +69,8 @@ class _WealthPageState extends State<WealthPage> {
       case 2:
         newDataPoints = mapIndexed(
             allDataPoints
-                .where((e) => e.time.isAfter(DateTime(DateTime.now().year - 5,
-                    DateTime.now().month, DateTime.now().day)))
+                .where((e) =>
+                    e.time.isAfter(DateTime(now.year - 5, now.month, now.day)))
                 .toList(),
             (index, WealthDataPoint item) =>
                 FlSpot(index.toDouble(), item.value)).toList();
@@ -82,13 +83,11 @@ class _WealthPageState extends State<WealthPage> {
     }
     setState(() {
       displayedDataPoints = newDataPoints;
-      //subtitle = dataIndex == 1 ? language.thisYear : language.maxTime;
     });
   }
 
   Future _refreshCategories() async {
     setState(() => isLoading = true);
-
     categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     displayedDataPoints = [];
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
@@ -140,35 +139,6 @@ class _WealthPageState extends State<WealthPage> {
                 height: 250,
                 titleSize: 24,
                 subtitle: subtitle,
-                // sideWidget: Container(
-                //   margin: const EdgeInsets.only(right: 15),
-                //   child: PopupMenuButton(
-                //     color: Theme.of(context).scaffoldBackgroundColor,
-                //     shape: const RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.all(
-                //         Radius.circular(20.0),
-                //       ),
-                //     ),
-                //     child: const Icon(Icons.more_horiz),
-                //     itemBuilder: (context) => [
-                //       PopupMenuItem(
-                //         child: Text(language.thisYear),
-                //         value: 1,
-                //       ),
-                //       PopupMenuItem(
-                //         child: Text(language.maxTime),
-                //         value: 2,
-                //       ),
-                //     ],
-                //     enableFeedback: true,
-                //     onSelected: (index) {
-                //       setState(() {
-                //         dataIndex = index as int;
-                //       });
-                //       _refreshDataPoints();
-                //     },
-                //   ),
-                // ),
                 child: Expanded(
                   child: WealthChart(
                     key: ValueKey<bool>(wealthChartKey),
@@ -182,7 +152,8 @@ class _WealthPageState extends State<WealthPage> {
                 ),
               ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding:
+              const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
           child: TabSwitcher(
             tabs: [
               TabElement(
@@ -205,7 +176,7 @@ class _WealthPageState extends State<WealthPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 15.0, top: 15),
+          padding: const EdgeInsets.only(left: sidePadding, top: 15),
           child: Text(
             language.investments,
             style: TextStyle(
@@ -277,13 +248,12 @@ class _WealthPageState extends State<WealthPage> {
 
   void _handleChartTouch(
       FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
-    //var language = AppLocalizations.of(context)!;
     if (event is FlTapUpEvent ||
         event is FlPanCancelEvent ||
         event is FlPanEndEvent ||
         event is FlLongPressEnd) {
       setState(() {
-        subtitle = ""; // dataIndex == 1 ? language.thisYear : language.maxTime;
+        subtitle = "";
         _indexLine = null;
         displayWealth = _getCurrentWealth();
       });
@@ -327,14 +297,6 @@ class _WealthPageState extends State<WealthPage> {
           default:
             currentXValues = allDataPoints.map((e) => e.time).toList();
         }
-        // if (dataIndex == 1) {
-        //   currentXValues = allDataPoints
-        //       .map((e) => e.time)
-        //       .where((element) => element.year == DateTime.now().year)
-        //       .toList();
-        // } else {
-        //   currentXValues = allDataPoints.map((e) => e.time).toList();
-        // }
         setState(() {
           displayWealth = value;
           subtitle = dateFormat.format(

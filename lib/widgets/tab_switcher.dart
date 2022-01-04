@@ -25,7 +25,7 @@ class TabSwitcher extends StatefulWidget {
 }
 
 class _TabSwitcherState extends State<TabSwitcher> {
-  int currentIndex = 0;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _TabSwitcherState extends State<TabSwitcher> {
               child: GestureDetector(
                 onTap: () {
                   HapticFeedback.mediumImpact();
-                  setState(() => currentIndex = i);
+                  setState(() => _currentIndex = i);
                   if (e.onPressed != null) {
                     e.onPressed!(i);
                   }
@@ -54,14 +54,16 @@ class _TabSwitcherState extends State<TabSwitcher> {
                         child: Text(
                           e.title.toUpperCase(),
                           style: TextStyle(
-                            color: currentIndex == i
+                            fontWeight:
+                                _currentIndex == i ? FontWeight.bold : null,
+                            fontSize: 12,
+                            color: _currentIndex == i
                                 ? null
                                 : Theme.of(context).secondaryHeaderColor,
                           ),
                         ),
                       ),
                     ),
-                    // ),
                   ),
                 ),
               ),
@@ -81,10 +83,10 @@ class _TabSwitcherState extends State<TabSwitcher> {
                       Theme.of(context).secondaryHeaderColor.withOpacity(0.4)),
             ),
             AnimatedPositioned(
-              duration: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 200),
               left: (MediaQuery.of(context).size.width - 30) /
                   widget.tabs.length *
-                  currentIndex,
+                  _currentIndex,
               child: Container(
                 height: 2,
                 width: (MediaQuery.of(context).size.width - 30) /

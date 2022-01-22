@@ -39,7 +39,7 @@
   "next": "Weiter",
   "enterAmountOfTransaction": "Geben Sie den Betrag der Transaktion an:",
   "enterBalanceForInvestment": "Geben Sie den momentanen Wert der Geldanlage an:",
-  "noDatapointsForSelectedPeriod": "Im ausgewählten Zeitraum gibt es keine Einträge.",
+  "noDatapointsForSelectedPeriod": "Im ausgewählten Zeitraum gibt es noch nicht genügend Einträge.",
   "review": "Zusammenfassung:",
   "type": "Typ:",
   "category": "Kategorie:",

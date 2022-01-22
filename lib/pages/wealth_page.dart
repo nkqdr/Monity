@@ -140,21 +140,35 @@ class _WealthPageState extends State<WealthPage> {
                 titleSize: 24,
                 subtitle: subtitle,
                 child: Expanded(
-                  child: WealthChart(
-                    key: ValueKey<bool>(wealthChartKey),
-                    currentWealth: _getCurrentWealth(),
-                    spots: displayedDataPoints,
-                    indexLine: _indexLine,
-                    touchHandler: (e, v) {
-                      _handleChartTouch(e, v, dateFormatter);
-                    },
-                  ),
+                  child: displayedDataPoints.length > 1
+                      ? WealthChart(
+                          key: ValueKey<bool>(wealthChartKey),
+                          currentWealth: _getCurrentWealth(),
+                          spots: displayedDataPoints,
+                          indexLine: _indexLine,
+                          touchHandler: (e, v) {
+                            _handleChartTouch(e, v, dateFormatter);
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
+                              language.noDatapointsForSelectedPeriod,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ),
         Padding(
           padding:
               const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
           child: TabSwitcher(
+            startIndex: dataIndex,
             tabs: [
               TabElement(
                 title: language.month,

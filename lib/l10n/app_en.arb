@@ -159,7 +159,7 @@
   "@enterBalanceForInvestment": {
     "description": "Tells the user to enter the new balance of this investment"
   },
-  "noDatapointsForSelectedPeriod": "There are no entries in the selected time period.",
+  "noDatapointsForSelectedPeriod": "There are not enough entries in the selected time period.",
   "@noDatapointsForSelectedPeriod": {
     "description": "Tells the user why a chart is empty."
   },

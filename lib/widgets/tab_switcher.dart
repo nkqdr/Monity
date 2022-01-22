@@ -13,10 +13,12 @@ class TabElement {
 
 class TabSwitcher extends StatefulWidget {
   final List<TabElement> tabs;
+  final int startIndex;
 
   const TabSwitcher({
     Key? key,
     required this.tabs,
+    required this.startIndex,
   })  : assert(tabs.length > 1),
         super(key: key);
 
@@ -26,6 +28,12 @@ class TabSwitcher extends StatefulWidget {
 
 class _TabSwitcherState extends State<TabSwitcher> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.startIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

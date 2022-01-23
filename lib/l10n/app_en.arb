@@ -450,5 +450,9 @@
   "dashboardIntroduction": "The Dashboard is your home page. Various statistics are displayed here, which better illustrate the data entered. Moreover, predictions are also made based on your past savings performance and you can always see how much money is left in your budget and how long the current month will last.",
   "@dashboardIntroduction": {
     "description": "Introduction text that explains dashboard to the user."
+  },
+  "richestManOnEarth": "Congratulations! If you continue saving at this rate, you will be the richest person on earth soon.",
+  "@richestManOnEarth": {
+    "description": "Explainatory text for when the maximum compound interest limit is reached."
   }
 }

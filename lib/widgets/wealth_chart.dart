@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WealthChart extends StatefulWidget {
   final VerticalLine? indexLine;
@@ -37,16 +37,16 @@ class _WealthChartState extends State<WealthChart> {
 
   @override
   Widget build(BuildContext context) {
-    var language = AppLocalizations.of(context)!;
-    if (widget.spots.isEmpty) {
-      return Center(
-        child: Text(
-          language.noDatapointsForSelectedPeriod,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
-        ),
-      );
-    }
+    // var language = AppLocalizations.of(context)!;
+    // if (widget.spots.isEmpty) {
+    //   return Center(
+    //     child: Text(
+    //       language.noDatapointsForSelectedPeriod,
+    //       textAlign: TextAlign.center,
+    //       style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+    //     ),
+    //   );
+    // }
     return LineChart(
       LineChartData(
         backgroundColor: Colors.transparent,
@@ -93,19 +93,20 @@ class _WealthChartState extends State<WealthChart> {
         minValue = item.y;
       }
     }
-    var firstValue = widget.spots.isEmpty ? 0.0 : widget.spots[0].y;
-    var returnValue =
-        minValue >= firstValue ? firstValue : (minValue + (minValue * 0.5));
     // Calculate max
-    double max = 0;
+    double maxValue = -double.maxFinite;
     for (var item in widget.spots) {
-      if (item.y > max) {
-        max = item.y;
+      if (item.y > maxValue) {
+        maxValue = item.y;
       }
     }
+    // var firstValue = widget.spots.isEmpty ? 0.0 : widget.spots.first.y;
+    // var returnValue =
+    //     minValue >= firstValue ? firstValue : (minValue + (minValue * 0.5));
+    assert(minValue <= maxValue);
     setState(() {
-      minLineChartValue = returnValue;
-      maxLineChartValue = max;
+      minLineChartValue = minValue;
+      maxLineChartValue = maxValue;
     });
   }
 

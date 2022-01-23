@@ -37,6 +37,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
     setState(() => isLoading = true);
     snapshots = await FinancesDatabase.instance
         .readInvestmentSnapshotFor(widget.category.id!);
+    snapshots.sort((a, b) => a.date.compareTo(b.date));
     setState(() => isLoading = false);
   }
 

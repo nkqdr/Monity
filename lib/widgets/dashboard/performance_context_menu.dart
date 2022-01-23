@@ -21,6 +21,7 @@ class PerformanceContextMenu extends StatefulWidget {
 
 class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
   static const double numberFormatThreshold = 1000000000000;
+  static const double maximumAmountOfMoney = 100000000000000;
   static const List<int> predictionDistances = [1, 5, 25];
   late List<WealthDataPoint> predictions = [];
   bool showDescription = false;
@@ -55,7 +56,9 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
           pow((100 + (percentageDiff * 100)) / 100, distance);
       predictions.add(WealthDataPoint(
           time: DateTime(DateTime.now().year + distance),
-          value: predictionValue));
+          value: predictionValue < maximumAmountOfMoney
+              ? predictionValue
+              : maximumAmountOfMoney));
     }
   }
 
@@ -156,10 +159,6 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
                                     ],
                                   ),
                                 ),
-                                // Container(
-                                //   height: 1,
-                                //   color: Theme.of(context).secondaryHeaderColor,
-                                // ),
                               ],
                             )),
                       if (predictions.isEmpty)
@@ -172,6 +171,13 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
                                   color: Theme.of(context).secondaryHeaderColor,
                                 )),
                           ),
+                        ),
+                      if (predictions.isNotEmpty &&
+                          predictions.last.value == maximumAmountOfMoney)
+                        Text(
+                          language.richestManOnEarth,
+                          style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor),
                         ),
                     ],
                   ),

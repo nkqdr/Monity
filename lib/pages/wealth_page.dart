@@ -213,6 +213,7 @@ class _WealthPageState extends State<WealthPage> {
                   _refreshCategories();
                 },
                 child: InvestmentTile(
+                  key: ObjectKey(e),
                   category: e,
                 ),
               )),

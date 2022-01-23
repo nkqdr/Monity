@@ -23,6 +23,7 @@ class WealthChart extends StatefulWidget {
 class _WealthChartState extends State<WealthChart> {
   late double maxLineChartValue;
   late double minLineChartValue;
+
   @override
   void initState() {
     super.initState();
@@ -37,16 +38,7 @@ class _WealthChartState extends State<WealthChart> {
 
   @override
   Widget build(BuildContext context) {
-    // var language = AppLocalizations.of(context)!;
-    // if (widget.spots.isEmpty) {
-    //   return Center(
-    //     child: Text(
-    //       language.noDatapointsForSelectedPeriod,
-    //       textAlign: TextAlign.center,
-    //       style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
-    //     ),
-    //   );
-    // }
+    var zeroLine = _getZeroLine();
     return LineChart(
       LineChartData(
         backgroundColor: Colors.transparent,
@@ -58,8 +50,7 @@ class _WealthChartState extends State<WealthChart> {
           verticalLines: widget.indexLine != null
               ? [widget.indexLine as VerticalLine]
               : [],
-          horizontalLines:
-              _getZeroLine() != null ? [_getZeroLine() as HorizontalLine] : [],
+          horizontalLines: zeroLine != null ? [zeroLine] : [],
         ),
         titlesData: FlTitlesData(
           show: false,
@@ -76,9 +67,9 @@ class _WealthChartState extends State<WealthChart> {
             preventCurveOverShooting: true,
             belowBarData: BarAreaData(show: false),
             dotData: FlDotData(show: false),
-            barWidth: 4,
+            barWidth: 3,
             colors: [_getLineColor()],
-            spots: widget.spots, //?? spots,
+            spots: widget.spots,
           )
         ],
       ),
@@ -86,23 +77,17 @@ class _WealthChartState extends State<WealthChart> {
   }
 
   void _setMinMaxValues() {
-    // Calculate min
+    // Calculate min and max
     double minValue = double.maxFinite;
+    double maxValue = -double.maxFinite;
     for (var item in widget.spots) {
       if (item.y < minValue) {
         minValue = item.y;
       }
-    }
-    // Calculate max
-    double maxValue = -double.maxFinite;
-    for (var item in widget.spots) {
       if (item.y > maxValue) {
         maxValue = item.y;
       }
     }
-    // var firstValue = widget.spots.isEmpty ? 0.0 : widget.spots.first.y;
-    // var returnValue =
-    //     minValue >= firstValue ? firstValue : (minValue + (minValue * 0.5));
     assert(minValue <= maxValue);
     setState(() {
       minLineChartValue = minValue;
@@ -116,11 +101,13 @@ class _WealthChartState extends State<WealthChart> {
   }
 
   HorizontalLine? _getZeroLine() {
-    var firstValue = widget.spots.isEmpty ? 0 : widget.spots[0].y;
+    var firstValue = widget.spots.isEmpty ? 0 : widget.spots.first.y;
     return minLineChartValue < firstValue
         ? HorizontalLine(
-            y: widget.spots[0].y,
+            y: widget.spots.first.y,
             color: Theme.of(context).secondaryHeaderColor,
+            strokeWidth: 1,
+            dashArray: [5],
           )
         : null;
   }

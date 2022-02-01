@@ -1,9 +1,12 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/helper/types.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/pages/wealth_category_page.dart';
+import 'package:finance_buddy/pages/wealth_statistics_page.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
+import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
@@ -49,7 +52,7 @@ class _WealthPageState extends State<WealthPage> {
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {
       case 0:
-        newDataPoints = mapIndexed(
+        newDataPoints = Utils.mapIndexed(
             allDataPoints
                 .where((e) =>
                     e.time.isAfter(DateTime(now.year, now.month - 1, now.day)))
@@ -58,7 +61,7 @@ class _WealthPageState extends State<WealthPage> {
                 FlSpot(index.toDouble(), item.value)).toList();
         break;
       case 1:
-        newDataPoints = mapIndexed(
+        newDataPoints = Utils.mapIndexed(
             allDataPoints
                 .where((e) =>
                     e.time.isAfter(DateTime(now.year - 1, now.month, now.day)))
@@ -67,7 +70,7 @@ class _WealthPageState extends State<WealthPage> {
                 FlSpot(index.toDouble(), item.value)).toList();
         break;
       case 2:
-        newDataPoints = mapIndexed(
+        newDataPoints = Utils.mapIndexed(
             allDataPoints
                 .where((e) =>
                     e.time.isAfter(DateTime(now.year - 5, now.month, now.day)))
@@ -77,7 +80,7 @@ class _WealthPageState extends State<WealthPage> {
         break;
       default:
         newDataPoints =
-            mapIndexed(allDataPoints, (index, WealthDataPoint item) {
+            Utils.mapIndexed(allDataPoints, (index, WealthDataPoint item) {
           return FlSpot(index.toDouble(), item.value);
         }).toList();
     }
@@ -189,6 +192,16 @@ class _WealthPageState extends State<WealthPage> {
             ],
           ),
         ),
+        Center(
+          child: AdaptiveTextButton(
+            text: language.wealthSplitTitle,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const WealthStatisticsPage();
+              }));
+            },
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(left: sidePadding, top: 15),
           child: Text(
@@ -234,15 +247,15 @@ class _WealthPageState extends State<WealthPage> {
     return allDataPoints.isEmpty ? 0 : allDataPoints.last.value;
   }
 
-  Iterable<E> mapIndexed<E, T>(
-      Iterable<T> items, E Function(int index, T item) f) sync* {
-    var index = 0;
+  // Iterable<E> mapIndexed<E, T>(
+  //     Iterable<T> items, E Function(int index, T item) f) sync* {
+  //   var index = 0;
 
-    for (final item in items) {
-      yield f(index, item);
-      index = index + 1;
-    }
-  }
+  //   for (final item in items) {
+  //     yield f(index, item);
+  //     index = index + 1;
+  //   }
+  // }
 
   Future _handleAddSnapshot() async {
     await showModalBottomSheet(

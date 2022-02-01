@@ -1,3 +1,4 @@
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,12 +42,12 @@ class _TabSwitcherState extends State<TabSwitcher> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: mapIndexed(
+          children: Utils.mapIndexed(
             widget.tabs,
             (i, TabElement e) => Expanded(
               child: GestureDetector(
                 onTap: () {
-                  HapticFeedback.mediumImpact();
+                  HapticFeedback.lightImpact();
                   setState(() => _currentIndex = i);
                   if (e.onPressed != null) {
                     e.onPressed!(i);
@@ -111,13 +112,13 @@ class _TabSwitcherState extends State<TabSwitcher> {
     );
   }
 
-  Iterable<E> mapIndexed<E, T>(
-      Iterable<T> items, E Function(int index, T item) f) sync* {
-    var index = 0;
+  // Iterable<E> mapIndexed<E, T>(
+  //     Iterable<T> items, E Function(int index, T item) f) sync* {
+  //   var index = 0;
 
-    for (final item in items) {
-      yield f(index, item);
-      index = index + 1;
-    }
-  }
+  //   for (final item in items) {
+  //     yield f(index, item);
+  //     index = index + 1;
+  //   }
+  // }
 }

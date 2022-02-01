@@ -454,5 +454,13 @@
   "richestManOnEarth": "Congratulations! If you continue saving at this rate, you will be the richest person on earth soon.",
   "@richestManOnEarth": {
     "description": "Explainatory text for when the maximum compound interest limit is reached."
+  },
+  "wealthStatisticsTitle": "Details",
+  "@wealthStatisticsTitle": {
+    "description": "Details."
+  },
+  "wealthSplitTitle": "Asset Allocation",
+  "@wealthSplitTitle": {
+    "description": "Title of the wealth split section."
   }
 }

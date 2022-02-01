@@ -112,5 +112,7 @@
   "investmentIntroduction": "Unsere Vermögensübersicht hilft Ihnen dabei, den Überblick über die Summe all Ihrer Anlagen und Ersparnisse zu behalten. Hierfür müssen Sie zunächst beliebig viele Geldanlagen definieren. Für diese Geldanlagen wird nur ein Name benötigt. Häufige Namen für Geldanlagen sind zum Beispiel 'Depot', 'Konto' oder 'Tresor'. \nUm diese Geldanlagen zu definieren, gehen Sie zu Einstellungen > Geldanlagen.",
   "investmentViewIntroduction": "In der Vermögensübersicht sehen Sie nun all Ihre Geldanlagen aufgelistet und Sie können nach Belieben neue Einträge hinzufügen. \nFür jeden Tag kann maximal ein Datenpunkt im Graphen erstellt werden. Alles was Sie tun müssen ist, zu beliebigen Zeitpunkten den aktuellen Stand des Investments einzutragen. \nSelbstverständlich gilt: Je mehr Einträge, desto genauer ist der Graph.",
   "dashboardIntroduction": "Das Dashboard ist Ihre Startseite. Hier werden verschiedene Statistiken angezeigt, welche die eingetragenen Daten besser veranschaulichen. Außerdem werden auch Vorhersagen auf Grund Ihrer vergangenen Spar-Performance gemacht und Sie sehen stets wie viel Geld noch in Ihrem Budget vorhanden ist und wie lange der aktuelle Monat noch dauert.",
-  "richestManOnEarth": "Herzlichen Glückwunsch! Wenn Sie weiterhin in diesem Tempo sparen, werden Sie bald der reichste Mensch der Welt sein."
+  "richestManOnEarth": "Herzlichen Glückwunsch! Wenn Sie weiterhin in diesem Tempo sparen, werden Sie bald der reichste Mensch der Welt sein.",
+  "wealthStatisticsTitle": "Details",
+  "wealthSplitTitle": "Vermögensaufteilung"
 }

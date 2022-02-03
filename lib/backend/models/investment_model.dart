@@ -12,11 +12,14 @@ class InvestmentCategoryFields {
   ];
   static const String id = "_id";
   static const String name = "name";
+  static const String label = "label";
 }
 
 class InvestmentCategory extends Category {
+  final String? label;
   const InvestmentCategory({
     int? id,
+    this.label,
     required String name,
   }) : super(id: id, name: name);
 
@@ -24,6 +27,7 @@ class InvestmentCategory extends Category {
     return {
       InvestmentCategoryFields.id: id,
       InvestmentCategoryFields.name: name,
+      InvestmentCategoryFields.label: label,
     };
   }
 
@@ -31,6 +35,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: json[InvestmentCategoryFields.id] as int?,
       name: json[InvestmentCategoryFields.name] as String,
+      label: json[InvestmentCategoryFields.label] as String?,
     );
   }
 
@@ -38,10 +43,12 @@ class InvestmentCategory extends Category {
   InvestmentCategory copy({
     int? id,
     String? name,
+    String? label,
   }) {
     return InvestmentCategory(
       id: id ?? this.id,
       name: name ?? this.name,
+      label: label ?? this.label,
     );
   }
 

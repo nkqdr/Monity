@@ -48,7 +48,8 @@ class FinancesDatabase {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path,
+        version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async {
@@ -84,6 +85,13 @@ class FinancesDatabase {
       FOREIGN KEY(${InvestmentSnapshotFields.categoryId}) REFERENCES $tableInvestmentCategory(${InvestmentCategoryFields.id})
     )
     ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) {
+    if (oldVersion == 1 && newVersion == 2) {
+      db.execute(
+          "ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
+    }
   }
 
   Future<model.Transaction> createTransaction(

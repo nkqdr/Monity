@@ -114,5 +114,6 @@
   "dashboardIntroduction": "Das Dashboard ist Ihre Startseite. Hier werden verschiedene Statistiken angezeigt, welche die eingetragenen Daten besser veranschaulichen. Außerdem werden auch Vorhersagen auf Grund Ihrer vergangenen Spar-Performance gemacht und Sie sehen stets wie viel Geld noch in Ihrem Budget vorhanden ist und wie lange der aktuelle Monat noch dauert.",
   "richestManOnEarth": "Herzlichen Glückwunsch! Wenn Sie weiterhin in diesem Tempo sparen, werden Sie bald der reichste Mensch der Welt sein.",
   "wealthStatisticsTitle": "Details",
-  "wealthSplitTitle": "Vermögensaufteilung"
+  "wealthSplitTitle": "Vermögensaufteilung",
+  "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:"
 }

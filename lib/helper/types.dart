@@ -13,9 +13,9 @@ class WealthDataPoint {
 class AssetLabel {
   final String title;
   final Color displayColor;
-  final double? percentage;
+  double? percentage;
 
-  const AssetLabel({
+  AssetLabel({
     required this.title,
     required this.displayColor,
     this.percentage,

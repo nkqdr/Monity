@@ -1,3 +1,4 @@
+import 'package:finance_buddy/helper/config.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -27,23 +28,14 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    List<AssetLabel> labelTitles = const [
-      AssetLabel(
-        title: "Invested",
-        displayColor: Color(0xff0293ee),
-        percentage: 40,
-      ),
-      AssetLabel(
-        title: "Static",
-        displayColor: Color(0xfff8b250),
-        percentage: 30,
-      ),
-      AssetLabel(
-        title: "Volatile",
-        displayColor: Color(0xff845bef),
-        percentage: 30,
-      ),
-    ];
+    List<AssetLabel> labelTitles = Config.assetAllocationCategories;
+    List<double> percentages = [30, 40, 30];
+    assert(percentages.length == labelTitles.length);
+    int i = 0;
+    for (var label in labelTitles) {
+      label.percentage = percentages[i];
+      i++;
+    }
     return View(
       appBar: CustomAppBar(
         title: language.wealthSplitTitle,

@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,7 @@ class _CategoryTileState extends State<CategoryTile> {
   }
 
   Future _handleEdit() async {
+    bool hasLabelDropdown = widget.category is InvestmentCategory;
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -80,10 +82,19 @@ class _CategoryTileState extends State<CategoryTile> {
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: CategoryBottomSheet(
               mode: CategoryBottomSheetMode.edit,
+              hasLabelDropdown: hasLabelDropdown,
+              label: hasLabelDropdown
+                  ? (widget.category as InvestmentCategory).label
+                  : null,
               categories: widget.categories,
               placeholder: widget.category.name,
               onSubmit: (s) async {
                 await widget.category.copy(name: s).updateSelf();
+              },
+              onSubmitWithLabel: (s, l) async {
+                await (widget.category as InvestmentCategory)
+                    .copy(name: s, label: l.title)
+                    .updateSelf();
               },
             ),
           );

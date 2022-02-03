@@ -462,5 +462,9 @@
   "wealthSplitTitle": "Asset Allocation",
   "@wealthSplitTitle": {
     "description": "Title of the wealth split section."
+  },
+  "newCategoryLabel": "Select a label for this new category:",
+  "@newCategoryLabel": {
+    "description": "Tells the user to select an asset label."
   }
 }

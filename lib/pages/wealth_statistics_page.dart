@@ -1,3 +1,5 @@
+import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/helper/config.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/helper/utils.dart';
@@ -18,24 +20,72 @@ class WealthStatisticsPage extends StatefulWidget {
 
 class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   late int touchedIndex;
+  late List<InvestmentCategory> investmentCategories;
+  late List<InvestmentSnapshot> lastSnapshotForCategory = [];
+  List<AssetLabel> labelTitles = Config.assetAllocationCategories;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     touchedIndex = -1;
+    _refreshInvestmentCategories();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var language = AppLocalizations.of(context)!;
-    List<AssetLabel> labelTitles = Config.assetAllocationCategories;
-    List<double> percentages = [30, 40, 30];
+  Future _refreshInvestmentCategories() async {
+    setState(() => isLoading = true);
+    investmentCategories =
+        await FinancesDatabase.instance.readAllInvestmentCategories();
+    investmentCategories =
+        investmentCategories.where((element) => element.label != null).toList();
+    var toDeleteCategories = [];
+    for (var i = 0; i < investmentCategories.length; i++) {
+      var lastSnapshot = await FinancesDatabase.instance
+          .readLastSnapshotFor(category: investmentCategories[i]);
+      if (lastSnapshot != null) {
+        lastSnapshotForCategory.add(lastSnapshot);
+      } else {
+        toDeleteCategories.add(investmentCategories[i]);
+      }
+    }
+    for (var c in toDeleteCategories) {
+      investmentCategories.remove(c);
+    }
+    assert(investmentCategories.length == lastSnapshotForCategory.length);
+    _setPercentages();
+    setState(() => isLoading = false);
+  }
+
+  void _setPercentages() {
+    double total = 0;
+    for (var item in lastSnapshotForCategory) {
+      total += item.amount;
+    }
+    List<double> percentages = [];
+    for (var label in labelTitles) {
+      double labelSum = 0;
+      var relevantCategoriesIndices = [];
+      for (var i = 0; i < investmentCategories.length; i++) {
+        if (investmentCategories[i].label == label.title) {
+          relevantCategoriesIndices.add(i);
+        }
+      }
+      for (var index in relevantCategoriesIndices) {
+        labelSum += lastSnapshotForCategory[index].amount;
+      }
+      percentages.add((labelSum / total) * 100);
+    }
     assert(percentages.length == labelTitles.length);
     int i = 0;
     for (var label in labelTitles) {
       label.percentage = percentages[i];
       i++;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(
         title: language.wealthSplitTitle,
@@ -139,9 +189,20 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Container(
-                          color: Colors.blue,
+                        SizedBox(
                           height: 200,
+                          child: Column(
+                            children: [
+                              ...investmentCategories
+                                  .where((element) =>
+                                      element.label ==
+                                      labelTitles[touchedIndex].title)
+                                  .map((e) => Text(e.name +
+                                      ", " +
+                                      (e.label != null ? e.label! : "")))
+                                  .toList(),
+                            ],
+                          ),
                         )
                       ],
                     ),

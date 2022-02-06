@@ -52,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
           destination: const InvestmentsSettingsPage(),
         ),
         SettingNavButton(
-          name: language.help,
+          name: language.about,
           destination: const HelpPage(),
         ),
       ],

@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart';
+import 'package:finance_buddy/widgets/horizontal_bar.dart';
 import 'package:finance_buddy/widgets/pie_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 
 class PieChartTileContextMenu extends StatefulWidget {
   final Widget child;
@@ -192,59 +190,6 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
       ],
       child: SingleChildScrollView(
         child: widget.child,
-      ),
-    );
-  }
-}
-
-class HorizontalBar extends StatelessWidget {
-  final double amount;
-  final double size;
-  final TransactionType type;
-  const HorizontalBar({
-    Key? key,
-    required this.amount,
-    required this.size,
-    required this.type,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
-    return Container(
-      decoration: BoxDecoration(
-        color: type == TransactionType.expense ? Colors.red : Colors.green,
-        borderRadius: BorderRadius.circular(10),
-        // borderRadius: const BorderRadius.only(
-        //   topRight: Radius.circular(10),
-        //   bottomRight: Radius.circular(10),
-        // ),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            type == TransactionType.expense
-                ? Colors.red[900] as Color
-                : Colors.green[900] as Color,
-            type == TransactionType.expense ? Colors.red : Colors.green,
-          ],
-        ),
-      ),
-      height: 40,
-      width: min(
-          max((MediaQuery.of(context).size.width / 1.1) * (amount * size), 75),
-          MediaQuery.of(context).size.width - 145),
-      child: Center(
-        child: Text(
-          currencyFormat.format(amount),
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
       ),
     );
   }

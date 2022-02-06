@@ -75,9 +75,13 @@
   "@transactionsSettings": {
     "description": "Transactions string used inside settings"
   },
-  "help": "About",
+  "about": "About",
+  "@about": {
+    "description": "About string used inside settings"
+  },
+  "help": "Help",
   "@help": {
-    "description": "Help string used inside settings"
+    "description": "Help string used inside dialogs"
   },
   "theme": "Theme",
   "@theme": {
@@ -466,5 +470,9 @@
   "newCategoryLabel": "Select a label for this new category:",
   "@newCategoryLabel": {
     "description": "Tells the user to select an asset label."
+  },
+  "assetAllocationHelp": "By assigning each investment a state from 'Invested', 'Saved', or 'Liquid', you get an even more detailed overview of your investments. You can make this adjustment in the settings.",
+  "@assetAllocationHelp": {
+    "description": "Content for the help dialog on asset allocation page."
   }
 }

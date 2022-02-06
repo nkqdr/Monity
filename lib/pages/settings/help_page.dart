@@ -19,7 +19,7 @@ class _HelpPageState extends State<HelpPage> {
     var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(
-        title: language.help,
+        title: language.about,
         left: IconButton(
           icon: const Icon(
             Icons.chevron_left,

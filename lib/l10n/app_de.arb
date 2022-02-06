@@ -18,7 +18,8 @@
   "system": "System",
   "appearance": "Anzeige",
   "transactionsSettings": "Transaktionen",
-  "help": "Info",
+  "about": "Info",
+  "help": "Hilfe",
   "theme": "Erscheinungsbild",
   "lightTheme": "Hell",
   "darkTheme": "Dunkel",
@@ -115,5 +116,6 @@
   "richestManOnEarth": "Herzlichen Glückwunsch! Wenn Sie weiterhin in diesem Tempo sparen, werden Sie bald der reichste Mensch der Welt sein.",
   "wealthStatisticsTitle": "Details",
   "wealthSplitTitle": "Vermögensaufteilung",
-  "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:"
+  "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:",
+  "assetAllocationHelp": "Indem du jeder Geldanlage einen Zustand aus 'Investiert', 'Gespart', oder 'Flüssig' zuweist, bekommst du eine noch genauere Übersicht über deine Geldanlagen. Diese Anpassung kannst du in den Einstellungen treffen."
 }

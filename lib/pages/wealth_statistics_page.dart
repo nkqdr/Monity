@@ -47,6 +47,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   late int touchedIndex;
   late List<DisplayAssetAllocation> allAllocations = [];
   bool isLoading = false;
+  bool noContent = false;
 
   @override
   void initState() {
@@ -62,6 +63,9 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
         await FinancesDatabase.instance.readAllInvestmentCategories();
     investmentCategories =
         investmentCategories.where((e) => e.label != null).toList();
+    if (investmentCategories.isEmpty) {
+      noContent = true;
+    }
     List<InvestmentSnapshot> lastSnapshots = [];
     for (var i = 0; i < investmentCategories.length; i++) {
       var snapshot = await FinancesDatabase.instance
@@ -132,184 +136,209 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       ),
       fixedAppBar: true,
       safeAreaBottomDisabled: true,
-      children: isLoading
+      children: noContent
           ? [
-              const AdaptiveProgressIndicator(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Center(
+                  child: Text(
+                    language.noDatapointsForSelectedPeriod,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
+                ),
+              ),
             ]
-          : [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: Utils.mapIndexed(allAllocations,
-                    (index, DisplayAssetAllocation item) {
-                  return Indicator(
-                    color: item.label.displayColor,
-                    text: item.label.title,
-                    isSquare: false,
-                    size: touchedIndex == index ? 18 : 16,
-                    textColor: touchedIndex == index
-                        ? null
-                        : Theme.of(context).secondaryHeaderColor,
-                  );
-                }).toList(),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: PieChart(
-                        PieChartData(
-                          pieTouchData: PieTouchData(touchCallback:
-                              (FlTouchEvent event, pieTouchResponse) {
-                            setState(() {
-                              if (pieTouchResponse == null) {
-                                return;
-                              }
-                              if (pieTouchResponse.touchedSection == null) {
-                                touchedIndex = -1;
-                                return;
-                              }
-                              int newIndex = pieTouchResponse
-                                  .touchedSection!.touchedSectionIndex;
-                              if (newIndex > -1 || event is FlTapUpEvent) {
-                                touchedIndex = pieTouchResponse
-                                    .touchedSection!.touchedSectionIndex;
-                                HapticFeedback.lightImpact();
-                              }
-                            });
-                          }),
-                          borderData: FlBorderData(
-                            show: false,
+          : isLoading
+              ? [
+                  const AdaptiveProgressIndicator(),
+                ]
+              : [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: Utils.mapIndexed(allAllocations,
+                        (index, DisplayAssetAllocation item) {
+                      return Indicator(
+                        color: item.label.displayColor,
+                        text: Utils.getCorrectTitleFromKey(
+                            item.label.title, language),
+                        isSquare: false,
+                        size: touchedIndex == index ? 18 : 16,
+                        textColor: touchedIndex == index
+                            ? null
+                            : Theme.of(context).secondaryHeaderColor,
+                      );
+                    }).toList(),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(touchCallback:
+                                  (FlTouchEvent event, pieTouchResponse) {
+                                setState(() {
+                                  if (pieTouchResponse == null) {
+                                    return;
+                                  }
+                                  if (pieTouchResponse.touchedSection == null) {
+                                    touchedIndex = -1;
+                                    return;
+                                  }
+                                  int newIndex = pieTouchResponse
+                                      .touchedSection!.touchedSectionIndex;
+                                  if (newIndex > -1 || event is FlTapUpEvent) {
+                                    touchedIndex = pieTouchResponse
+                                        .touchedSection!.touchedSectionIndex;
+                                    HapticFeedback.lightImpact();
+                                  }
+                                });
+                              }),
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 60,
+                              sections: getSections(allAllocations),
+                            ),
                           ),
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 60,
-                          sections: getSections(allAllocations),
                         ),
                       ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 800),
+                      constraints: const BoxConstraints(
+                        minHeight: 100.0,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).cardColor,
+                      ),
+                      child: touchedIndex == -1
+                          ? Center(
+                              child: Text(
+                                language.tapChartForDetails,
+                                style: TextStyle(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        Utils.getCorrectTitleFromKey(
+                                            allAllocations[touchedIndex]
+                                                .label
+                                                .title,
+                                            language),
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        currencyFormat.format(
+                                            allAllocations[touchedIndex]
+                                                .totalSum),
+                                        style: TextStyle(
+                                          color: allAllocations[touchedIndex]
+                                                      .totalSum >
+                                                  0
+                                              ? Theme.of(context).hintColor
+                                              : Theme.of(context).errorColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  Column(
+                                    children: [
+                                      ...Utils.mapIndexed(
+                                          allAllocations[touchedIndex]
+                                              .relevantCategories,
+                                          (i, CategoryWithSnapshot e) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              e.category.name,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                HorizontalBar(
+                                                  amount: e.snapshot.amount,
+                                                  size: 1 /
+                                                      allAllocations[
+                                                              touchedIndex]
+                                                          .totalSum,
+                                                  color: allAllocations[
+                                                          touchedIndex]
+                                                      .label
+                                                      .displayColor,
+                                                ),
+                                                const SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  (e.snapshot.amount /
+                                                              allAllocations[
+                                                                      touchedIndex]
+                                                                  .totalSum *
+                                                              100)
+                                                          .toStringAsFixed(1) +
+                                                      "%",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .secondaryHeaderColor),
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                          ],
+                                        );
+                                      })
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                     ),
                   ),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 800),
-                  constraints: const BoxConstraints(
-                    minHeight: 100.0,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).cardColor,
-                  ),
-                  child: touchedIndex == -1
-                      ? Center(
-                          child: Text(
-                            "Tap the chart for more details.",
-                            style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    allAllocations[touchedIndex].label.title,
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    currencyFormat.format(
-                                        allAllocations[touchedIndex].totalSum),
-                                    style: TextStyle(
-                                      color: allAllocations[touchedIndex]
-                                                  .totalSum >
-                                              0
-                                          ? Theme.of(context).hintColor
-                                          : Theme.of(context).errorColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Column(
-                                children: [
-                                  ...Utils.mapIndexed(
-                                      allAllocations[touchedIndex]
-                                          .relevantCategories,
-                                      (i, CategoryWithSnapshot e) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          e.category.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            HorizontalBar(
-                                              amount: e.snapshot.amount,
-                                              size: 1 /
-                                                  allAllocations[touchedIndex]
-                                                      .totalSum,
-                                              color:
-                                                  allAllocations[touchedIndex]
-                                                      .label
-                                                      .displayColor,
-                                            ),
-                                            const SizedBox(
-                                              width: 15,
-                                            ),
-                                            Text(
-                                              (e.snapshot.amount /
-                                                          allAllocations[
-                                                                  touchedIndex]
-                                                              .totalSum *
-                                                          100)
-                                                      .toStringAsFixed(1) +
-                                                  "%",
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .secondaryHeaderColor),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                      ],
-                                    );
-                                  })
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                ),
-              ),
-            ],
     );
   }
 

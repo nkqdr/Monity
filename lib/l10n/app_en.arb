@@ -411,9 +411,25 @@
   "@year": {
     "description": "Year."
   },
+  "liquid": "Liquid",
+  "@liquid": {
+    "description": "Liquid."
+  },
+  "saved": "Saved",
+  "@saved": {
+    "description": "Saved."
+  },
+  "invested": "Invested",
+  "@invested": {
+    "description": "Invested."
+  },
   "month": "Month",
   "@month": {
     "description": "Month."
+  },
+  "tapChartForDetails": "Tap the chart for more details.",
+  "@tapChartForDetails": {
+    "description": "Tap chart for details."
   },
   "finish": "Finish",
   "@finish": {

@@ -9,11 +9,11 @@ class Config {
       displayColor: const Color(0xff0293ee),
     ),
     AssetLabel(
-      title: "Static",
+      title: "Saved",
       displayColor: const Color(0xfff8b250),
     ),
     AssetLabel(
-      title: "Volatile",
+      title: "Liquid",
       displayColor: const Color(0xff845bef),
     ),
   ];

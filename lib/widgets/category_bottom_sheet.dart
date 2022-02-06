@@ -1,6 +1,7 @@
 import 'package:finance_buddy/helper/config.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/helper/types.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -143,9 +144,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   }
 
   DropdownMenuItem<AssetLabel> buildMenuItem(AssetLabel item) {
+    var language = AppLocalizations.of(context)!;
     return DropdownMenuItem(
       value: item,
-      child: Text(item.title),
+      child: Text(Utils.getCorrectTitleFromKey(item.title, language)),
     );
   }
 
@@ -172,6 +174,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
       widget.onSubmit(value);
     } else if (widget.onSubmitWithLabel != null && _selectedLabel != null) {
       widget.onSubmitWithLabel!(value, _selectedLabel!);
+    } else {
+      widget.onSubmit(value);
     }
   }
 }

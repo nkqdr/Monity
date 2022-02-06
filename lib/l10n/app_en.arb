@@ -67,6 +67,10 @@
   "@system": {
     "description": "System string used inside settings"
   },
+  "options": "Options",
+  "@options": {
+    "description": "Options string used inside settings"
+  },
   "appearance": "Appearance",
   "@appearance": {
     "description": "Appearance string used inside settings"
@@ -483,6 +487,10 @@
   "@wealthSplitTitle": {
     "description": "Title of the wealth split section."
   },
+  "enableOverflow": "Enable overflow:",
+  "@enableOverflow": {
+    "description": "Option title for enabling overflow"
+  },
   "newCategoryLabel": "Select a label for this new category:",
   "@newCategoryLabel": {
     "description": "Tells the user to select an asset label."
@@ -490,5 +498,9 @@
   "assetAllocationHelp": "By assigning each investment a state from 'Invested', 'Saved', or 'Liquid', you get an even more detailed overview of your investments. You can make this adjustment in the settings.",
   "@assetAllocationHelp": {
     "description": "Content for the help dialog on asset allocation page."
+  },
+  "remainingBudgetOverflow": "Carry forward the remaining budget to the next month",
+  "@remainingBudgetOverflow": {
+    "description": "Option title for remaining budget overflow"
   }
 }

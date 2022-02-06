@@ -37,15 +37,16 @@ class CustomSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    title ?? "",
-                    style: TextStyle(
-                      fontSize: titleSize ?? 22,
-                      fontWeight: titleWeight ?? FontWeight.bold,
-                      color:
-                          titleColor ?? Theme.of(context).secondaryHeaderColor,
+                  if (title != null)
+                    Text(
+                      title!,
+                      style: TextStyle(
+                        fontSize: titleSize ?? 22,
+                        fontWeight: titleWeight ?? FontWeight.bold,
+                        color: titleColor ??
+                            Theme.of(context).secondaryHeaderColor,
+                      ),
                     ),
-                  ),
                   trailing ?? Container(),
                 ],
               ),

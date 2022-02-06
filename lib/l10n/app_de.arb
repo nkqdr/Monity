@@ -16,6 +16,7 @@
   "lastChange": "Letzte Änderung:",
   "viewAll": "Alle anzeigen",
   "system": "System",
+  "options": "Optionen",
   "appearance": "Anzeige",
   "transactionsSettings": "Transaktionen",
   "about": "Info",
@@ -119,7 +120,9 @@
   "dashboardIntroduction": "Das Dashboard ist Ihre Startseite. Hier werden verschiedene Statistiken angezeigt, welche die eingetragenen Daten besser veranschaulichen. Außerdem werden auch Vorhersagen auf Grund Ihrer vergangenen Spar-Performance gemacht und Sie sehen stets wie viel Geld noch in Ihrem Budget vorhanden ist und wie lange der aktuelle Monat noch dauert.",
   "richestManOnEarth": "Herzlichen Glückwunsch! Wenn Sie weiterhin in diesem Tempo sparen, werden Sie bald der reichste Mensch der Welt sein.",
   "wealthStatisticsTitle": "Details",
+  "enableOverflow": "Überlauf aktivieren:",
   "wealthSplitTitle": "Vermögensaufteilung",
   "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:",
-  "assetAllocationHelp": "Indem du jeder Geldanlage einen Zustand aus 'Investiert', 'Gespart', oder 'Flüssig' zuweist, bekommst du eine noch genauere Übersicht über deine Geldanlagen. Diese Anpassung kannst du in den Einstellungen treffen."
+  "assetAllocationHelp": "Indem du jeder Geldanlage einen Zustand aus 'Investiert', 'Gespart', oder 'Flüssig' zuweist, bekommst du eine noch genauere Übersicht über deine Geldanlagen. Diese Anpassung kannst du in den Einstellungen treffen.",
+  "remainingBudgetOverflow": "Das übrige Budget in den nächsten Monat übertragen"
 }

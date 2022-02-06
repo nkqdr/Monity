@@ -57,7 +57,7 @@ class _HelpPageState extends State<HelpPage> {
             ),
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
-              child: Text("© 2021 Niklas Kuder"),
+              child: Text("© 2021-2022 Niklas Kuder"),
             ),
           ],
         ),

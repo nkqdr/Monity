@@ -16,6 +16,7 @@ void main() {
     await tester.pumpWidget(const MyApp(
       initialTheme: ThemeMode.system,
       shouldShowInstructions: false,
+      budgetOverflowEnabled: false,
     ));
 
     // Verify that our counter starts at 0.

@@ -1,4 +1,5 @@
 import 'package:finance_buddy/backend/key_value_database.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/home.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/custom_themes.dart';
@@ -13,10 +14,13 @@ void main() async {
   bool? firstStartUp = await KeyValueDatabase.getFirstStartup();
   ThemeMode mode = await KeyValueDatabase.getTheme();
   Locale? locale = await KeyValueDatabase.getLocale();
+  bool? budgetOverflowEnabled =
+      await KeyValueDatabase.getBudgetOverflowEnabled();
   runApp(MyApp(
     initialTheme: mode,
     selectedLocale: locale,
     shouldShowInstructions: firstStartUp ?? true,
+    budgetOverflowEnabled: budgetOverflowEnabled ?? false,
   ));
 }
 
@@ -24,11 +28,13 @@ class MyApp extends StatefulWidget {
   final ThemeMode initialTheme;
   final Locale? selectedLocale;
   final bool shouldShowInstructions;
+  final bool budgetOverflowEnabled;
 
   const MyApp({
     Key? key,
     required this.initialTheme,
     required this.shouldShowInstructions,
+    required this.budgetOverflowEnabled,
     this.selectedLocale,
   }) : super(key: key);
 
@@ -57,31 +63,39 @@ class _MyAppState extends State<MyApp> {
           ),
           builder: (context, _) {
             final themeProvider = Provider.of<ThemeProvider>(context);
-            return MaterialApp(
-              title: 'Monity',
-              themeMode: themeProvider.themeMode,
-              debugShowCheckedModeBanner: false,
-              locale: languageProvider.locale,
-              theme: CustomThemes.lightTheme,
-              darkTheme: CustomThemes.darkTheme,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              // localeListResolutionCallback: (locales, supportedLocales) {
-              //   for (Locale locale in locales!) {
-              //     // if device language is supported by the app,
-              //     // just return it to set it as current app language
-              //     if (supportedLocales.contains(locale)) {
-              //       return locale;
-              //     }
-              //   }
-
-              //   // if device language is not supported by the app,
-              //   // the app will set it to english but return this to set to Bahasa instead
-              //   return const Locale('en', 'US');
-              // },
-              home: HomePage(
-                showInstructions: widget.shouldShowInstructions,
+            return ChangeNotifierProvider(
+              create: (context) => ConfigProvider(
+                budgetOverflowEnabled: widget.budgetOverflowEnabled,
               ),
+              builder: (context, _) {
+                return MaterialApp(
+                  title: 'Monity',
+                  themeMode: themeProvider.themeMode,
+                  debugShowCheckedModeBanner: false,
+                  locale: languageProvider.locale,
+                  theme: CustomThemes.lightTheme,
+                  darkTheme: CustomThemes.darkTheme,
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  // localeListResolutionCallback: (locales, supportedLocales) {
+                  //   for (Locale locale in locales!) {
+                  //     // if device language is supported by the app,
+                  //     // just return it to set it as current app language
+                  //     if (supportedLocales.contains(locale)) {
+                  //       return locale;
+                  //     }
+                  //   }
+
+                  //   // if device language is not supported by the app,
+                  //   // the app will set it to english but return this to set to Bahasa instead
+                  //   return const Locale('en', 'US');
+                  // },
+                  home: HomePage(
+                    showInstructions: widget.shouldShowInstructions,
+                  ),
+                );
+              },
             );
           },
         );

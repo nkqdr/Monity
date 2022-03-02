@@ -502,5 +502,17 @@
   "remainingBudgetOverflow": "Carry forward the remaining budget to the next month",
   "@remainingBudgetOverflow": {
     "description": "Option title for remaining budget overflow"
+  },
+  "sureDeleteOverflow": "Are you sure you want to disable the overflow? The previously saved overflow will be deleted.",
+  "@sureDeleteOverflow": {
+    "description": "Dialog message to ask if user really wants to delete the overflow."
+  },
+  "percentageHighBecauseOfOverflow": "Your available budget is greater than your monthly limit because you saved last month!",
+  "@percentageHighBecauseOfOverflow": {
+    "description": "Context menu message if remaining percentage is more than 100%"
+  },
+  "currentOverflow": "Current overflow:",
+  "@currentOverflow": {
+    "description": "Current Overflow."
   }
 }

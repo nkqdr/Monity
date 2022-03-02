@@ -113,6 +113,7 @@ class FinancesDatabase {
     if (maps.isNotEmpty) {
       return model.Transaction.fromJson(maps.first);
     }
+    return null;
   }
 
   Future<List<model.Transaction>> readAllTransactions() async {
@@ -151,6 +152,7 @@ class FinancesDatabase {
     if (maps.isNotEmpty) {
       return model.TransactionCategory.fromJson(maps.first);
     }
+    return null;
   }
 
   Future<List<model.TransactionCategory>> readAllTransactionCategories() async {
@@ -198,6 +200,7 @@ class FinancesDatabase {
     if (maps.isNotEmpty) {
       return InvestmentCategory.fromJson(maps.first);
     }
+    return null;
   }
 
   Future<List<InvestmentCategory>> readAllInvestmentCategories() async {

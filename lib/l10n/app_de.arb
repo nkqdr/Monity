@@ -105,7 +105,7 @@
   "month": "Monat",
   "invested": "Investiert",
   "saved": "Gespart",
-  "liquid": "Flüssig",
+  "liquid": "Liquide",
   "tapChartForDetails": "Tippe auf das Diagramm um Details zu sehen.",
   "showIntroduction": "Einführung anzeigen",
   "showAdditionalLicenses": "Weitere Lizenzen",
@@ -123,6 +123,9 @@
   "enableOverflow": "Überlauf aktivieren:",
   "wealthSplitTitle": "Vermögensaufteilung",
   "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:",
-  "assetAllocationHelp": "Indem du jeder Geldanlage einen Zustand aus 'Investiert', 'Gespart', oder 'Flüssig' zuweist, bekommst du eine noch genauere Übersicht über deine Geldanlagen. Diese Anpassung kannst du in den Einstellungen treffen.",
-  "remainingBudgetOverflow": "Das übrige Budget in den nächsten Monat übertragen"
+  "assetAllocationHelp": "Indem du jeder Geldanlage einen Zustand aus 'Investiert', 'Gespart', oder 'Liquide' zuweist, bekommst du eine noch genauere Übersicht über deine Geldanlagen. Diese Anpassung kannst du in den Einstellungen treffen.",
+  "remainingBudgetOverflow": "Das übrige Budget in den nächsten Monat übertragen",
+  "sureDeleteOverflow": "Bist du sicher dass du den Überlauf deaktivieren möchtest? Der bisher gespeicherte Überlauf wird dadurch gelöscht.",
+  "percentageHighBecauseOfOverflow": "Dein verfügbares Budget ist größer als dein monatliches Limit, da du im letzten Monat gespart hast!",
+  "currentOverflow": "Aktueller Überlauf:"
 }

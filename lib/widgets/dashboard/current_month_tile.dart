@@ -1,12 +1,14 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard/current_month_context_menu.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CurrentMonthTile extends StatefulWidget {
   const CurrentMonthTile({Key? key}) : super(key: key);
@@ -19,11 +21,19 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
   double? monthlyLimit;
   double? remainingAmount;
   bool isLoading = false;
+  late bool budgetOverflowEnabled;
 
   @override
   void initState() {
     super.initState();
     _refreshTile();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    budgetOverflowEnabled =
+        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
   }
 
   Future _refreshTile() async {
@@ -120,15 +130,39 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
   }
 
   Future<double> _getRemainingAmount() async {
-    var currentMonth = DateTime.now().month;
+    var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
-    var thisMonthTransactions =
-        transactions.where((element) => element.date.month == currentMonth);
+    var thisMonthTransactions = transactions.where((element) =>
+        element.date.month == currentDate.month &&
+        element.date.year == currentDate.year);
+    var lastTransactionBeforeCurrentMonth = transactions
+        .where((element) => element.date
+            .isBefore(DateTime(currentDate.year, currentDate.month)))
+        .last;
+    var lastTransaction = transactions.last;
+    if (lastTransaction.date
+            .isBefore(DateTime(currentDate.year, currentDate.month)) &&
+        budgetOverflowEnabled) {
+      var lastMonthTransactions = transactions.where((element) =>
+          element.date.month == lastTransactionBeforeCurrentMonth.date.month &&
+          element.date.year == lastTransactionBeforeCurrentMonth.date.year);
+      double lastMonthSum = 0;
+      for (var month in lastMonthTransactions) {
+        if (month.type == TransactionType.expense) {
+          lastMonthSum += month.amount;
+        }
+      }
+      await KeyValueDatabase.setBudgetOverflow(monthlyLimit! - lastMonthSum);
+    }
     double sum = 0;
     for (var month in thisMonthTransactions) {
       if (month.type == TransactionType.expense) {
         sum += month.amount;
       }
+    }
+    double? overflow = await KeyValueDatabase.getBudgetOverflow();
+    if (overflow != null && budgetOverflowEnabled) {
+      return monthlyLimit! - sum + overflow;
     }
     return monthlyLimit! - sum;
   }

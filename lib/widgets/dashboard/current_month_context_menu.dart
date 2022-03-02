@@ -72,56 +72,77 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    language.remainingDays +
-                                        " ${widget.daysRemaining}",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .secondaryHeaderColor,
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      language.remainingDays +
+                                          " ${widget.daysRemaining}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        language.remainingBudget,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .secondaryHeaderColor,
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          language.remainingBudget,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context)
+                                                .secondaryHeaderColor,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        showRemainingGraphic
+                                            ? Text(
+                                                widget.remainingAmount! >= 0
+                                                    ? "+" +
+                                                        currencyFormat.format(
+                                                            widget
+                                                                .remainingAmount)
+                                                    : currencyFormat.format(
+                                                        widget.remainingAmount),
+                                                style: TextStyle(
+                                                  color:
+                                                      widget.remainingAmount! >=
+                                                              0
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 50),
+                                    if (widget.remainingAmount! >
+                                        widget.monthlyLimit!)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10.0),
+                                        child: Text(
+                                          language
+                                              .percentageHighBecauseOfOverflow,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context)
+                                                .secondaryHeaderColor,
+                                          ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      showRemainingGraphic
-                                          ? Text(
-                                              widget.remainingAmount! >= 0
-                                                  ? "+" +
-                                                      currencyFormat.format(
-                                                          widget
-                                                              .remainingAmount)
-                                                  : currencyFormat.format(
-                                                      widget.remainingAmount),
-                                              style: TextStyle(
-                                                color:
-                                                    widget.remainingAmount! >= 0
-                                                        ? Colors.green
-                                                        : Colors.red,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          : Container(),
-                                    ],
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               showRemainingGraphic
                                   ? Container(

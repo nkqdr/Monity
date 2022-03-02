@@ -1,4 +1,4 @@
-import 'package:finance_buddy/helper/config.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/helper/utils.dart';
@@ -6,6 +6,7 @@ import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum CategoryBottomSheetMode {
   add,
@@ -51,7 +52,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
     isButtonDisabled = true;
     isTextFieldEmpty = _categoryNameController.text == "";
     if (widget.label != null) {
-      _selectedLabel = Config.assetAllocationCategories
+      _selectedLabel = Provider.of<ConfigProvider>(context)
+          .assetAllocationCategories
           .where((element) => element.title == widget.label)
           .first;
     }
@@ -111,7 +113,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
                     alignment: Alignment.center,
                     borderRadius: BorderRadius.circular(20),
                     underline: Container(),
-                    items: Config.assetAllocationCategories
+                    items: Provider.of<ConfigProvider>(context)
+                        .assetAllocationCategories
                         .map(buildMenuItem)
                         .toList(),
                     onChanged: (value) {

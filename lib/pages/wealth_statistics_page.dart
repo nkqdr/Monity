@@ -1,7 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/config.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class WealthStatisticsPage extends StatefulWidget {
   const WealthStatisticsPage({Key? key}) : super(key: key);
@@ -53,11 +54,17 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   void initState() {
     super.initState();
     touchedIndex = -1;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _refreshInvestmentCategories();
   }
 
   Future _refreshInvestmentCategories() async {
-    List<AssetLabel> labelTitles = Config.assetAllocationCategories;
+    List<AssetLabel> labelTitles =
+        Provider.of<ConfigProvider>(context).assetAllocationCategories;
     setState(() => isLoading = true);
     var investmentCategories =
         await FinancesDatabase.instance.readAllInvestmentCategories();

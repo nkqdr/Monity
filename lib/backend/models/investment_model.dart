@@ -48,7 +48,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: id ?? this.id,
       name: name ?? this.name,
-      label: label ?? this.label,
+      label: label,
     );
   }
 

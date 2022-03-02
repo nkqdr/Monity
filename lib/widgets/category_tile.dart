@@ -1,9 +1,12 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class CategoryTile extends StatefulWidget {
   final Category category;
@@ -24,6 +27,7 @@ class CategoryTile extends StatefulWidget {
 class _CategoryTileState extends State<CategoryTile> {
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Container(
@@ -38,12 +42,57 @@ class _CategoryTileState extends State<CategoryTile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
-                child: Text(
-                  widget.category.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.category.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                    if (widget.category is InvestmentCategory)
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    if (widget.category is InvestmentCategory &&
+                        (widget.category as InvestmentCategory).label != null)
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _getColorForLabel(
+                                  (widget.category as InvestmentCategory)
+                                      .label!,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            Utils.getCorrectTitleFromKey(
+                                (widget.category as InvestmentCategory).label!,
+                                language),
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (widget.category is InvestmentCategory &&
+                        (widget.category as InvestmentCategory).label == null)
+                      Text(
+                        language.noLabel,
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               Row(
@@ -66,6 +115,15 @@ class _CategoryTileState extends State<CategoryTile> {
         ),
       ),
     );
+  }
+
+  Color _getColorForLabel(String label) {
+    var allLabels =
+        Provider.of<ConfigProvider>(context).assetAllocationCategories;
+    return allLabels
+        .where((element) => element.title == label)
+        .first
+        .displayColor;
   }
 
   Future _handleEdit() async {
@@ -93,7 +151,7 @@ class _CategoryTileState extends State<CategoryTile> {
               },
               onSubmitWithLabel: (s, l) async {
                 await (widget.category as InvestmentCategory)
-                    .copy(name: s, label: l.title)
+                    .copy(name: s, label: l?.title)
                     .updateSelf();
               },
             ),

@@ -514,5 +514,13 @@
   "currentOverflow": "Current overflow:",
   "@currentOverflow": {
     "description": "Current Overflow."
+  },
+  "noLabel": "No label",
+  "@noLabel": {
+    "description": "Indicates that this investment has no label."
+  },
+  "removeLabel": "Remove label",
+  "@removeLabel": {
+    "description": "Button text to remove the current label."
   }
 }

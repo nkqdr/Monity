@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/category_tile.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -98,11 +99,11 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
                   name: s,
                 ));
               },
-              onSubmitWithLabel: (s, l) {
+              onSubmitWithLabel: (s, AssetLabel? l) {
                 FinancesDatabase.instance
                     .createInvestmentCategory(InvestmentCategory(
                   name: s,
-                  label: l.title,
+                  label: l?.title,
                 ));
               },
             ),

@@ -2,6 +2,7 @@ import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/helper/interfaces.dart';
 import 'package:finance_buddy/helper/types.dart';
 import 'package:finance_buddy/helper/utils.dart';
+import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,7 +18,7 @@ class CategoryBottomSheet extends StatefulWidget {
   final CategoryBottomSheetMode mode;
   final String? placeholder;
   final Function(String) onSubmit;
-  final Function(String, AssetLabel)? onSubmitWithLabel;
+  final Function(String, AssetLabel?)? onSubmitWithLabel;
   final List<Category> categories;
   final bool? hasLabelDropdown;
   final String? label;
@@ -51,6 +52,11 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
     }
     isButtonDisabled = true;
     isTextFieldEmpty = _categoryNameController.text == "";
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     if (widget.label != null) {
       _selectedLabel = Provider.of<ConfigProvider>(context)
           .assetAllocationCategories
@@ -99,31 +105,47 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
               ),
             ),
           if (widget.hasLabelDropdown == true)
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).scaffoldBackgroundColor,
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                    child: DropdownButton<AssetLabel?>(
+                        value: _selectedLabel,
+                        isExpanded: true,
+                        alignment: Alignment.center,
+                        borderRadius: BorderRadius.circular(20),
+                        underline: Container(),
+                        items: Provider.of<ConfigProvider>(context)
+                            .assetAllocationCategories
+                            .map(buildMenuItem)
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() => _selectedLabel = value);
+                          if (!isTextFieldEmpty) {
+                            setState(() => isButtonDisabled = false);
+                          }
+                        }),
+                  ),
                 ),
-                child: DropdownButton<AssetLabel?>(
-                    value: _selectedLabel,
-                    isExpanded: true,
-                    alignment: Alignment.center,
-                    borderRadius: BorderRadius.circular(20),
-                    underline: Container(),
-                    items: Provider.of<ConfigProvider>(context)
-                        .assetAllocationCategories
-                        .map(buildMenuItem)
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => _selectedLabel = value);
-                      if (!isTextFieldEmpty) {
-                        setState(() => isButtonDisabled = false);
-                      }
-                    }),
-              ),
+                AdaptiveTextButton(
+                  text: language.removeLabel,
+                  onPressed: _selectedLabel == null
+                      ? null
+                      : () {
+                          setState(() => _selectedLabel = null);
+                          setState(() => isButtonDisabled =
+                              _categoryNameController.text ==
+                                      widget.placeholder &&
+                                  widget.label == _selectedLabel?.title);
+                        },
+                ),
+              ],
             ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0),
@@ -175,8 +197,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
     String value = _categoryNameController.text.trim();
     if (!widget.hasLabelDropdown!) {
       widget.onSubmit(value);
-    } else if (widget.onSubmitWithLabel != null && _selectedLabel != null) {
-      widget.onSubmitWithLabel!(value, _selectedLabel!);
+    } else if (widget.onSubmitWithLabel != null) {
+      widget.onSubmitWithLabel!(value, _selectedLabel);
     } else {
       widget.onSubmit(value);
     }

@@ -104,6 +104,8 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       for (var element in relevantCategoriesWithSnapshot) {
         sum += element.snapshot.amount;
       }
+      relevantCategoriesWithSnapshot
+          .sort(((a, b) => b.snapshot.amount.compareTo(a.snapshot.amount)));
       // Set the correct percentage for this allocation
       labelTitles[i].percentage = sum / totalSum * 100;
       // Add this allocation to the list
@@ -206,9 +208,10 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                   int newIndex = pieTouchResponse
                                       .touchedSection!.touchedSectionIndex;
                                   if (newIndex > -1 || event is FlTapUpEvent) {
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSectionIndex;
-                                    HapticFeedback.lightImpact();
+                                    if (newIndex != touchedIndex) {
+                                      HapticFeedback.lightImpact();
+                                    }
+                                    touchedIndex = newIndex;
                                   }
                                 });
                               }),
@@ -270,7 +273,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                                 .totalSum),
                                         style: TextStyle(
                                           color: allAllocations[touchedIndex]
-                                                      .totalSum >
+                                                      .totalSum >=
                                                   0
                                               ? Theme.of(context).hintColor
                                               : Theme.of(context).errorColor,

@@ -195,7 +195,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   void _handleSubmit() {
     Navigator.of(context).pop();
     String value = _categoryNameController.text.trim();
-    if (!widget.hasLabelDropdown!) {
+    if (widget.hasLabelDropdown == null || !widget.hasLabelDropdown!) {
       widget.onSubmit(value);
     } else if (widget.onSubmitWithLabel != null) {
       widget.onSubmitWithLabel!(value, _selectedLabel);

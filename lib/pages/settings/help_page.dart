@@ -13,7 +13,7 @@ class HelpPage extends StatefulWidget {
 }
 
 class _HelpPageState extends State<HelpPage> {
-  static const String appVersion = "1.0.5";
+  static const String appVersion = "1.0.6";
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;

@@ -2,7 +2,6 @@ import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard/current_month_context_menu.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
@@ -90,30 +89,16 @@ class CurrentMonthTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<double?> monthlyLimit = KeyValueDatabase.getMonthlyLimit();
+    double? monthlyLimit = Provider.of<ConfigProvider>(context).monthlyLimit;
     bool budgetOverflowEnabled =
         Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
     Future<double?> remainingAmount =
         _getRemainingAmount(budgetOverflowEnabled, monthlyLimit);
     return FutureBuilder<double?>(
-      future: monthlyLimit,
-      builder: (context, limit) {
-        if (limit.hasData) {
-          return FutureBuilder<double?>(
-              future: remainingAmount,
-              builder: (context, remaining) {
-                return currentMonthContextMenu(
-                    context, remaining.data, limit.data);
-              });
-        }
-        return const DashboardTile(
-          width: DashboardTileWidth.half,
-          child: Center(
-            child: AdaptiveProgressIndicator(),
-          ),
-        );
-      },
-    );
+        future: remainingAmount,
+        builder: (context, remaining) {
+          return currentMonthContextMenu(context, remaining.data, monthlyLimit);
+        });
   }
 
   double _getThisMonthSpentAmount(allTransactions) {
@@ -132,10 +117,10 @@ class CurrentMonthTile extends StatelessWidget {
   }
 
   Future<double> _getRemainingAmount(
-      bool budgetOverflowEnabled, Future<double?> _monthlyLimit) async {
+      bool budgetOverflowEnabled, double? monthlyLimit) async {
     var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
-    if (transactions.isEmpty) return await _monthlyLimit ?? 0;
+    if (transactions.isEmpty) return monthlyLimit ?? 0;
     double thisMonthSpent = _getThisMonthSpentAmount(transactions);
 
     var lastTransaction = transactions.last;
@@ -158,15 +143,14 @@ class CurrentMonthTile extends StatelessWidget {
           lastMonthSum += month.amount;
         }
       }
-      await KeyValueDatabase.setBudgetOverflow(
-          (await _monthlyLimit)! - lastMonthSum);
+      await KeyValueDatabase.setBudgetOverflow(monthlyLimit! - lastMonthSum);
     }
 
     double? overflow = await KeyValueDatabase.getBudgetOverflow();
     if (overflow != null && budgetOverflowEnabled) {
-      return (await _monthlyLimit)! - thisMonthSpent + overflow;
+      return monthlyLimit! - thisMonthSpent + overflow;
     }
-    return (await _monthlyLimit)! - thisMonthSpent;
+    return monthlyLimit! - thisMonthSpent;
   }
 
   String _getCurrentDaysRemaining() {

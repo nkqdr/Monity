@@ -19,10 +19,18 @@ class ConfigProvider extends ChangeNotifier {
     ),
   ];
   bool budgetOverflowEnabled;
+  double? monthlyLimit;
 
   ConfigProvider({
     required this.budgetOverflowEnabled,
+    required this.monthlyLimit,
   });
+
+  setMonthlyLimit(double value) {
+    monthlyLimit = value;
+    KeyValueDatabase.setMonthlyLimit(value);
+    notifyListeners();
+  }
 
   setBudgetOverflow(bool value) {
     budgetOverflowEnabled = value;

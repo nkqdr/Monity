@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/category_tile.dart';
@@ -12,6 +13,7 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class TransactionsSettingsPage extends StatefulWidget {
   const TransactionsSettingsPage({Key? key}) : super(key: key);
@@ -176,7 +178,8 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       } catch (e) {
         return;
       }
-      await KeyValueDatabase.setMonthlyLimit(limit);
+      Provider.of<ConfigProvider>(context, listen: false)
+          .setMonthlyLimit(limit);
       await _refreshCategories();
     }
   }

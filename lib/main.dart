@@ -15,11 +15,13 @@ void main() async {
   Locale? locale = await KeyValueDatabase.getLocale();
   bool? budgetOverflowEnabled =
       await KeyValueDatabase.getBudgetOverflowEnabled();
+  double? monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
   runApp(MyApp(
     initialTheme: mode,
     selectedLocale: locale,
     shouldShowInstructions: firstStartUp ?? true,
     budgetOverflowEnabled: budgetOverflowEnabled ?? false,
+    monthlyLimit: monthlyLimit,
   ));
 }
 
@@ -28,12 +30,14 @@ class MyApp extends StatelessWidget {
   final Locale? selectedLocale;
   final bool shouldShowInstructions;
   final bool budgetOverflowEnabled;
+  final double? monthlyLimit;
 
   const MyApp({
     Key? key,
     required this.initialTheme,
     required this.shouldShowInstructions,
     required this.budgetOverflowEnabled,
+    required this.monthlyLimit,
     this.selectedLocale,
   }) : super(key: key);
 
@@ -46,8 +50,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (_) => ThemeProvider(themeMode: initialTheme)),
         ChangeNotifierProvider(
-            create: (_) =>
-                ConfigProvider(budgetOverflowEnabled: budgetOverflowEnabled)),
+            create: (_) => ConfigProvider(
+                  budgetOverflowEnabled: budgetOverflowEnabled,
+                  monthlyLimit: monthlyLimit,
+                )),
       ],
       builder: (context, _) {
         final languageProvider = Provider.of<LanguageProvider>(context);

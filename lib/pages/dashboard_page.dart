@@ -10,15 +10,8 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
-
-  @override
-  _DashboardState createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
-  bool keyToggle = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +30,6 @@ class _DashboardState extends State<Dashboard> {
                 builder: (context) => const SettingsPage(),
               ),
             );
-            setState(() => keyToggle = !keyToggle);
           },
         ),
       ),
@@ -45,11 +37,9 @@ class _DashboardState extends State<Dashboard> {
       safeAreaBottomDisabled: true,
       children: [
         Row(
-          children: [
-            CurrentMonthTile(
-              key: ValueKey<bool>(keyToggle),
-            ),
-            const PerformanceTile(),
+          children: const [
+            CurrentMonthTile(),
+            PerformanceTile(),
           ],
         ),
         Column(

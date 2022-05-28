@@ -2,44 +2,31 @@ import 'dart:math';
 
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/helper/types.dart';
+import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../custom_cupertino_context_menu_action.dart';
 
-class PerformanceContextMenu extends StatefulWidget {
+class PerformanceContextMenu extends StatelessWidget {
+  static const double numberFormatThreshold = 1000000000000;
+  static const double maximumAmountOfMoney = 100000000000000;
+  static const List<int> predictionDistances = [1, 5, 25];
+
   final Widget child;
   const PerformanceContextMenu({
     Key? key,
     required this.child,
   }) : super(key: key);
 
-  @override
-  _PerformanceContextMenuState createState() => _PerformanceContextMenuState();
-}
-
-class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
-  static const double numberFormatThreshold = 1000000000000;
-  static const double maximumAmountOfMoney = 100000000000000;
-  static const List<int> predictionDistances = [1, 5, 25];
-  late List<WealthDataPoint> predictions = [];
-  bool showDescription = false;
-  bool showTable = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _calculateWealthPredictions();
-  }
-
-  Future _calculateWealthPredictions() async {
+  Future<List<WealthDataPoint>> _calculatePredictions() async {
+    List<WealthDataPoint> predictions = [];
     List<WealthDataPoint> allDataPoints =
         await FinancesDatabase.instance.getAllWealthDatapoints();
-    if (allDataPoints.isEmpty) {
-      predictions = [];
-      return;
-    }
+
+    if (allDataPoints.isEmpty) return predictions;
+
     WealthDataPoint oneYearAgo = allDataPoints.lastWhere(
         (e) => e.time.isBefore(DateTime(
             DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)),
@@ -60,143 +47,157 @@ class _PerformanceContextMenuState extends State<PerformanceContextMenu> {
               ? predictionValue
               : maximumAmountOfMoney));
     }
+    return predictions;
   }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
+    Future<List<WealthDataPoint>> predictions = _calculatePredictions();
+    bool showDescription = false;
+    bool showTable = true;
     NumberFormat currencyFormat;
-    if (predictions.isEmpty) {
-      currencyFormat = NumberFormat.compactCurrency(
-          locale: locale.toString(), decimalDigits: 2);
-    } else {
-      currencyFormat = predictions.last.value < numberFormatThreshold
-          ? NumberFormat.simpleCurrency(
-              locale: locale.toString(), decimalDigits: 2)
-          : NumberFormat.compactSimpleCurrency(
+    return FutureBuilder<List<WealthDataPoint>>(
+      future: predictions,
+      builder: (context, predList) {
+        if (!predList.hasData) return const AdaptiveProgressIndicator();
+
+        if (predList.data!.isEmpty) {
+          currencyFormat = NumberFormat.compactCurrency(
               locale: locale.toString(), decimalDigits: 2);
-    }
-    return CupertinoContextMenu(
-      previewBuilder: (context, animation, child) {
-        animation.addListener(() {
-          if (animation.value >= 0.6) {
-            setState(() => showDescription = true);
-          } else {
-            setState(() => showDescription = false);
-          }
-          if (animation.value <= 0.5) {
-            setState(() => showTable = false);
-          } else {
-            setState(() => showTable = true);
-          }
-        });
-        return Material(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width - 40,
-            height: MediaQuery.of(context).size.height / 3,
-            child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        language.performanceTitle,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (showDescription)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Text(
-                            language.predictionOfWealth,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .secondaryHeaderColor
-                                  .withOpacity(animation.value),
+        } else {
+          currencyFormat = predList.data!.last.value < numberFormatThreshold
+              ? NumberFormat.simpleCurrency(
+                  locale: locale.toString(), decimalDigits: 2)
+              : NumberFormat.compactSimpleCurrency(
+                  locale: locale.toString(), decimalDigits: 2);
+        }
+        return CupertinoContextMenu(
+          previewBuilder: (context, animation, child) {
+            animation.addListener(() {
+              if (animation.value >= 0.6) {
+                showDescription = true;
+              } else {
+                showDescription = false;
+              }
+              if (animation.value <= 0.5) {
+                showTable = false;
+              } else {
+                showTable = true;
+              }
+            });
+            return Material(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(20),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 40,
+                height: MediaQuery.of(context).size.height / 3,
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            language.performanceTitle,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      if (showTable && predictions.isNotEmpty)
-                        ...predictions.map((e) => Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        (e.time.year - DateTime.now().year)
-                                                .toString() +
-                                            " ${(e.time.year - DateTime.now().year) == 1 ? language.year : language.years}:",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          currencyFormat.format(e.value),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Theme.of(context)
-                                                .hintColor
-                                                .withOpacity(animation.value),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )),
-                      if (predictions.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Center(
-                            child: Text(language.notEnoughSnapshots,
-                                textAlign: TextAlign.center,
+                          if (showDescription)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Text(
+                                language.predictionOfWealth,
                                 style: TextStyle(
-                                  color: Theme.of(context).secondaryHeaderColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context)
+                                      .secondaryHeaderColor
+                                      .withOpacity(animation.value),
+                                ),
+                              ),
+                            ),
+                          if (showTable && predList.data!.isNotEmpty)
+                            ...predList.data!.map((e) => Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            (e.time.year - DateTime.now().year)
+                                                    .toString() +
+                                                " ${(e.time.year - DateTime.now().year) == 1 ? language.year : language.years}:",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              currencyFormat.format(e.value),
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Theme.of(context)
+                                                    .hintColor
+                                                    .withOpacity(
+                                                        animation.value),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 )),
-                          ),
-                        ),
-                      if (predictions.isNotEmpty &&
-                          predictions.last.value == maximumAmountOfMoney)
-                        Text(
-                          language.richestManOnEarth,
-                          style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor),
-                        ),
-                    ],
-                  ),
-                )),
+                          if (predList.data!.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Center(
+                                child: Text(language.notEnoughSnapshots,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    )),
+                              ),
+                            ),
+                          if (predList.data!.isNotEmpty &&
+                              predList.data!.last.value == maximumAmountOfMoney)
+                            Text(
+                              language.richestManOnEarth,
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).secondaryHeaderColor),
+                            ),
+                        ],
+                      ),
+                    )),
+              ),
+            );
+          },
+          actions: [
+            CustomCupertinoContextMenuAction(
+              child: Text(language.hide),
+              trailingIcon: CupertinoIcons.eye_slash,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+          child: SingleChildScrollView(
+            child: child,
           ),
         );
       },
-      actions: [
-        CustomCupertinoContextMenuAction(
-          child: Text(language.hide),
-          trailingIcon: CupertinoIcons.eye_slash,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-      child: SingleChildScrollView(
-        child: widget.child,
-      ),
     );
   }
 }

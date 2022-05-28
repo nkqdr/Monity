@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../custom_cupertino_context_menu_action.dart';
 
-class CurrentMonthContextMenu extends StatefulWidget {
+class CurrentMonthContextMenu extends StatelessWidget {
   final Widget child;
   final int daysRemaining;
   final double? remainingAmount;
@@ -20,18 +20,12 @@ class CurrentMonthContextMenu extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CurrentMonthContextMenu> createState() =>
-      _CurrentMonthContextMenuState();
-}
-
-class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
-  bool showRemainingGraphic = false;
-  @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);
+    bool showRemainingGraphic = false;
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         animation.addListener(() {
@@ -65,7 +59,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                   const SizedBox(
                     height: 20,
                   ),
-                  widget.monthlyLimit != null
+                  monthlyLimit != null
                       ? Flexible(
                           fit: FlexFit.loose,
                           child: Row(
@@ -80,7 +74,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                   children: [
                                     Text(
                                       language.remainingDays +
-                                          " ${widget.daysRemaining}",
+                                          " $daysRemaining",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -105,19 +99,16 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                         ),
                                         showRemainingGraphic
                                             ? Text(
-                                                widget.remainingAmount! >= 0
+                                                remainingAmount! >= 0
                                                     ? "+" +
                                                         currencyFormat.format(
-                                                            widget
-                                                                .remainingAmount)
+                                                            remainingAmount)
                                                     : currencyFormat.format(
-                                                        widget.remainingAmount),
+                                                        remainingAmount),
                                                 style: TextStyle(
-                                                  color:
-                                                      widget.remainingAmount! >=
-                                                              0
-                                                          ? Colors.green
-                                                          : Colors.red,
+                                                  color: remainingAmount! >= 0
+                                                      ? Colors.green
+                                                      : Colors.red,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -126,8 +117,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                       ],
                                     ),
                                     const SizedBox(height: 50),
-                                    if (widget.remainingAmount! >
-                                        widget.monthlyLimit!)
+                                    if (remainingAmount! > monthlyLimit!)
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(right: 10.0),
@@ -161,13 +151,13 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                               Colors.green,
                                               Theme.of(context).cardColor
                                             ],
-                                            stops: widget.remainingAmount! <= 0
+                                            stops: remainingAmount! <= 0
                                                 ? [0, 0]
                                                 : [
-                                                    (widget.remainingAmount! /
-                                                        widget.monthlyLimit!),
-                                                    (widget.remainingAmount! /
-                                                        widget.monthlyLimit!)
+                                                    (remainingAmount! /
+                                                        monthlyLimit!),
+                                                    (remainingAmount! /
+                                                        monthlyLimit!)
                                                   ],
                                             begin: Alignment.bottomCenter,
                                             end: Alignment.topCenter,
@@ -175,14 +165,13 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           border: Border.all(
-                                              color:
-                                                  widget.remainingAmount! <= 0
-                                                      ? Colors.red
-                                                      : Colors.green,
+                                              color: remainingAmount! <= 0
+                                                  ? Colors.red
+                                                  : Colors.green,
                                               width: 4)),
                                       child: Center(
                                         child: Text(
-                                          "${(max((widget.remainingAmount! / widget.monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",
+                                          "${(max((remainingAmount! / monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 35,
@@ -218,7 +207,7 @@ class _CurrentMonthContextMenuState extends State<CurrentMonthContextMenu> {
         ),
       ],
       child: SingleChildScrollView(
-        child: widget.child,
+        child: child,
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/dashboard/current_month_context_menu.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
@@ -10,55 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CurrentMonthTile extends StatefulWidget {
+class CurrentMonthTile extends StatelessWidget {
   const CurrentMonthTile({Key? key}) : super(key: key);
 
-  @override
-  State<CurrentMonthTile> createState() => _CurrentMonthTileState();
-}
-
-class _CurrentMonthTileState extends State<CurrentMonthTile> {
-  double? monthlyLimit;
-  double? remainingAmount;
-  bool isLoading = false;
-  late bool budgetOverflowEnabled;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshTile();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    budgetOverflowEnabled =
-        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
-  }
-
-  Future _refreshTile() async {
-    setState(() => isLoading = true);
-    monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
-    if (monthlyLimit != null) {
-      remainingAmount = await _getRemainingAmount();
-    }
-    setState(() => isLoading = false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget currentMonthContextMenu(
+      BuildContext context, double? remainingAmount, double? monthlyLimit) {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
-    if (isLoading) {
-      return const DashboardTile(
-        width: DashboardTileWidth.half,
-        child: Center(
-          child: AdaptiveProgressIndicator(),
-        ),
-      );
-    }
     return CurrentMonthContextMenu(
       daysRemaining: int.parse(_getCurrentDaysRemaining()),
       remainingAmount: remainingAmount,
@@ -104,12 +63,11 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
                       height: 5,
                     ),
                     Text(
-                      remainingAmount! >= 0
+                      remainingAmount >= 0
                           ? "+" + currencyFormat.format(remainingAmount)
                           : currencyFormat.format(remainingAmount),
                       style: TextStyle(
-                        color:
-                            remainingAmount! >= 0 ? Colors.green : Colors.red,
+                        color: remainingAmount >= 0 ? Colors.green : Colors.red,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -129,23 +87,56 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     );
   }
 
-  Future<double> _getRemainingAmount() async {
+  @override
+  Widget build(BuildContext context) {
+    double? monthlyLimit = Provider.of<ConfigProvider>(context).monthlyLimit;
+    bool budgetOverflowEnabled =
+        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
+    Future<double?> remainingAmount =
+        _getRemainingAmount(budgetOverflowEnabled, monthlyLimit);
+    return FutureBuilder<double?>(
+        future: remainingAmount,
+        builder: (context, remaining) {
+          return currentMonthContextMenu(context, remaining.data, monthlyLimit);
+        });
+  }
+
+  double _getThisMonthSpentAmount(allTransactions) {
     var currentDate = DateTime.now();
-    var transactions = await FinancesDatabase.instance.readAllTransactions();
-    var thisMonthTransactions = transactions.where((element) =>
+    var thisMonthTransactions = allTransactions.where((element) =>
         element.date.month == currentDate.month &&
         element.date.year == currentDate.year);
-    var lastTransactionBeforeCurrentMonth = transactions
-        .where((element) => element.date
-            .isBefore(DateTime(currentDate.year, currentDate.month)))
-        .last;
+
+    double sum = 0;
+    for (var month in thisMonthTransactions) {
+      if (month.type == TransactionType.expense) {
+        sum += month.amount;
+      }
+    }
+    return sum;
+  }
+
+  Future<double> _getRemainingAmount(
+      bool budgetOverflowEnabled, double? monthlyLimit) async {
+    var currentDate = DateTime.now();
+    var transactions = await FinancesDatabase.instance.readAllTransactions();
+    if (transactions.isEmpty) return monthlyLimit ?? 0;
+    double thisMonthSpent = _getThisMonthSpentAmount(transactions);
+
     var lastTransaction = transactions.last;
+
     if (lastTransaction.date
             .isBefore(DateTime(currentDate.year, currentDate.month)) &&
         budgetOverflowEnabled) {
+      var previousMonthMonth =
+          currentDate.month == 1 ? 12 : currentDate.month - 1;
+      var previousMonthYear =
+          currentDate.month == 1 ? currentDate.year - 1 : currentDate.year;
+
       var lastMonthTransactions = transactions.where((element) =>
-          element.date.month == lastTransactionBeforeCurrentMonth.date.month &&
-          element.date.year == lastTransactionBeforeCurrentMonth.date.year);
+          element.date.month == previousMonthMonth &&
+          element.date.year == previousMonthYear);
+
       double lastMonthSum = 0;
       for (var month in lastMonthTransactions) {
         if (month.type == TransactionType.expense) {
@@ -154,17 +145,12 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
       }
       await KeyValueDatabase.setBudgetOverflow(monthlyLimit! - lastMonthSum);
     }
-    double sum = 0;
-    for (var month in thisMonthTransactions) {
-      if (month.type == TransactionType.expense) {
-        sum += month.amount;
-      }
-    }
+
     double? overflow = await KeyValueDatabase.getBudgetOverflow();
     if (overflow != null && budgetOverflowEnabled) {
-      return monthlyLimit! - sum + overflow;
+      return monthlyLimit! - thisMonthSpent + overflow;
     }
-    return monthlyLimit! - sum;
+    return monthlyLimit! - thisMonthSpent;
   }
 
   String _getCurrentDaysRemaining() {

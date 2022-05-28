@@ -47,7 +47,7 @@ class _WealthPageState extends State<WealthPage> {
     _refreshCategories();
   }
 
-  Future _refreshDataPoints() async {
+  void _refreshDataPoints() {
     var now = DateTime.now();
     List<FlSpot> newDataPoints = [];
     switch (dataIndex) {

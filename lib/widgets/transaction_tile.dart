@@ -6,9 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// import 'add_transaction_bottom_sheet.dart';
-
-class TransactionTile extends StatefulWidget {
+class TransactionTile extends StatelessWidget {
   final Transaction transaction;
   final TransactionCategory category;
   final Function? refreshFunction;
@@ -21,11 +19,6 @@ class TransactionTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TransactionTile> createState() => _TransactionTileState();
-}
-
-class _TransactionTileState extends State<TransactionTile> {
-  @override
   Widget build(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
@@ -33,9 +26,9 @@ class _TransactionTileState extends State<TransactionTile> {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
       child: TransactionContextMenu(
-        transaction: widget.transaction,
-        transactionCategory: widget.category,
-        handleDelete: _handleDeleteTransaction,
+        transaction: transaction,
+        transactionCategory: category,
+        handleDelete: () => _handleDeleteTransaction(context),
         child: Material(
           borderRadius: BorderRadius.circular(20),
           child: Container(
@@ -49,7 +42,7 @@ class _TransactionTileState extends State<TransactionTile> {
                     //     ? Colors.green[600] as Color
                     //     : Colors.red[600] as Color),
                     Theme.of(context).scaffoldBackgroundColor,
-                    (widget.transaction.type == TransactionType.income
+                    (transaction.type == TransactionType.income
                         ? Colors.green[600] as Color
                         : Colors.red[600] as Color),
                   ],
@@ -91,7 +84,7 @@ class _TransactionTileState extends State<TransactionTile> {
                                 constraints:
                                     const BoxConstraints(maxWidth: 200),
                                 child: Text(
-                                  widget.category.name,
+                                  category.name,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -100,15 +93,14 @@ class _TransactionTileState extends State<TransactionTile> {
                                 ),
                               ),
                               Text(
-                                currencyFormat
-                                    .format(widget.transaction.amount),
+                                currencyFormat.format(transaction.amount),
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: widget.transaction.type ==
-                                          TransactionType.income
-                                      ? Theme.of(context).hintColor
-                                      : Theme.of(context).errorColor,
+                                  color:
+                                      transaction.type == TransactionType.income
+                                          ? Theme.of(context).hintColor
+                                          : Theme.of(context).errorColor,
                                 ),
                               )
                             ],
@@ -122,7 +114,7 @@ class _TransactionTileState extends State<TransactionTile> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width / 2,
                           child: Text(
-                            widget.transaction.description ?? "",
+                            transaction.description ?? "",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -147,7 +139,7 @@ class _TransactionTileState extends State<TransactionTile> {
     );
   }
 
-  _handleDeleteTransaction() async {
+  _handleDeleteTransaction(BuildContext context) async {
     var language = AppLocalizations.of(context)!;
     var result = await showOkCancelAlertDialog(
         context: context,
@@ -155,24 +147,8 @@ class _TransactionTileState extends State<TransactionTile> {
         message: language.sureDeleteTransaction,
         isDestructiveAction: true);
     if (result == OkCancelResult.ok) {
-      FinancesDatabase.instance.deleteTransaction(widget.transaction.id as int);
-      widget.refreshFunction!();
+      FinancesDatabase.instance.deleteTransaction(transaction.id as int);
+      refreshFunction!();
     }
   }
-
-  // _handleEditTransaction() async {
-  //   await showModalBottomSheet(
-  //       context: context,
-  //       isScrollControlled: true,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(20.0),
-  //       ),
-  //       builder: (context) {
-  //         return Padding(
-  //           padding: EdgeInsets.only(
-  //               bottom: MediaQuery.of(context).viewInsets.bottom),
-  //           child: const AddTransactionBottomSheet(),
-  //         );
-  //       });
-  // }
 }

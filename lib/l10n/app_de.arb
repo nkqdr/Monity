@@ -35,7 +35,7 @@
   "whatKindOfTransaction": "Welche Art von Transaktion möchtest du hinzufügen?",
   "expense": "Ausgabe",
   "income": "Einnahme",
-  "selectCategoryForTransaction": "Wähle eine Kategorie für diese Transaktion:",
+  "selectCategoryForTransaction": "Wähle eine Kategorie...",
   "selectCategoryForSnapshot": "Wähle eine Kategorie für diesen Snapshot:",
   "startTyping": "Tippe hier...",
   "next": "Weiter",
@@ -45,6 +45,8 @@
   "review": "Zusammenfassung:",
   "type": "Typ:",
   "category": "Kategorie:",
+  "addTransaction": "Transaktion hinzufügen",
+  "addSnapshot": "Snapshot hinzufügen",
   "amount": "Betrag:",
   "optionalDescription": "Beschreibung (Optional)",
   "abort": "Abbrechen",
@@ -129,5 +131,6 @@
   "percentageHighBecauseOfOverflow": "Dein verfügbares Budget ist größer als dein monatliches Limit, da du im letzten Monat gespart hast!",
   "currentOverflow": "Aktueller Überlauf:",
   "noLabel": "Kein Bezeichner",
-  "removeLabel": "Bezeichner entfernen"
+  "removeLabel": "Bezeichner entfernen",
+  "selectTransactionType": "Wähle einen Transaktionstyp aus"
 }

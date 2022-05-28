@@ -143,7 +143,7 @@
   "@income": {
     "description": "Income string"
   },
-  "selectCategoryForTransaction": "Select a category for this transaction:",
+  "selectCategoryForTransaction": "Select a category...",
   "@selectCategoryForTransaction": {
     "description": "Tells the user to select a category for this transaction"
   },
@@ -182,6 +182,14 @@
   "category": "Category:",
   "@category": {
     "description": "Category of the configured transaction"
+  },
+  "addTransaction": "Add transaction",
+  "@addTransaction": {
+    "description": "Title for add transaction form"
+  },
+  "addSnapshot": "Add snapshot",
+  "@addSnapshot": {
+    "description": "Title for add snapshot form"
   },
   "amount": "Amount:",
   "@amount": {
@@ -522,5 +530,9 @@
   "removeLabel": "Remove label",
   "@removeLabel": {
     "description": "Button text to remove the current label."
+  },
+  "selectTransactionType": "Select a transaction type",
+  "@selectTransactionType": {
+    "description": "Error message for when no transaction type has been selected."
   }
 }

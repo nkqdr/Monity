@@ -1,7 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -56,19 +55,21 @@ class InvestmentTile extends StatelessWidget {
                       future: lastSnapshot,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const AdaptiveProgressIndicator();
+                          return const Text(
+                            "-",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
                         }
                         return Text(
-                          snapshot.data != null
-                              ? currencyFormat.format(snapshot.data!.amount)
-                              : "-",
+                          currencyFormat.format(snapshot.data!.amount),
                           style: TextStyle(
                             fontSize: 18,
-                            color: snapshot.data != null
-                                ? (snapshot.data!.amount < 0
-                                    ? Theme.of(context).errorColor
-                                    : Theme.of(context).hintColor)
-                                : null,
+                            color: snapshot.data!.amount < 0
+                                ? Theme.of(context).errorColor
+                                : Theme.of(context).hintColor,
                             fontWeight: FontWeight.bold,
                           ),
                         );
@@ -94,13 +95,17 @@ class InvestmentTile extends StatelessWidget {
                       future: lastSnapshot,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const AdaptiveProgressIndicator();
+                          return Text(
+                            "-",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          );
                         }
 
                         return Text(
-                          snapshot.data != null
-                              ? dateFormatter.format(snapshot.data!.date)
-                              : "-",
+                          dateFormatter.format(snapshot.data!.date),
                           style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).secondaryHeaderColor,

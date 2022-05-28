@@ -1,8 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class WealthChart extends StatefulWidget {
+class WealthChart extends StatelessWidget {
   final VerticalLine? indexLine;
   final void Function(FlTouchEvent, LineTouchResponse?)? touchHandler;
   final double currentWealth;
@@ -16,40 +15,48 @@ class WealthChart extends StatefulWidget {
     required this.currentWealth,
   }) : super(key: key);
 
-  @override
-  State<WealthChart> createState() => _WealthChartState();
-}
-
-class _WealthChartState extends State<WealthChart> {
-  late double maxLineChartValue;
-  late double minLineChartValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _setMinMaxValues();
+  Color _getLineColor() {
+    var firstValue = spots.isEmpty ? 0 : spots.first.y;
+    return currentWealth < firstValue ? Colors.red : Colors.green;
   }
 
-  @override
-  void didUpdateWidget(covariant WealthChart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _setMinMaxValues();
+  HorizontalLine? _getZeroLine(BuildContext context, double minLineChartValue) {
+    var firstValue = spots.isEmpty ? 0 : spots.first.y;
+    return minLineChartValue < firstValue
+        ? HorizontalLine(
+            y: spots.first.y,
+            color: Theme.of(context).secondaryHeaderColor,
+            strokeWidth: 1,
+            dashArray: [5],
+          )
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
-    var zeroLine = _getZeroLine();
+    // Calculate min and max
+    double minValue = double.maxFinite;
+    double maxValue = -double.maxFinite;
+    for (var item in spots) {
+      if (item.y < minValue) {
+        minValue = item.y;
+      }
+      if (item.y > maxValue) {
+        maxValue = item.y;
+      }
+    }
+    assert(minValue <= maxValue);
+
+    var zeroLine = _getZeroLine(context, minValue);
     return LineChart(
       LineChartData(
         backgroundColor: Colors.transparent,
         minX: 0,
-        maxX: widget.spots.length - 1,
-        minY: minLineChartValue,
-        maxY: maxLineChartValue,
+        maxX: spots.length - 1,
+        minY: minValue,
+        maxY: maxValue,
         extraLinesData: ExtraLinesData(
-          verticalLines: widget.indexLine != null
-              ? [widget.indexLine as VerticalLine]
-              : [],
+          verticalLines: indexLine != null ? [indexLine as VerticalLine] : [],
           horizontalLines: zeroLine != null ? [zeroLine] : [],
         ),
         titlesData: FlTitlesData(
@@ -57,7 +64,7 @@ class _WealthChartState extends State<WealthChart> {
         ),
         lineTouchData: LineTouchData(
           enabled: false,
-          touchCallback: widget.touchHandler,
+          touchCallback: touchHandler,
         ),
         borderData: FlBorderData(show: false),
         gridData: FlGridData(show: false),
@@ -69,46 +76,10 @@ class _WealthChartState extends State<WealthChart> {
             dotData: FlDotData(show: false),
             barWidth: 3,
             colors: [_getLineColor()],
-            spots: widget.spots,
+            spots: spots,
           )
         ],
       ),
     );
-  }
-
-  void _setMinMaxValues() {
-    // Calculate min and max
-    double minValue = double.maxFinite;
-    double maxValue = -double.maxFinite;
-    for (var item in widget.spots) {
-      if (item.y < minValue) {
-        minValue = item.y;
-      }
-      if (item.y > maxValue) {
-        maxValue = item.y;
-      }
-    }
-    assert(minValue <= maxValue);
-    setState(() {
-      minLineChartValue = minValue;
-      maxLineChartValue = maxValue;
-    });
-  }
-
-  Color _getLineColor() {
-    var firstValue = widget.spots.isEmpty ? 0 : widget.spots.first.y;
-    return widget.currentWealth < firstValue ? Colors.red : Colors.green;
-  }
-
-  HorizontalLine? _getZeroLine() {
-    var firstValue = widget.spots.isEmpty ? 0 : widget.spots.first.y;
-    return minLineChartValue < firstValue
-        ? HorizontalLine(
-            y: widget.spots.first.y,
-            color: Theme.of(context).secondaryHeaderColor,
-            strokeWidth: 1,
-            dashArray: [5],
-          )
-        : null;
   }
 }

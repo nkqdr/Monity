@@ -10,31 +10,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CurrentMonthTile extends StatefulWidget {
+class CurrentMonthTile extends StatelessWidget {
   const CurrentMonthTile({Key? key}) : super(key: key);
-
-  @override
-  State<CurrentMonthTile> createState() => _CurrentMonthTileState();
-}
-
-class _CurrentMonthTileState extends State<CurrentMonthTile> {
-  late Future<double?> _monthlyLimit;
-  late Future<double?> _remainingAmount;
-  late bool _budgetOverflowEnabled;
-
-  @override
-  void initState() {
-    super.initState();
-    _monthlyLimit = KeyValueDatabase.getMonthlyLimit();
-    _remainingAmount = _getRemainingAmount();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _budgetOverflowEnabled =
-        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
-  }
 
   Widget currentMonthContextMenu(
       BuildContext context, double? remainingAmount, double? monthlyLimit) {
@@ -113,12 +90,17 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
 
   @override
   Widget build(BuildContext context) {
+    Future<double?> monthlyLimit = KeyValueDatabase.getMonthlyLimit();
+    bool budgetOverflowEnabled =
+        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
+    Future<double?> remainingAmount =
+        _getRemainingAmount(budgetOverflowEnabled, monthlyLimit);
     return FutureBuilder<double?>(
-      future: _monthlyLimit,
+      future: monthlyLimit,
       builder: (context, limit) {
         if (limit.hasData) {
           return FutureBuilder<double?>(
-              future: _remainingAmount,
+              future: remainingAmount,
               builder: (context, remaining) {
                 return currentMonthContextMenu(
                     context, remaining.data, limit.data);
@@ -149,7 +131,8 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     return sum;
   }
 
-  Future<double> _getRemainingAmount() async {
+  Future<double> _getRemainingAmount(
+      bool budgetOverflowEnabled, Future<double?> _monthlyLimit) async {
     var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
     if (transactions.isEmpty) return await _monthlyLimit ?? 0;
@@ -159,7 +142,7 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
 
     if (lastTransaction.date
             .isBefore(DateTime(currentDate.year, currentDate.month)) &&
-        _budgetOverflowEnabled) {
+        budgetOverflowEnabled) {
       var previousMonthMonth =
           currentDate.month == 1 ? 12 : currentDate.month - 1;
       var previousMonthYear =
@@ -180,7 +163,7 @@ class _CurrentMonthTileState extends State<CurrentMonthTile> {
     }
 
     double? overflow = await KeyValueDatabase.getBudgetOverflow();
-    if (overflow != null && _budgetOverflowEnabled) {
+    if (overflow != null && budgetOverflowEnabled) {
       return (await _monthlyLimit)! - thisMonthSpent + overflow;
     }
     return (await _monthlyLimit)! - thisMonthSpent;

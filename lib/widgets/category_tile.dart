@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class CategoryTile extends StatefulWidget {
+class CategoryTile extends StatelessWidget {
   final Category category;
   final Function refreshCallback;
   final List<Category> categories;
@@ -20,11 +20,6 @@ class CategoryTile extends StatefulWidget {
     required this.categories,
   }) : super(key: key);
 
-  @override
-  State<CategoryTile> createState() => _CategoryTileState();
-}
-
-class _CategoryTileState extends State<CategoryTile> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
@@ -46,18 +41,18 @@ class _CategoryTileState extends State<CategoryTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.category.name,
+                      category.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
                       ),
                     ),
-                    if (widget.category is InvestmentCategory)
+                    if (category is InvestmentCategory)
                       const SizedBox(
                         height: 10,
                       ),
-                    if (widget.category is InvestmentCategory &&
-                        (widget.category as InvestmentCategory).label != null)
+                    if (category is InvestmentCategory &&
+                        (category as InvestmentCategory).label != null)
                       Row(
                         children: [
                           Padding(
@@ -68,15 +63,15 @@ class _CategoryTileState extends State<CategoryTile> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: _getColorForLabel(
-                                  (widget.category as InvestmentCategory)
-                                      .label!,
+                                  context,
+                                  (category as InvestmentCategory).label!,
                                 ),
                               ),
                             ),
                           ),
                           Text(
                             Utils.getCorrectTitleFromKey(
-                                (widget.category as InvestmentCategory).label!,
+                                (category as InvestmentCategory).label!,
                                 language),
                             style: TextStyle(
                               color: Theme.of(context).secondaryHeaderColor,
@@ -84,8 +79,8 @@ class _CategoryTileState extends State<CategoryTile> {
                           ),
                         ],
                       ),
-                    if (widget.category is InvestmentCategory &&
-                        (widget.category as InvestmentCategory).label == null)
+                    if (category is InvestmentCategory &&
+                        (category as InvestmentCategory).label == null)
                       Text(
                         language.noLabel,
                         style: TextStyle(
@@ -99,14 +94,14 @@ class _CategoryTileState extends State<CategoryTile> {
                 children: [
                   InkWell(
                     child: const Icon(Icons.edit_rounded),
-                    onTap: _handleEdit,
+                    onTap: () => _handleEdit(context),
                   ),
                   const SizedBox(
                     width: 15,
                   ),
                   InkWell(
                     child: const Icon(Icons.delete_rounded, color: Colors.red),
-                    onTap: _handleDelete,
+                    onTap: () => _handleDelete(context),
                   ),
                 ],
               ),
@@ -117,7 +112,7 @@ class _CategoryTileState extends State<CategoryTile> {
     );
   }
 
-  Color _getColorForLabel(String label) {
+  Color _getColorForLabel(BuildContext context, String label) {
     var allLabels =
         Provider.of<ConfigProvider>(context).assetAllocationCategories;
     return allLabels
@@ -126,8 +121,8 @@ class _CategoryTileState extends State<CategoryTile> {
         .displayColor;
   }
 
-  Future _handleEdit() async {
-    bool hasLabelDropdown = widget.category is InvestmentCategory;
+  Future _handleEdit(BuildContext context) async {
+    bool hasLabelDropdown = category is InvestmentCategory;
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -142,37 +137,37 @@ class _CategoryTileState extends State<CategoryTile> {
               mode: CategoryBottomSheetMode.edit,
               hasLabelDropdown: hasLabelDropdown,
               label: hasLabelDropdown
-                  ? (widget.category as InvestmentCategory).label
+                  ? (category as InvestmentCategory).label
                   : null,
-              categories: widget.categories,
-              placeholder: widget.category.name,
+              categories: categories,
+              placeholder: category.name,
               onSubmit: (s) async {
-                await widget.category.copy(name: s).updateSelf();
+                await category.copy(name: s).updateSelf();
               },
               onSubmitWithLabel: (s, l) async {
-                await (widget.category as InvestmentCategory)
+                await (category as InvestmentCategory)
                     .copy(name: s, label: l?.title)
                     .updateSelf();
               },
             ),
           );
         });
-    widget.refreshCallback();
+    refreshCallback();
   }
 
-  Future _handleDelete() async {
+  Future _handleDelete(BuildContext context) async {
     var language = AppLocalizations.of(context)!;
     var dialogResult = await showOkCancelAlertDialog(
       context: context,
       title: language.attention,
-      message: widget.category.getDeleteMessage(language),
+      message: category.getDeleteMessage(language),
       isDestructiveAction: true,
       okLabel: language.delete,
       cancelLabel: language.abort,
     );
     if (dialogResult == OkCancelResult.ok) {
-      await widget.category.deleteSelf();
-      widget.refreshCallback();
+      await category.deleteSelf();
+      refreshCallback();
     }
   }
 }

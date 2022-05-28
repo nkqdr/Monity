@@ -51,53 +51,44 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => LanguageProvider(
-        locale: widget.selectedLocale,
-      ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => LanguageProvider(locale: widget.selectedLocale)),
+        ChangeNotifierProvider(
+            create: (_) => ThemeProvider(themeMode: widget.initialTheme)),
+        ChangeNotifierProvider(
+            create: (_) => ConfigProvider(
+                budgetOverflowEnabled: widget.budgetOverflowEnabled)),
+      ],
       builder: (context, _) {
         final languageProvider = Provider.of<LanguageProvider>(context);
-        return ChangeNotifierProvider(
-          create: (context) => ThemeProvider(
-            themeMode: widget.initialTheme,
-          ),
-          builder: (context, _) {
-            final themeProvider = Provider.of<ThemeProvider>(context);
-            return ChangeNotifierProvider(
-              create: (context) => ConfigProvider(
-                budgetOverflowEnabled: widget.budgetOverflowEnabled,
-              ),
-              builder: (context, _) {
-                return MaterialApp(
-                  title: 'Monity',
-                  themeMode: themeProvider.themeMode,
-                  debugShowCheckedModeBanner: false,
-                  locale: languageProvider.locale,
-                  theme: CustomThemes.lightTheme,
-                  darkTheme: CustomThemes.darkTheme,
-                  localizationsDelegates:
-                      AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  // localeListResolutionCallback: (locales, supportedLocales) {
-                  //   for (Locale locale in locales!) {
-                  //     // if device language is supported by the app,
-                  //     // just return it to set it as current app language
-                  //     if (supportedLocales.contains(locale)) {
-                  //       return locale;
-                  //     }
-                  //   }
+        final themeProvider = Provider.of<ThemeProvider>(context);
+        return MaterialApp(
+          title: 'Monity',
+          themeMode: themeProvider.themeMode,
+          debugShowCheckedModeBanner: false,
+          locale: languageProvider.locale,
+          theme: CustomThemes.lightTheme,
+          darkTheme: CustomThemes.darkTheme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          // localeListResolutionCallback: (locales, supportedLocales) {
+          //   for (Locale locale in locales!) {
+          //     // if device language is supported by the app,
+          //     // just return it to set it as current app language
+          //     if (supportedLocales.contains(locale)) {
+          //       return locale;
+          //     }
+          //   }
 
-                  //   // if device language is not supported by the app,
-                  //   // the app will set it to english but return this to set to Bahasa instead
-                  //   return const Locale('en', 'US');
-                  // },
-                  home: HomePage(
-                    showInstructions: widget.shouldShowInstructions,
-                  ),
-                );
-              },
-            );
-          },
+          //   // if device language is not supported by the app,
+          //   // the app will set it to english but return this to set to Bahasa instead
+          //   return const Locale('en', 'US');
+          // },
+          home: HomePage(
+            showInstructions: widget.shouldShowInstructions,
+          ),
         );
       },
     );

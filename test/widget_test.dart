@@ -17,6 +17,7 @@ void main() {
       initialTheme: ThemeMode.system,
       shouldShowInstructions: false,
       budgetOverflowEnabled: false,
+      monthlyLimit: 0,
     ));
 
     // Verify that our counter starts at 0.

@@ -9,31 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class OptionsPage extends StatefulWidget {
+class OptionsPage extends StatelessWidget {
   const OptionsPage({Key? key}) : super(key: key);
-
-  @override
-  _OptionsPageState createState() => _OptionsPageState();
-}
-
-class _OptionsPageState extends State<OptionsPage> {
-  bool isLoading = false;
-  late bool enableOverflow;
-  late double currentOverflow;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    enableOverflow = Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
-    _refreshCurrentOverflow();
-  }
-
-  Future _refreshCurrentOverflow() async {
-    setState(() => isLoading = true);
-    double? currentOverflowValue = await KeyValueDatabase.getBudgetOverflow();
-    currentOverflow = currentOverflowValue ?? 0;
-    setState(() => isLoading = false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +18,10 @@ class _OptionsPageState extends State<OptionsPage> {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);
+    bool enableOverflow =
+        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
+    Future<double?> currentOverflow = KeyValueDatabase.getBudgetOverflow();
+
     return View(
         appBar: CustomAppBar(
           title: language.options,
@@ -80,16 +61,23 @@ class _OptionsPageState extends State<OptionsPage> {
                             ),
                           ),
                           Switch.adaptive(
-                              value: enableOverflow, onChanged: _toggleOverflow)
+                              value: enableOverflow,
+                              onChanged: (value) =>
+                                  _toggleOverflow(context, value))
                         ],
                       ),
-                      if (enableOverflow && !isLoading)
-                        Text(
-                          "${language.currentOverflow} ${currencyFormat.format(currentOverflow)}",
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                          ),
-                        ),
+                      if (enableOverflow)
+                        FutureBuilder(
+                          future: currentOverflow,
+                          builder: ((context, snapshot) {
+                            return Text(
+                              "${language.currentOverflow} ${currencyFormat.format(snapshot.hasData ? snapshot.data : 0)}",
+                              style: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                            );
+                          }),
+                        )
                     ],
                   ),
                 ),
@@ -99,7 +87,7 @@ class _OptionsPageState extends State<OptionsPage> {
         ]);
   }
 
-  void _toggleOverflow(bool value) async {
+  void _toggleOverflow(BuildContext context, bool value) async {
     var language = AppLocalizations.of(context)!;
     if (!value) {
       var result = await showOkCancelAlertDialog(
@@ -112,7 +100,6 @@ class _OptionsPageState extends State<OptionsPage> {
         return;
       }
     }
-    setState(() => enableOverflow = value);
     Provider.of<ConfigProvider>(context, listen: false)
         .setBudgetOverflow(value);
   }

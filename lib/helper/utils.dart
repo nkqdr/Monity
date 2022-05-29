@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Utils {
@@ -9,6 +10,14 @@ class Utils {
       yield f(index, item);
       index = index + 1;
     }
+  }
+
+  static playErrorFeedback() async {
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 100));
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 100));
+    await HapticFeedback.lightImpact();
   }
 
   static String getCorrectTitleFromKey(

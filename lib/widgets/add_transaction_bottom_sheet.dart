@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_textfield.dart';
@@ -19,23 +20,19 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TransactionType? _transactionType;
   TransactionCategory? _transactionCategory;
+  double? _givenAmount;
   bool _showTransactionTypeHint = false;
   final Future<List<TransactionCategory>> _categories =
       FinancesDatabase.instance.readAllTransactionCategories();
-  final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
 
   Future _handleAddTransaction() async {
     int category = _transactionCategory!.id!;
-    var amountString = _amountController.text.replaceAll(",", ".");
-    double newAmount;
-    try {
-      newAmount = double.parse(amountString);
-    } catch (e) {
+    if (_givenAmount == null) {
       return;
     }
     FinancesDatabase.instance.createTransaction(Transaction(
-      amount: newAmount,
+      amount: _givenAmount!,
       date: DateTime.now(),
       type: _transactionType ?? TransactionType.expense,
       categoryId: category,
@@ -193,15 +190,16 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               child: TextFormField(
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: true, signed: false),
-                controller: _amountController,
                 decoration: const InputDecoration.collapsed(hintText: "0,00"),
                 validator: (String? val) {
                   double x = 0;
                   if (val == null || val == "") {
                     return language.invalidInput;
                   }
+                  var amountString = val.replaceAll(",", ".");
                   try {
-                    x = double.parse(val);
+                    x = double.parse(amountString);
+                    setState(() => _givenAmount = x);
                   } catch (e) {
                     return language.invalidInput;
                   }
@@ -237,6 +235,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                                 if (_transactionType == null) {
                                   setState(
                                       () => _showTransactionTypeHint = true);
+                                  Utils.playErrorFeedback();
                                   return;
                                 } else {
                                   setState(
@@ -245,6 +244,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                                 if (isValid) {
                                   _handleAddTransaction();
                                   Navigator.of(context).pop();
+                                } else {
+                                  Utils.playErrorFeedback();
                                 }
                               },
                         style: ButtonStyle(

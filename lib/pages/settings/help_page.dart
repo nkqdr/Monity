@@ -5,15 +5,11 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class HelpPage extends StatefulWidget {
+class HelpPage extends StatelessWidget {
+  static const String appVersion = "1.0.7";
+
   const HelpPage({Key? key}) : super(key: key);
 
-  @override
-  _HelpPageState createState() => _HelpPageState();
-}
-
-class _HelpPageState extends State<HelpPage> {
-  static const String appVersion = "1.0.7";
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
@@ -32,11 +28,6 @@ class _HelpPageState extends State<HelpPage> {
       ),
       fixedAppBar: true,
       children: [
-        // SizedBox(
-        //   height: (MediaQuery.of(context).size.height / 2) -
-        //       MediaQuery.of(context).viewPadding.top -
-        //       200,
-        // ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -70,7 +61,7 @@ class _HelpPageState extends State<HelpPage> {
           ),
           child: AdaptiveTextButton(
             text: language.showIntroduction,
-            onPressed: _showInstructions,
+            onPressed: () => _showInstructions(context),
           ),
         ),
         const SizedBox(height: 5),
@@ -80,14 +71,14 @@ class _HelpPageState extends State<HelpPage> {
           ),
           child: AdaptiveTextButton(
             text: language.showAdditionalLicenses,
-            onPressed: _showLicenses,
+            onPressed: () => _showLicenses(context),
           ),
         ),
       ],
     );
   }
 
-  void _showLicenses() {
+  void _showLicenses(BuildContext context) {
     showLicensePage(
       context: context,
       applicationName: "Monity",
@@ -103,7 +94,7 @@ class _HelpPageState extends State<HelpPage> {
     );
   }
 
-  Future _showInstructions() async {
+  Future _showInstructions(BuildContext context) async {
     double topInsets = (MediaQuery.of(context).viewPadding.top);
     await showModalBottomSheet(
         context: context,
@@ -141,10 +132,4 @@ class _HelpPageState extends State<HelpPage> {
           );
         });
   }
-
-  // Future _openWebsite() async {
-  //   if (!await launch('https://niklas-kuder.de')) {
-  //     return;
-  //   }
-  // }
 }

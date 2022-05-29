@@ -34,11 +34,13 @@ class _SettingNavButtonState extends State<SettingNavButton> {
       onTapDown: _tapDown,
       onTapUp: _tapUp,
       onTapCancel: _tapCancel,
-      onTap: () {
+      onTap: () async {
         if (widget.destination != null) {
-          Navigator.of(context).push(
+          setState(() => _isTapped = true);
+          await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => widget.destination!),
           );
+          setState(() => _isTapped = false);
         }
       },
       child: AnimatedContainer(

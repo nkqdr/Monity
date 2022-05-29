@@ -1,5 +1,6 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,7 +18,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
   final Future<List<InvestmentCategory>> _categories =
       FinancesDatabase.instance.readAllInvestmentCategories();
   InvestmentCategory? _investmentCategory;
-  final _amountController = TextEditingController();
+  double? _givenAmount;
 
   Future _handleAddSnapshot() async {
     if (_investmentCategory == null) return;
@@ -30,16 +31,14 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
       await FinancesDatabase.instance
           .deleteInvestmentSnapshot(lastSnapshot.id!);
     }
-    var amountString = _amountController.text.replaceAll(",", ".");
-    double newAmount;
-    try {
-      newAmount = double.parse(amountString);
-    } catch (e) {
+
+    if (_givenAmount == null) {
       return;
     }
+
     await FinancesDatabase.instance.createInvestmentSnapshot(InvestmentSnapshot(
       categoryId: _investmentCategory!.id!,
-      amount: newAmount,
+      amount: _givenAmount!,
       date: DateTime.now(),
     ));
   }
@@ -146,15 +145,16 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
               child: TextFormField(
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: true, signed: false),
-                controller: _amountController,
                 decoration: const InputDecoration.collapsed(hintText: "0,00"),
                 validator: (String? val) {
                   double x = 0;
                   if (val == null || val == "") {
                     return language.invalidInput;
                   }
+                  var amountString = val.replaceAll(",", ".");
                   try {
-                    x = double.parse(val);
+                    x = double.parse(amountString);
+                    setState(() => _givenAmount = x);
                   } catch (e) {
                     return language.invalidInput;
                   }
@@ -189,6 +189,8 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                               if (isValid) {
                                 await _handleAddSnapshot();
                                 Navigator.of(context).pop();
+                              } else {
+                                Utils.playErrorFeedback();
                               }
                             },
                       child: Text(language.saveButton),

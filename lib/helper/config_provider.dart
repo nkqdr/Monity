@@ -26,9 +26,15 @@ class ConfigProvider extends ChangeNotifier {
     required this.monthlyLimit,
   });
 
-  setMonthlyLimit(double value) {
+  deleteMonthlyLimit() async {
+    monthlyLimit = null;
+    await KeyValueDatabase.deleteMonthlyLimit();
+    notifyListeners();
+  }
+
+  setMonthlyLimit(double value) async {
     monthlyLimit = value;
-    KeyValueDatabase.setMonthlyLimit(value);
+    await KeyValueDatabase.setMonthlyLimit(value);
     notifyListeners();
   }
 

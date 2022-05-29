@@ -152,7 +152,8 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       cancelLabel: language.abort,
     );
     if (dialogResult == OkCancelResult.ok) {
-      await KeyValueDatabase.deleteMonthlyLimit();
+      await Provider.of<ConfigProvider>(context, listen: false)
+          .deleteMonthlyLimit();
       await _refreshCategories();
     }
   }

@@ -8,14 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AppearancePage extends StatefulWidget {
+class AppearancePage extends StatelessWidget {
   const AppearancePage({Key? key}) : super(key: key);
 
-  @override
-  _AppearancePageState createState() => _AppearancePageState();
-}
-
-class _AppearancePageState extends State<AppearancePage> {
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context);
@@ -39,87 +34,67 @@ class _AppearancePageState extends State<AppearancePage> {
       children: [
         CustomSection(
           title: language.theme,
-          //titleSize: 18,
-          //titlePadding: 10,
           children: [
             MultipleChoiceSetting(
               title: language.system,
               isActive: _themeProvider.themeMode == ThemeMode.system,
               onTap: () {
-                setThemeMode(ThemeMode.system);
+                setThemeMode(context, ThemeMode.system);
               },
             ),
             MultipleChoiceSetting(
               title: language.lightTheme,
               isActive: _themeProvider.themeMode == ThemeMode.light,
               onTap: () {
-                setThemeMode(ThemeMode.light);
+                setThemeMode(context, ThemeMode.light);
               },
             ),
             MultipleChoiceSetting(
               title: language.darkTheme,
               isActive: _themeProvider.themeMode == ThemeMode.dark,
               onTap: () {
-                setThemeMode(ThemeMode.dark);
+                setThemeMode(context, ThemeMode.dark);
               },
             ),
           ],
         ),
         CustomSection(
           title: language.language,
-          //titleSize: 18,
-          //titlePadding: 10,
           children: [
             MultipleChoiceSetting(
               title: 'System',
               isActive: _languageProvider.locale == null,
               onTap: () {
-                setLanguage(null);
+                setLanguage(context, null);
               },
             ),
             MultipleChoiceSetting(
               title: 'English',
               isActive: _languageProvider.locale == const Locale('en'),
               onTap: () {
-                setLanguage('en');
+                setLanguage(context, 'en');
               },
             ),
             MultipleChoiceSetting(
               title: 'Deutsch',
               isActive: _languageProvider.locale == const Locale('de'),
               onTap: () {
-                setLanguage('de');
+                setLanguage(context, 'de');
               },
             ),
           ],
         ),
-        // CustomSection(
-        //   title: "Hidden Elements",
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.only(top: 20.0),
-        //       child: Center(
-        //         child: Text(
-        //           "No hidden elements.",
-        //           style: TextStyle(
-        //             color: Theme.of(context).secondaryHeaderColor,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
 
-  void setThemeMode(ThemeMode mode) {
+  void setThemeMode(BuildContext context, ThemeMode mode) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
     KeyValueDatabase.setTheme(mode);
     provider.setThemeMode(mode);
   }
 
-  void setLanguage(String? languageCode) {
+  void setLanguage(BuildContext context, String? languageCode) {
     final provider = Provider.of<LanguageProvider>(context, listen: false);
     KeyValueDatabase.setLanguage(languageCode);
     if (languageCode == null) {

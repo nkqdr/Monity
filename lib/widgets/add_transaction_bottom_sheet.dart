@@ -174,7 +174,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 child: Center(
                   child: Text(
                     language.selectTransactionType,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(
+                        color: Theme.of(context).errorColor, fontSize: 12),
                   ),
                 ),
               ),

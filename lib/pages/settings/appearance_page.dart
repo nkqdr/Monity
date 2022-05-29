@@ -2,7 +2,7 @@ import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/multiple_choice_select.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +17,7 @@ class AppearancePage extends StatelessWidget {
     final LanguageProvider _languageProvider =
         Provider.of<LanguageProvider>(context);
     var language = AppLocalizations.of(context)!;
+
     return View(
       appBar: CustomAppBar(
         title: language.appearance,
@@ -32,57 +33,28 @@ class AppearancePage extends StatelessWidget {
       ),
       fixedAppBar: true,
       children: [
-        CustomSection(
+        MultipleChoiceSection<ThemeMode>(
           title: language.theme,
-          children: [
-            MultipleChoiceSetting(
-              title: language.system,
-              isActive: _themeProvider.themeMode == ThemeMode.system,
-              onTap: () {
-                setThemeMode(context, ThemeMode.system);
-              },
-            ),
-            MultipleChoiceSetting(
-              title: language.lightTheme,
-              isActive: _themeProvider.themeMode == ThemeMode.light,
-              onTap: () {
-                setThemeMode(context, ThemeMode.light);
-              },
-            ),
-            MultipleChoiceSetting(
-              title: language.darkTheme,
-              isActive: _themeProvider.themeMode == ThemeMode.dark,
-              onTap: () {
-                setThemeMode(context, ThemeMode.dark);
-              },
-            ),
+          options: [
+            MultipleChoiceOption(
+                name: language.system, value: ThemeMode.system),
+            MultipleChoiceOption(
+                name: language.lightTheme, value: ThemeMode.light),
+            MultipleChoiceOption(
+                name: language.darkTheme, value: ThemeMode.dark),
           ],
+          value: _themeProvider.themeMode,
+          onChanged: setThemeMode,
         ),
-        CustomSection(
+        MultipleChoiceSection<String?>(
           title: language.language,
-          children: [
-            MultipleChoiceSetting(
-              title: 'System',
-              isActive: _languageProvider.locale == null,
-              onTap: () {
-                setLanguage(context, null);
-              },
-            ),
-            MultipleChoiceSetting(
-              title: 'English',
-              isActive: _languageProvider.locale == const Locale('en'),
-              onTap: () {
-                setLanguage(context, 'en');
-              },
-            ),
-            MultipleChoiceSetting(
-              title: 'Deutsch',
-              isActive: _languageProvider.locale == const Locale('de'),
-              onTap: () {
-                setLanguage(context, 'de');
-              },
-            ),
+          options: [
+            MultipleChoiceOption(name: language.system, value: null),
+            const MultipleChoiceOption(name: 'English', value: 'en'),
+            const MultipleChoiceOption(name: 'Deutsch', value: 'de'),
           ],
+          value: _languageProvider.locale?.toString(),
+          onChanged: setLanguage,
         ),
       ],
     );
@@ -102,68 +74,5 @@ class AppearancePage extends StatelessWidget {
       return;
     }
     provider.setLocale(Locale(languageCode));
-  }
-}
-
-class MultipleChoiceSetting extends StatelessWidget {
-  final String title;
-  final bool isActive;
-  final void Function()? onTap;
-  const MultipleChoiceSetting({
-    Key? key,
-    required this.title,
-    required this.isActive,
-    this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: SizedBox(
-                    width: 12,
-                    height: 12,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isActive
-                            ? Theme.of(context).colorScheme.onBackground
-                            : Theme.of(context).scaffoldBackgroundColor,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

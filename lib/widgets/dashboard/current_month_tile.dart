@@ -150,7 +150,7 @@ class CurrentMonthTile extends StatelessWidget {
     if (overflow != null && budgetOverflowEnabled) {
       return monthlyLimit! - thisMonthSpent + overflow;
     }
-    return monthlyLimit! - thisMonthSpent;
+    return monthlyLimit == null ? null : monthlyLimit - thisMonthSpent;
   }
 
   String _getCurrentDaysRemaining() {

@@ -68,7 +68,9 @@ class _HomePageState extends State<HomePage> {
                 left: 20,
                 right: 20,
               ),
-              child: const InstructionsPage(),
+              child: const InstructionsPage(
+                key: Key("instructions-page-widget"),
+              ),
             ),
           );
         });

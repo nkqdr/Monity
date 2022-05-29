@@ -56,16 +56,15 @@ class View extends StatelessWidget {
                       ),
                       if (fixedAppBar)
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(15),
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                            filter:
+                                ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
                             child: Container(
                               height:
                                   MediaQuery.of(context).viewPadding.top + 48,
-                              color: appBarBackgroundColor ??
-                                  Theme.of(context)
-                                      .scaffoldBackgroundColor
-                                      .withOpacity(0.5),
+                              color:
+                                  appBarBackgroundColor ?? Colors.transparent,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -87,11 +86,10 @@ class View extends StatelessWidget {
                         height: MediaQuery.of(context).viewPadding.bottom,
                         child: ClipRect(
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            filter:
+                                ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
                             child: Container(
-                              color: Theme.of(context)
-                                  .scaffoldBackgroundColor
-                                  .withOpacity(0.5),
+                              color: Colors.transparent,
                             ),
                           ),
                         ),

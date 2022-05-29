@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         isScrollControlled: true,
         backgroundColor: Colors.grey[900],
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         isDismissible: false,
         enableDrag: false,
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
+                top: Radius.circular(15),
               ),
               boxShadow: const [
                 BoxShadow(blurRadius: 10),
@@ -94,19 +94,18 @@ class _HomePageState extends State<HomePage> {
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
           ),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 30.0),
             child: BottomNavigationBar(
               currentIndex: _currentPage,
               unselectedItemColor: Theme.of(context).colorScheme.onBackground,
               selectedItemColor: Theme.of(context).colorScheme.primary,
               onTap: _onItemTapped,
-              backgroundColor: Theme.of(context)
-                  .scaffoldBackgroundColor
-                  .withOpacity(0.5), // Theme.of(context).bottomAppBarColor,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               selectedFontSize: 12,
               items: [
                 BottomNavigationBarItem(

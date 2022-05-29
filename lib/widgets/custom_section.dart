@@ -73,7 +73,7 @@ class CustomSection extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
               child: ClipRRect(
-                borderRadius: _getBorderRadius(index, children.length) ??
+                borderRadius: getBorderRadius(index, children.length) ??
                     BorderRadius.circular(0),
                 child: item,
               ),
@@ -85,14 +85,21 @@ class CustomSection extends StatelessWidget {
     );
   }
 
-  BorderRadius? _getBorderRadius(int index, int length) {
+  @visibleForTesting
+  BorderRadius? getBorderRadius(int index, int length) {
+    // Get rid of edge-cases
+    if (index >= length || index < 0 || length <= 0) {
+      return null;
+    }
+    // Actual calculations
     if (index == 0) {
       if (length == 1) {
         return const BorderRadius.all(Radius.circular(15));
       }
       return const BorderRadius.only(
           topLeft: Radius.circular(15), topRight: Radius.circular(15));
-    } else if (index == length - 1) {
+    }
+    if (index == length - 1) {
       return const BorderRadius.only(
           bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15));
     }

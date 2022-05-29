@@ -58,46 +58,39 @@ class _OptionsPageState extends State<OptionsPage> {
         children: [
           // Option to carry over the remaining budget into the next month.
           CustomSection(
+            groupItems: true,
             subtitle: language.remainingBudgetOverflow,
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              language.enableOverflow,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Switch.adaptive(
-                                value: enableOverflow,
-                                onChanged: _toggleOverflow)
-                          ],
-                        ),
-                        if (enableOverflow && !isLoading)
+              Container(
+                color: Theme.of(context).cardColor,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text(
-                            "${language.currentOverflow} ${currencyFormat.format(currentOverflow)}",
-                            style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
+                            language.enableOverflow,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
                             ),
                           ),
-                      ],
-                    ),
+                          Switch.adaptive(
+                              value: enableOverflow, onChanged: _toggleOverflow)
+                        ],
+                      ),
+                      if (enableOverflow && !isLoading)
+                        Text(
+                          "${language.currentOverflow} ${currencyFormat.format(currentOverflow)}",
+                          style: TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

@@ -116,7 +116,7 @@ class CurrentMonthTile extends StatelessWidget {
     return sum;
   }
 
-  Future<double> _getRemainingAmount(
+  Future<double?> _getRemainingAmount(
       bool budgetOverflowEnabled, double? monthlyLimit) async {
     var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
@@ -150,7 +150,7 @@ class CurrentMonthTile extends StatelessWidget {
     if (overflow != null && budgetOverflowEnabled) {
       return monthlyLimit! - thisMonthSpent + overflow;
     }
-    return monthlyLimit! - thisMonthSpent;
+    return monthlyLimit == null ? null : monthlyLimit - thisMonthSpent;
   }
 
   String _getCurrentDaysRemaining() {

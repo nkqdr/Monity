@@ -1,3 +1,4 @@
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:flutter/material.dart';
 
 class CustomSection extends StatelessWidget {
@@ -9,6 +10,7 @@ class CustomSection extends StatelessWidget {
   final FontWeight? titleWeight;
   final Color? titleColor;
   final InkWell? trailing;
+  final bool groupItems;
 
   const CustomSection({
     Key? key,
@@ -20,6 +22,7 @@ class CustomSection extends StatelessWidget {
     this.titleColor,
     this.titlePadding,
     this.trailing,
+    this.groupItems = false,
   }) : super(key: key);
 
   @override
@@ -65,8 +68,34 @@ class CustomSection extends StatelessWidget {
             ],
           ),
         ),
-        ...children,
+        if (groupItems)
+          ...Utils.mapIndexed(children, (index, Widget item) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+              child: ClipRRect(
+                borderRadius: _getBorderRadius(index, children.length) ??
+                    BorderRadius.circular(0),
+                child: item,
+              ),
+            );
+          })
+        else
+          ...children
       ],
     );
+  }
+
+  BorderRadius? _getBorderRadius(int index, int length) {
+    if (index == 0) {
+      if (length == 1) {
+        return const BorderRadius.all(Radius.circular(15));
+      }
+      return const BorderRadius.only(
+          topLeft: Radius.circular(15), topRight: Radius.circular(15));
+    } else if (index == length - 1) {
+      return const BorderRadius.only(
+          bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15));
+    }
+    return null;
   }
 }

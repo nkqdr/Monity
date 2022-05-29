@@ -64,131 +64,111 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       fixedAppBar: true,
       children: [
         CustomSection(
+          groupItems: true,
           title: language.dataTitle,
           subtitle: language.dataSectionDescription,
           children: [
             // Registered transactions
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).cardColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        language.registeredTransactions,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).cardColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      language.registeredTransactions,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
                       ),
-                      if (isLoading)
-                        const AdaptiveProgressIndicator()
-                      else
-                        Text(
-                          transactionsCount.toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                    ],
-                  ),
+                    ),
+                    if (isLoading)
+                      const AdaptiveProgressIndicator()
+                    else
+                      Text(
+                        transactionsCount.toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  ],
                 ),
               ),
             ),
             // Registered snapshots
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).cardColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        language.registeredSnapshots,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).cardColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      language.registeredSnapshots,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
                       ),
-                      if (isLoading)
-                        const AdaptiveProgressIndicator()
-                      else
-                        Text(
-                          snapshotCount.toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                    ],
-                  ),
+                    ),
+                    if (isLoading)
+                      const AdaptiveProgressIndicator()
+                    else
+                      Text(
+                        snapshotCount.toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  ],
                 ),
               ),
             ),
             // Used storage
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).cardColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        language.usedStorage,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).cardColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      language.usedStorage,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
                       ),
-                      if (isLoading)
-                        const AdaptiveProgressIndicator()
-                      else
-                        Text(
-                          _formatBytes(databaseSize, 2),
-                          style: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                    ],
-                  ),
+                    ),
+                    if (isLoading)
+                      const AdaptiveProgressIndicator()
+                    else
+                      Text(
+                        _formatBytes(databaseSize, 2),
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  ],
                 ),
               ),
             ),
-            Center(
-              child: AdaptiveTextButton(
-                onPressed: _handleDeleteData,
-                isDescructive: true,
-                text: language.deleteAllData,
-              ),
-            )
           ],
+        ),
+        Center(
+          child: AdaptiveTextButton(
+            onPressed: _handleDeleteData,
+            isDescructive: true,
+            text: language.deleteAllData,
+          ),
         ),
         CustomSection(
           title: language.backup,

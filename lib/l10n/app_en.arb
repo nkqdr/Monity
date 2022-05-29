@@ -534,5 +534,13 @@
   "selectTransactionType": "Select a transaction type",
   "@selectTransactionType": {
     "description": "Error message for when no transaction type has been selected."
+  },
+  "general": "General",
+  "@general": {
+    "description": "General header to be used inside settings."
+  },
+  "configuration": "Configuration",
+  "@configuration": {
+    "description": "Configuration header to be used inside settings."
   }
 }

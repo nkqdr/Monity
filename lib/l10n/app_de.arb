@@ -132,5 +132,7 @@
   "currentOverflow": "Aktueller Überlauf:",
   "noLabel": "Kein Bezeichner",
   "removeLabel": "Bezeichner entfernen",
-  "selectTransactionType": "Wähle einen Transaktionstyp aus"
+  "selectTransactionType": "Wähle einen Transaktionstyp aus",
+  "general": "Allgemein",
+  "configuration": "Konfiguration"
 }

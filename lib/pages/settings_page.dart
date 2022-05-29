@@ -5,6 +5,7 @@ import 'package:finance_buddy/pages/settings/options_page.dart';
 import 'package:finance_buddy/pages/settings/system_settings_page.dart';
 import 'package:finance_buddy/pages/settings/transactions_settings_page.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/setting_nav_button.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
@@ -31,29 +32,47 @@ class SettingsPage extends StatelessWidget {
       ),
       fixedAppBar: true,
       children: [
-        SettingNavButton(
-          name: language.system,
-          destination: const SystemSettingsPage(),
+        CustomSection(
+          groupItems: true,
+          title: language.general,
+          children: [
+            SettingNavButton(
+              name: language.system,
+              destination: const SystemSettingsPage(),
+            ),
+            SettingNavButton(
+              name: language.options,
+              destination: const OptionsPage(),
+            ),
+            SettingNavButton(
+              name: language.appearance,
+              destination: const AppearancePage(),
+            ),
+          ],
         ),
-        SettingNavButton(
-          name: language.options,
-          destination: const OptionsPage(),
+        CustomSection(
+          groupItems: true,
+          title: language.configuration,
+          children: [
+            SettingNavButton(
+              name: language.transactionsSettings,
+              destination: const TransactionsSettingsPage(),
+            ),
+            SettingNavButton(
+              name: language.investments,
+              destination: const InvestmentsSettingsPage(),
+            ),
+          ],
         ),
-        SettingNavButton(
-          name: language.appearance,
-          destination: const AppearancePage(),
-        ),
-        SettingNavButton(
-          name: language.transactionsSettings,
-          destination: const TransactionsSettingsPage(),
-        ),
-        SettingNavButton(
-          name: language.investments,
-          destination: const InvestmentsSettingsPage(),
-        ),
-        SettingNavButton(
-          name: language.about,
-          destination: const HelpPage(),
+        CustomSection(
+          groupItems: true,
+          title: language.help,
+          children: [
+            SettingNavButton(
+              name: language.about,
+              destination: const HelpPage(),
+            ),
+          ],
         ),
       ],
     );

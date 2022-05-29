@@ -44,7 +44,7 @@ class AppearancePage extends StatelessWidget {
                 name: language.darkTheme, value: ThemeMode.dark),
           ],
           value: _themeProvider.themeMode,
-          onChanged: setThemeMode,
+          onChanged: (value) => setThemeMode(context, value),
         ),
         MultipleChoiceSection<String?>(
           title: language.language,
@@ -54,7 +54,7 @@ class AppearancePage extends StatelessWidget {
             const MultipleChoiceOption(name: 'Deutsch', value: 'de'),
           ],
           value: _languageProvider.locale?.toString(),
-          onChanged: setLanguage,
+          onChanged: (value) => setLanguage(context, value),
         ),
       ],
     );

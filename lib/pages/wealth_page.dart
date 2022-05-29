@@ -9,6 +9,7 @@ import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:finance_buddy/widgets/custom_section.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:finance_buddy/widgets/investment_tile.dart';
 import 'package:finance_buddy/widgets/tab_switcher.dart';
@@ -202,35 +203,26 @@ class _WealthPageState extends State<WealthPage> {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: sidePadding, top: 15),
-          child: Text(
-            language.investments,
-            style: TextStyle(
-              color: Theme.of(context).secondaryHeaderColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
+        CustomSection(
+          title: language.investments,
+          children: isLoading
+              ? []
+              : [
+                  ...categories.map((e) => GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return WealthCategoryPage(category: e);
+                          }));
+                          _refreshCategories();
+                        },
+                        child: InvestmentTile(
+                          key: ObjectKey(e),
+                          category: e,
+                        ),
+                      )),
+                ],
         ),
-        // Render investment categories
-        if (isLoading)
-          const SizedBox(height: 100, child: AdaptiveProgressIndicator())
-        else
-          ...categories.map((e) => GestureDetector(
-                onTap: () async {
-                  await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                    return WealthCategoryPage(category: e);
-                  }));
-                  _refreshCategories();
-                },
-                child: InvestmentTile(
-                  key: ObjectKey(e),
-                  category: e,
-                ),
-              )),
-
         const SizedBox(
           height: 50,
         ),

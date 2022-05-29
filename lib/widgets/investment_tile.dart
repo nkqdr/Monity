@@ -31,13 +31,13 @@ class InvestmentTile extends StatelessWidget {
     Future<InvestmentSnapshot?> lastSnapshot =
         FinancesDatabase.instance.readLastSnapshotFor(category: category);
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 10.0, left: 10, right: 10),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         child: Container(
           color: Theme.of(context).cardColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
             child: Column(
               children: [
                 Row(

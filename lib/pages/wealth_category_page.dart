@@ -103,7 +103,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                         margin: const EdgeInsets.only(bottom: 10),
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         child: Material(
                           color: Theme.of(context).cardColor,

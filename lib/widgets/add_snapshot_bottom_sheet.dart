@@ -167,21 +167,36 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
             ),
 
             // Save button
-            Padding(
-              padding: const EdgeInsets.only(top: 25.0, bottom: 15),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    bool isValid = _formKey.currentState!.validate();
-                    if (isValid) {
-                      await _handleAddSnapshot();
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Text(language.saveButton),
-                ),
-              ),
-            ),
+            FutureBuilder<List<InvestmentCategory>>(
+              future: _categories,
+              builder: (context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 25.0, bottom: 15),
+                  child: Center(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            snapshot.hasData && snapshot.data!.isEmpty
+                                ? Colors.grey
+                                : Colors.green),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                      ),
+                      onPressed: snapshot.hasData && snapshot.data!.isEmpty
+                          ? null
+                          : () async {
+                              bool isValid = _formKey.currentState!.validate();
+                              if (isValid) {
+                                await _handleAddSnapshot();
+                                Navigator.of(context).pop();
+                              }
+                            },
+                      child: Text(language.saveButton),
+                    ),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

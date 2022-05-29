@@ -221,27 +221,45 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ),
 
             // Save button
-            Padding(
-              padding: const EdgeInsets.only(top: 25.0, bottom: 15),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    bool isValid = _formKey.currentState!.validate();
-                    if (_transactionType == null) {
-                      setState(() => _showTransactionTypeHint = true);
-                      return;
-                    } else {
-                      setState(() => _showTransactionTypeHint = false);
-                    }
-                    if (isValid) {
-                      _handleAddTransaction();
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Text(language.saveButton),
-                ),
-              ),
-            ),
+            FutureBuilder<List<TransactionCategory>>(
+                future: _categories,
+                builder: ((context, snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 25.0, bottom: 15),
+                    child: Center(
+                      child: ElevatedButton(
+                        key: const Key("save-transaction-button"),
+                        onPressed: snapshot.hasData && snapshot.data!.isEmpty
+                            ? null
+                            : () {
+                                bool isValid =
+                                    _formKey.currentState!.validate();
+                                if (_transactionType == null) {
+                                  setState(
+                                      () => _showTransactionTypeHint = true);
+                                  return;
+                                } else {
+                                  setState(
+                                      () => _showTransactionTypeHint = false);
+                                }
+                                if (isValid) {
+                                  _handleAddTransaction();
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              snapshot.hasData && snapshot.data!.isEmpty
+                                  ? Colors.grey
+                                  : Colors.green),
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                        ),
+                        child: Text(language.saveButton),
+                      ),
+                    ),
+                  );
+                })),
           ],
         ),
       ),

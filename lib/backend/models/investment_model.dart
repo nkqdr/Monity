@@ -23,6 +23,10 @@ class InvestmentCategory extends Category {
     required String name,
   }) : super(id: id, name: name);
 
+  bool equals(InvestmentCategory other) {
+    return label == other.label && id == other.id && name == other.name;
+  }
+
   Map<String, Object?> toJson() {
     return {
       InvestmentCategoryFields.id: id,
@@ -48,7 +52,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: id ?? this.id,
       name: name ?? this.name,
-      label: label,
+      label: label ?? this.label,
     );
   }
 
@@ -95,6 +99,13 @@ class InvestmentSnapshot {
     required this.date,
     required this.categoryId,
   });
+
+  bool equals(InvestmentSnapshot other) {
+    return id == other.id &&
+        amount == other.amount &&
+        date.isAtSameMomentAs(other.date) &&
+        categoryId == other.categoryId;
+  }
 
   @override
   String toString() {

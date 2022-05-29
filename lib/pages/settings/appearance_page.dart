@@ -8,14 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AppearancePage extends StatefulWidget {
+class AppearancePage extends StatelessWidget {
   const AppearancePage({Key? key}) : super(key: key);
 
-  @override
-  _AppearancePageState createState() => _AppearancePageState();
-}
-
-class _AppearancePageState extends State<AppearancePage> {
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context);
@@ -65,13 +60,13 @@ class _AppearancePageState extends State<AppearancePage> {
     );
   }
 
-  void setThemeMode(ThemeMode mode) {
+  void setThemeMode(BuildContext context, ThemeMode mode) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
     KeyValueDatabase.setTheme(mode);
     provider.setThemeMode(mode);
   }
 
-  void setLanguage(String? languageCode) {
+  void setLanguage(BuildContext context, String? languageCode) {
     final provider = Provider.of<LanguageProvider>(context, listen: false);
     KeyValueDatabase.setLanguage(languageCode);
     if (languageCode == null) {

@@ -120,7 +120,7 @@ class CurrentMonthTile extends StatelessWidget {
       bool budgetOverflowEnabled, double? monthlyLimit) async {
     var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
-    if (transactions.isEmpty) return monthlyLimit ?? 0;
+    if (transactions.isEmpty) return monthlyLimit;
     double thisMonthSpent = _getThisMonthSpentAmount(transactions);
 
     var lastTransaction = transactions.last;

@@ -115,6 +115,9 @@
   "general": "Allgemein",
   "configuration": "Konfiguration",
   "faq": "FAQ",
+  "load_success": "Erfolgreich geladen!",
+  "save_success": "Erfolgreich gespeichert!",
+  "lastBackupCreatedOn": "Letztes Backup erstellt am: ",
 
 
 

@@ -1,13 +1,12 @@
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/dashboard_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class CashFlowTile extends StatefulWidget {
   const CashFlowTile({Key? key}) : super(key: key);
@@ -100,14 +99,7 @@ class _CashFlowTileState extends State<CashFlowTile> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    final provider = Provider.of<LanguageProvider>(context);
-    DateFormat dateFormat;
-    if (provider.locale == null) {
-      dateFormat =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormat = DateFormat.yMMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormat = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);

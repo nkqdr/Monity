@@ -21,11 +21,26 @@ class ConfigProvider extends ChangeNotifier {
   ];
   bool budgetOverflowEnabled;
   double? monthlyLimit;
+  DateTime? lastBackupCreated;
 
   ConfigProvider({
     required this.budgetOverflowEnabled,
     required this.monthlyLimit,
-  });
+  }) {
+    _setUpValues();
+  }
+
+  Future _setUpValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? dateString = prefs.getString(lastBackupCreatedKey);
+    lastBackupCreated = dateString != null ? DateTime.parse(dateString) : null;
+  }
+
+  Future setLastBackupCreated(DateTime time) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(lastBackupCreatedKey, time.toIso8601String());
+    notifyListeners();
+  }
 
   Future deleteMonthlyLimit() async {
     monthlyLimit = null;

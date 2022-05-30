@@ -6,6 +6,7 @@ import 'package:finance_buddy/backend/database_manager.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/helper/config_provider.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
@@ -53,6 +54,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+    var configProvider = Provider.of<ConfigProvider>(context);
+    var dateFormatter = Utils.getDateFormatter(context);
     return View(
       appBar: CustomAppBar(
         title: language.system,
@@ -183,7 +186,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AdaptiveTextButton(
-                  onPressed: _handleGenerateBackup,
+                  onPressed: () => _handleGenerateBackup(context),
                   text: language.generateBackup,
                 ),
                 AdaptiveTextButton(
@@ -192,6 +195,29 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 ),
               ],
             ),
+            if (configProvider.lastBackupCreated != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: Theme.of(context).secondaryHeaderColor,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    Text(
+                      language.lastBackupCreatedOn +
+                          dateFormatter
+                              .format(configProvider.lastBackupCreated!),
+                      style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ],
+                ),
+              )
           ],
         ),
       ],
@@ -225,7 +251,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       }
       await showOkAlertDialog(
         context: context,
-        title: language.attention,
+        title: language.load_success,
         message: language.backupRestoredSuccessfully,
       );
       _refreshDatabaseSize();
@@ -253,7 +279,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     return files.map((e) => e.path.split("/").last).toList();
   }
 
-  Future _handleGenerateBackup() async {
+  Future _handleGenerateBackup(BuildContext context) async {
     // String? outputFile = await FilePicker.platform.saveFile(
     //   dialogTitle: 'Please select an output file:',
     //   fileName: 'output-file.pdf',
@@ -299,6 +325,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           return;
         }
       }
+      Provider.of<ConfigProvider>(context, listen: false)
+          .setLastBackupCreated(DateTime.now());
       _finishSaving(result, dialogResult.first);
     }
   }
@@ -309,7 +337,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
         await DatabaseManager.instance.saveBackup(result, fileName);
     await showOkAlertDialog(
       context: context,
-      title: language.attention,
+      title: language.save_success,
       message: Platform.isIOS
           ? language.savedTo
           : language.savedToAndroid + "\n" + filePath,

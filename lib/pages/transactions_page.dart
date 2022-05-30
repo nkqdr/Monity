@@ -2,7 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
 import 'package:finance_buddy/helper/showcase_keys_provider.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -57,15 +57,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LanguageProvider>(context);
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMM(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMM(provider.locale!.languageCode);
-    }
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
 
     var language = AppLocalizations.of(context)!;
     return View(

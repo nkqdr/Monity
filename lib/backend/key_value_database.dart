@@ -7,6 +7,7 @@ const String monthlyLimitKey = 'MONTHLY_LIMIT';
 const String firstStartupKey = 'IS_FIRST_START_UP';
 const String budgetOverflowEnabledKey = "BUDGET_OVERFLOW_ENABLED";
 const String budgetOverflowKey = "BUDGET_OVERFLOW";
+const String lastBackupCreatedKey = "LAST_BACKUP_CREATED";
 
 const List<String> keyList = [
   'APPEARANCE',

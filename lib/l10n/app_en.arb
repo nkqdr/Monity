@@ -463,6 +463,18 @@
   "@faq": {
     "description": "Title for faq page."
   },
+  "load_success": "Loaded successfully!",
+  "@load_success": {
+    "description": "Success."
+  },
+  "save_success": "Saved successfully!",
+  "@save_success": {
+    "description": "Success."
+  },
+  "lastBackupCreatedOn": "Last Backup created on: ",
+  "@lastBackupCreatedOn": {
+    "description": "Describes when the last backup has been created."
+  },
 
 
 
@@ -477,54 +489,54 @@
   },
   "yes_please": "Yes, please!",
   "@yes_please": {
-    "yes_please": "Button Text"
+    "description": "Button Text"
   },
   "no_thanks": "No thanks, I know my way around.",
   "@no_thanks": {
-    "no_thanks": "Button Text"
+    "description": "Button Text"
   },
   "tap_to_view_transactions": "Tap to view the transactions page.",
   "@tap_to_view_transactions": {
-    "tap_to_view_transactions": "Showcase Text"
+    "description": "Showcase Text"
   },
   "tap_to_view_dashboard": "Tap to view the dashboard page.",
   "@tap_to_view_dashboard": {
-    "tap_to_view_dashboard": "Showcase Text"
+    "description": "Showcase Text"
   },
   "tap_to_view_settings": "Tap to view the settings page.",
   "@tap_to_view_settings": {
-    "tap_to_view_settings": "Showcase Text"
+    "description": "Showcase Text"
   },
   "good_job": "Good Job!",
   "@good_job": {
-    "good_job": "Showcase Text"
+    "description": "Showcase Text"
   },
   "current_month_tile_showcase": "Now that you have configured your limit, this tile shows you information for the current month. If you long-press this, you also see a visualization of your spending behavior.",
   "@current_month_tile_showcase": {
-    "current_month_tile_showcase": "Showcase Text"
+    "description": "Showcase Text"
   },
   "this_is_settings_page": "This is the settings page",
   "@this_is_settings_page": {
-    "this_is_settings_page": "Showcase Text"
+    "description": "Showcase Text"
   },
   "this_is_settings_page_desc": "Here you can find all of the settings to view information and customize your app.",
   "@this_is_settings_page_desc": {
-    "this_is_settings_page_desc": "Showcase Text"
+    "description": "Showcase Text"
   },
   "start_set_limit_and_categories": "Start by setting yourself a monthly spending limit and creating transaction categories like 'Food' or 'Freetime'.",
   "@start_set_limit_and_categories": {
-    "start_set_limit_and_categories": "Showcase Text"
+    "description": "Showcase Text"
   },
   "tap_to_create_transaction": "Tap here to create your first transaction. \n(Don't worry, you can delete it later.) \n\nWith every transaction that you save, your dashboard will populate more, and you'll get a clearer insight into your personal finances.",
   "@tap_to_create_transaction": {
-    "tap_to_create_transaction": "Showcase Text"
+    "description": "Showcase Text"
   },
   "introduction_completed": "You succesfully completed the introduction. Have fun exploring the rest of Monity! If you have any further questions, please refer to the Help-Section in the settings.",
   "@introduction_completed": {
-    "introduction_completed": "Showcase Text"
+    "description": "Showcase Text"
   },
   "swipe_down_to_continue": "Swipe down to continue!",
   "@swipe_down_to_continue": {
-    "swipe_down_to_continue": "Showcase Text"
+    "description": "Showcase Text"
   }
 }

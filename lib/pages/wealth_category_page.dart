@@ -1,7 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart';
@@ -9,7 +9,6 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WealthCategoryPage extends StatefulWidget {
@@ -43,14 +42,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LanguageProvider>(context);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);

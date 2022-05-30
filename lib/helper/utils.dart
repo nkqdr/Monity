@@ -1,5 +1,9 @@
+import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Utils {
   static Iterable<E> mapIndexed<E, T>(
@@ -10,6 +14,18 @@ class Utils {
       yield f(index, item);
       index = index + 1;
     }
+  }
+
+  static DateFormat getDateFormatter(BuildContext context) {
+    final provider = Provider.of<LanguageProvider>(context);
+    DateFormat dateFormatter;
+    if (provider.locale == null) {
+      dateFormatter =
+          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
+    } else {
+      dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
+    }
+    return dateFormatter;
   }
 
   static playErrorFeedback() async {

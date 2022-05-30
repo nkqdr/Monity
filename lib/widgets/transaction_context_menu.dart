@@ -1,10 +1,9 @@
 import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import 'custom_cupertino_context_menu_action.dart';
 
@@ -25,17 +24,10 @@ class TransactionContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    final provider = Provider.of<LanguageProvider>(context);
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(
         locale: locale.toString(), decimalDigits: 2);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         return Material(

@@ -13,10 +13,10 @@ class LanguageProvider extends ChangeNotifier {
     if (languageCode == null) {
       await prefs.remove(languageKey);
       locale = null;
-      return;
+    } else {
+      await prefs.setString(languageKey, languageCode);
+      locale = Locale(languageCode);
     }
-    await prefs.setString(languageKey, languageCode);
-    locale = Locale(languageCode);
     notifyListeners();
   }
 

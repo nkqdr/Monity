@@ -14,9 +14,12 @@ class AdaptiveFilledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Platform.isIOS
-        ? CupertinoButton.filled(
-            child: child,
-            onPressed: onPressed,
+        ? Container(
+            constraints: const BoxConstraints(minWidth: double.infinity),
+            child: CupertinoButton.filled(
+              child: child,
+              onPressed: onPressed,
+            ),
           )
         : ElevatedButton(onPressed: onPressed, child: child);
   }

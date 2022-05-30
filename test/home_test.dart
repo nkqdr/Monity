@@ -32,19 +32,6 @@ void main() {
     expect(find.text('Wealth'), findsOneWidget);
   });
 
-  testWidgets('Instructions are shown if the boolean is set to true',
-      (tester) async {
-    await tester.pumpWidget(const MyApp(
-      initialTheme: ThemeMode.system,
-      shouldShowInstructions: true,
-      budgetOverflowEnabled: false,
-      monthlyLimit: 0,
-    ));
-    await tester.pump();
-    expect(find.byKey(const Key("instructions-page-widget")), findsOneWidget);
-    expect(find.byIcon(Icons.close), findsOneWidget);
-  });
-
   testWidgets('Instructions are not shown if the boolean is set to false',
       (tester) async {
     await tester.pumpWidget(const MyApp(

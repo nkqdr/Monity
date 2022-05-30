@@ -43,6 +43,16 @@ class HelpPage extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
+              child: Text(
+                "Monity",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 5.0),
               child: Text("Version $appVersion"),
             ),
             const Padding(

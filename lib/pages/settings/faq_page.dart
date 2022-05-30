@@ -4,6 +4,7 @@ import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// TODO: Implement different languages for FAQ Page.
 class FaqPage extends StatelessWidget {
   const FaqPage({Key? key}) : super(key: key);
 
@@ -128,7 +129,7 @@ class _CustomExpansionTile extends StatelessWidget {
       leading: leading != null
           ? Text(
               leading!,
-              style: TextStyle(fontSize: 22),
+              style: const TextStyle(fontSize: 22),
             )
           : null,
       children: children,

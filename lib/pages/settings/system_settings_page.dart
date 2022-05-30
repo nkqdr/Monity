@@ -6,7 +6,6 @@ import 'package:finance_buddy/backend/database_manager.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/helper/showcase_keys_provider.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';

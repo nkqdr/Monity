@@ -134,5 +134,6 @@
   "removeLabel": "Bezeichner entfernen",
   "selectTransactionType": "Wähle einen Transaktionstyp aus",
   "general": "Allgemein",
-  "configuration": "Konfiguration"
+  "configuration": "Konfiguration",
+  "faq": "FAQ"
 }

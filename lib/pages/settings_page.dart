@@ -1,5 +1,6 @@
 import 'package:finance_buddy/helper/showcase_keys_provider.dart';
 import 'package:finance_buddy/pages/settings/appearance_page.dart';
+import 'package:finance_buddy/pages/settings/faq_page.dart';
 import 'package:finance_buddy/pages/settings/help_page.dart';
 import 'package:finance_buddy/pages/settings/investments_settings_page.dart';
 import 'package:finance_buddy/pages/settings/options_page.dart';
@@ -111,6 +112,10 @@ class SettingsPage extends StatelessWidget {
                       groupItems: true,
                       title: language.help,
                       children: [
+                        SettingNavButton(
+                          name: language.faq,
+                          destination: const FaqPage(),
+                        ),
                         SettingNavButton(
                           name: language.about,
                           destination: const HelpPage(),

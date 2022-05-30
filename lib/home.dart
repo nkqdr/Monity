@@ -41,50 +41,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             builder: (context) {
-              return CustomBottomSheet(
-                child: Container(
-                  constraints: const BoxConstraints(maxHeight: 500),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
-                          child: const Text(
-                            'Welcome!',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                            ),
-                          ),
-                        ),
-                        const Text(
-                            'It seems like this is your first time using Monity. Would you like to take a quick tour?'),
-                        const Spacer(),
-                        Center(
-                          child: AdaptiveFilledButton(
-                            child: Text('Yes, please!'),
-                            onPressed: () {
-                              showcaseProvider.setUserWantsTour(true);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 20.0, top: 10.0),
-                          child: Center(
-                            child: AdaptiveTextButton(
-                              text: 'No thanks, I know my way around.',
-                              onPressed: () async {
-                                await showcaseProvider.setShowcase();
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ),
-                        )
-                      ]),
-                ),
-              );
+              return const _WelcomePage();
             });
       }
       if (showcaseProvider.userWantsTour) {
@@ -197,5 +154,56 @@ class _HomePageState extends State<HomePage> {
       default:
         return Container();
     }
+  }
+}
+
+class _WelcomePage extends StatelessWidget {
+  const _WelcomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var showcaseProvider =
+        Provider.of<ShowcaseProvider>(context, listen: false);
+    return CustomBottomSheet(
+      child: Container(
+        constraints: const BoxConstraints(maxHeight: 500),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: const Text(
+              'Welcome!',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
+            ),
+          ),
+          const Text(
+              'It seems like this is your first time using Monity. Would you like to take a quick tour?'),
+          const Spacer(),
+          Center(
+            child: AdaptiveFilledButton(
+              child: Text('Yes, please!'),
+              onPressed: () {
+                showcaseProvider.setUserWantsTour(true);
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0, top: 10.0),
+            child: Center(
+              child: AdaptiveTextButton(
+                text: 'No thanks, I know my way around.',
+                onPressed: () async {
+                  await showcaseProvider.setShowcase();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
   }
 }

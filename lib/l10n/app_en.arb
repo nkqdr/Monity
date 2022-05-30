@@ -542,5 +542,9 @@
   "configuration": "Configuration",
   "@configuration": {
     "description": "Configuration header to be used inside settings."
+  },
+  "faq": "FAQ",
+  "@faq": {
+    "description": "Title for faq page."
   }
 }

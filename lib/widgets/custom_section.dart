@@ -27,61 +27,65 @@ class CustomSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-              top: 30, left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (title != null)
-                    Text(
-                      title!,
-                      style: TextStyle(
-                        fontSize: titleSize ?? 22,
-                        fontWeight: titleWeight ?? FontWeight.bold,
-                        color: titleColor ??
-                            Theme.of(context).secondaryHeaderColor,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: TextStyle(
+                          fontSize: titleSize ?? 22,
+                          fontWeight: titleWeight ?? FontWeight.bold,
+                          color: titleColor ??
+                              Theme.of(context).secondaryHeaderColor,
+                        ),
                       ),
-                    ),
-                  trailing ?? Container(),
-                ],
-              ),
-              if (subtitle != null)
-                const SizedBox(
-                  height: 5,
+                    trailing ?? Container(),
+                  ],
                 ),
-              if (subtitle != null)
-                Text(
-                  subtitle!,
-                  style: TextStyle(
-                      color: Theme.of(context).secondaryHeaderColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                )
-            ],
+                if (subtitle != null)
+                  const SizedBox(
+                    height: 5,
+                  ),
+                if (subtitle != null)
+                  Text(
+                    subtitle!,
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  )
+              ],
+            ),
           ),
-        ),
-        if (groupItems)
-          ...Utils.mapIndexed(children, (index, Widget item) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-              child: ClipRRect(
-                borderRadius: getBorderRadius(index, children.length) ??
-                    BorderRadius.circular(0),
-                child: item,
-              ),
-            );
-          })
-        else
-          ...children
-      ],
+          if (groupItems)
+            ...Utils.mapIndexed(children, (index, Widget item) {
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                child: ClipRRect(
+                  borderRadius: getBorderRadius(index, children.length) ??
+                      BorderRadius.circular(0),
+                  child: item,
+                ),
+              );
+            })
+          else
+            ...children
+        ],
+      ),
     );
   }
 

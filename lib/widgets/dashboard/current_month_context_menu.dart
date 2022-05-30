@@ -163,7 +163,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                             end: Alignment.topCenter,
                                           ),
                                           borderRadius:
-                                              BorderRadius.circular(20),
+                                              BorderRadius.circular(15),
                                           border: Border.all(
                                               color: remainingAmount! <= 0
                                                   ? Colors.red
@@ -175,6 +175,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 35,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ))

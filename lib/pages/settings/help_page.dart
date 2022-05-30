@@ -1,4 +1,3 @@
-import 'package:finance_buddy/pages/instructions_page.dart';
 import 'package:finance_buddy/widgets/adaptive_text_button.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/view.dart';
@@ -55,15 +54,6 @@ class HelpPage extends StatelessWidget {
         const SizedBox(
           height: 100,
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
-          child: AdaptiveTextButton(
-            text: language.showIntroduction,
-            onPressed: () => _showInstructions(context),
-          ),
-        ),
         const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
@@ -92,44 +82,5 @@ class HelpPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future _showInstructions(BuildContext context) async {
-    double topInsets = (MediaQuery.of(context).viewPadding.top);
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.grey[900],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).cardColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-              boxShadow: const [
-                BoxShadow(blurRadius: 10),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: topInsets + 10,
-                left: 20,
-                right: 20,
-              ),
-              child: const InstructionsPage(),
-            ),
-          );
-        });
   }
 }

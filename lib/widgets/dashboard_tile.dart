@@ -42,14 +42,14 @@ class DashboardTile extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
           child: Material(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             child: Container(
               height: height ?? 220,
               width: width == DashboardTileWidth.half
                   ? screenSize.width * 0.5 - 20
                   : screenSize.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
                 color: backgroundColor, // Theme.of(context).cardColor,
                 gradient: backgroundColor != null
                     ? null

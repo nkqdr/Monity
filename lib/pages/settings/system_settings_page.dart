@@ -4,6 +4,11 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance_buddy/backend/database_manager.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
+import 'package:finance_buddy/backend/key_value_database.dart';
+import 'package:finance_buddy/helper/config_provider.dart';
+import 'package:finance_buddy/helper/showcase_keys_provider.dart';
+import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
@@ -14,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -345,6 +351,10 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
     if (dialogResult != null) {
       await FinancesDatabase.instance.deleteDatabase();
+      await KeyValueDatabase.deleteAllData();
+      Provider.of<LanguageProvider>(context, listen: false).reset();
+      Provider.of<ConfigProvider>(context, listen: false).reset();
+      Provider.of<ThemeProvider>(context, listen: false).reset();
       _refreshDatabaseSize();
     }
   }

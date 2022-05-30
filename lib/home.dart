@@ -1,8 +1,10 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/pages/instructions_page.dart';
+import 'package:finance_buddy/helper/showcase_keys_provider.dart';
+import 'package:finance_buddy/widgets/custom_showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/dashboard_page.dart';
 import 'pages/wealth_page.dart';
@@ -10,10 +12,8 @@ import 'pages/transactions_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  final bool showInstructions;
   const HomePage({
     Key? key,
-    required this.showInstructions,
   }) : super(key: key);
 
   @override
@@ -26,60 +26,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (widget.showInstructions) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        _showInstructions();
-      });
-    }
-  }
-
-  Future _showInstructions() async {
-    double topInsets = (MediaQuery.of(context).viewPadding.top);
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.grey[900],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        isDismissible: false,
-        enableDrag: false,
-        builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).cardColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(15),
-              ),
-              boxShadow: const [
-                BoxShadow(blurRadius: 10),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: topInsets + 10,
-                left: 20,
-                right: 20,
-              ),
-              child: const InstructionsPage(
-                key: Key("instructions-page-widget"),
-              ),
-            ),
-          );
-        });
+    var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      showcaseKeys.startTourIfNeeded(context, [showcaseKeys.settingsKey]);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-
+    var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
     return Scaffold(
       extendBody: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -109,14 +65,42 @@ class _HomePageState extends State<HomePage> {
               selectedFontSize: 12,
               items: [
                 BottomNavigationBarItem(
-                  icon: const Icon(
-                    Icons.compare_arrows_rounded,
+                  icon: CustomShowcase(
+                    showcaseKey: showcaseKeys.transactionsKey,
+                    title: 'Transactions',
+                    description: 'Tap to view the transactions page.',
+                    overlayPadding:
+                        const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    disableBackdropClick: true,
+                    disposeOnTap: true,
+                    onTargetClick: () {
+                      setState(() => _currentPage = 0);
+                      showcaseKeys.startTourIfNeeded(
+                          context, [showcaseKeys.addTransactionKey],
+                          delay: const Duration(milliseconds: 200));
+                    },
+                    child: const Icon(
+                      Icons.compare_arrows_rounded,
+                    ),
                   ),
                   label: language.transactionsTitle,
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(
-                    Icons.bar_chart_rounded,
+                  icon: CustomShowcase(
+                    showcaseKey: showcaseKeys.dashboardKey,
+                    title: 'Dashboard',
+                    description: 'Tap to view the dashboard page.',
+                    overlayPadding:
+                        const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    disableBackdropClick: true,
+                    disposeOnTap: true,
+                    onTargetClick: () async {
+                      setState(() => _currentPage = 1);
+                      showcaseKeys.showCompletedScreen(context);
+                    },
+                    child: const Icon(
+                      Icons.bar_chart_rounded,
+                    ),
                   ),
                   label: language.dashboardTitle,
                 ),

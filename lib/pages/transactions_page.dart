@@ -1,11 +1,13 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:finance_buddy/backend/finances_database.dart';
 import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:finance_buddy/helper/showcase_keys_provider.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
 import 'package:finance_buddy/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
 import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:finance_buddy/widgets/custom_showcase.dart';
 import 'package:finance_buddy/widgets/transaction_tile.dart';
 import 'package:finance_buddy/widgets/view.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,6 +58,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LanguageProvider>(context);
+    var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
     DateFormat dateFormatter;
     if (provider.locale == null) {
       dateFormatter =
@@ -75,12 +78,20 @@ class _TransactionsPageState extends State<TransactionsPage> {
           splashRadius: 18,
           onPressed: () => _handleFilterTransactions(dateFormatter),
         ),
-        right: IconButton(
-          icon: const Icon(
-            Icons.add,
+        right: CustomShowcase(
+          showcaseKey: showcaseKeys.addTransactionKey,
+          description:
+              "Tap here to create your first transaction. \n(Don't worry, you can delete it later.) \n\nWith every transaction that you save, your dashboard will populate more, and you'll get a clearer insight into your personal finances. ",
+          disableBackdropClick: true,
+          disposeOnTap: true,
+          onTargetClick: _handleAddTransaction,
+          child: IconButton(
+            icon: const Icon(
+              Icons.add,
+            ),
+            splashRadius: 18,
+            onPressed: _handleAddTransaction,
           ),
-          splashRadius: 18,
-          onPressed: _handleAddTransaction,
         ),
       ),
       fixedAppBar: true,
@@ -181,12 +192,12 @@ class _TransactionsPageState extends State<TransactionsPage> {
     }
   }
 
-  void _handleAddTransaction() async {
+  void _handleAddTransaction({bool isDuringShowcase = false}) async {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         builder: (context) {
           return Padding(
@@ -198,6 +209,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
     if (DateTime.now().isAfter(selectedMonth)) {
       selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
     }
-    _refreshTransactions();
+    await _refreshTransactions();
+    var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
+    showcaseKeys.startTourIfNeeded(context, [showcaseKeys.dashboardKey],
+        delay: const Duration(milliseconds: 200));
   }
 }

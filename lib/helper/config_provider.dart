@@ -2,6 +2,7 @@ import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/helper/types.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigProvider extends ChangeNotifier {
   List<AssetLabel> assetAllocationCategories = [
@@ -26,22 +27,31 @@ class ConfigProvider extends ChangeNotifier {
     required this.monthlyLimit,
   });
 
-  deleteMonthlyLimit() async {
+  Future deleteMonthlyLimit() async {
     monthlyLimit = null;
-    await KeyValueDatabase.deleteMonthlyLimit();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(monthlyLimitKey);
     notifyListeners();
   }
 
-  setMonthlyLimit(double value) async {
+  Future setMonthlyLimit(double value) async {
     monthlyLimit = value;
-    await KeyValueDatabase.setMonthlyLimit(value);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(monthlyLimitKey, value);
     notifyListeners();
   }
 
-  setBudgetOverflow(bool value) {
+  Future setBudgetOverflow(bool value) async {
     budgetOverflowEnabled = value;
-    KeyValueDatabase.setBudgetOverflowEnabled(value);
-    KeyValueDatabase.deleteBudgetOverflow();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(budgetOverflowEnabledKey, value);
+    await prefs.remove(budgetOverflowKey);
+    notifyListeners();
+  }
+
+  void reset() {
+    budgetOverflowEnabled = false;
+    monthlyLimit = null;
     notifyListeners();
   }
 }

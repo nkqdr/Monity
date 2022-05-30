@@ -1,4 +1,3 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:finance_buddy/l10n/language_provider.dart';
 import 'package:finance_buddy/theme/theme_provider.dart';
 import 'package:finance_buddy/widgets/custom_appbar.dart';
@@ -62,17 +61,11 @@ class AppearancePage extends StatelessWidget {
 
   void setThemeMode(BuildContext context, ThemeMode mode) {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    KeyValueDatabase.setTheme(mode);
     provider.setThemeMode(mode);
   }
 
   void setLanguage(BuildContext context, String? languageCode) {
     final provider = Provider.of<LanguageProvider>(context, listen: false);
-    KeyValueDatabase.setLanguage(languageCode);
-    if (languageCode == null) {
-      provider.setLocale(null);
-      return;
-    }
-    provider.setLocale(Locale(languageCode));
+    provider.setLocale(languageCode);
   }
 }

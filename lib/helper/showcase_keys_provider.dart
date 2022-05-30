@@ -15,6 +15,7 @@ class ShowcaseProvider extends ChangeNotifier {
   final GlobalKey currentMonthKey = GlobalKey();
   final GlobalKey addTransactionKey = GlobalKey();
   bool showShowcase;
+  bool userWantsTour = false;
 
   ShowcaseProvider({
     Key? key,
@@ -32,21 +33,30 @@ class ShowcaseProvider extends ChangeNotifier {
         builder: (context) {
           return const _ShowcaseCompletedScreen();
         });
+    await setShowcase();
+    notifyListeners();
+  }
+
+  Future setShowcase() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(firstStartupKey, false);
     showShowcase = false;
-    notifyListeners();
   }
 
   void startTourIfNeeded(BuildContext context, List<GlobalKey> keys,
       {Duration? delay}) {
-    if (!showShowcase) return;
+    if (!showShowcase || !userWantsTour) return;
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (delay != null) {
         await Future.delayed(delay);
       }
       ShowCaseWidget.of(context)!.startShowCase(keys);
     });
+  }
+
+  void setUserWantsTour(bool value) {
+    userWantsTour = value;
+    notifyListeners();
   }
 }
 

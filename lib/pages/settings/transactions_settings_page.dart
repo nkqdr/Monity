@@ -173,9 +173,10 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       ],
     );
     if (dialogResult != null) {
+      var amountString = dialogResult.first.replaceAll(",", ".");
       double limit;
       try {
-        limit = double.parse(dialogResult.first);
+        limit = double.parse(amountString);
       } catch (e) {
         return;
       }

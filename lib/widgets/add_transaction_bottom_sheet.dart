@@ -81,7 +81,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: DropdownButtonFormField<TransactionCategory>(
-                            hint: Text(language.selectCategoryForTransaction),
+                            hint: Text(language.selectCategory),
                             borderRadius: BorderRadius.circular(15),
                             menuMaxHeight: 300,
                             alignment: Alignment.center,

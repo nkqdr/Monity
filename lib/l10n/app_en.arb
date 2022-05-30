@@ -1,12 +1,4 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "lastYear": "Last year",
-  "@lastYear": {
-    "description": "Used for filtering datasets by specific time"
-  },
    "remainingDays": "Days left:",
   "@remainingDays": {
     "description": "Remaining days in a month"
@@ -58,10 +50,6 @@
   "lastChange": "Last change:",
   "@lastChange": {
     "description": "String for the last changed date of an investment"
-  },
-  "viewAll": "View all",
-  "@viewAll": {
-    "description": "Text for view-all button"
   },
   "system": "System",
   "@system": {
@@ -131,10 +119,6 @@
   "@saveButton": {
     "description": "Text that appears on a button with save functionality"
   },
-  "whatKindOfTransaction": "What kind of transaction do you want to enter?",
-  "@whatKindOfTransaction": {
-    "description": "Question that asks the user what kind of transaction he wants to enter"
-  },
   "expense": "Expense",
   "@expense": {
     "description": "Expense string"
@@ -143,45 +127,13 @@
   "@income": {
     "description": "Income string"
   },
-  "selectCategoryForTransaction": "Select a category...",
-  "@selectCategoryForTransaction": {
+  "selectCategory": "Select a category...",
+  "@selectCategory": {
     "description": "Tells the user to select a category for this transaction"
-  },
-  "selectCategoryForSnapshot": "Select a category for this snapshot:",
-  "@selectCategoryForSnapshot": {
-    "description": "Tells the user to select a category for this snapshot"
-  },
-  "startTyping": "Start typing...",
-  "@startTyping": {
-    "description": "Indicates to the user that he can just start typing"
-  },
-  "next": "Next",
-  "@next": {
-    "description": "Content for button with next functionality"
-  },
-  "enterAmountOfTransaction": "Enter the amount of this transaction:",
-  "@enterAmountOfTransaction": {
-    "description": "Tells the user to enter the amount of this transaction"
-  },
-  "enterBalanceForInvestment": "Enter the current balance of this investment:",
-  "@enterBalanceForInvestment": {
-    "description": "Tells the user to enter the new balance of this investment"
   },
   "noDatapointsForSelectedPeriod": "There are not enough entries in the selected time period.",
   "@noDatapointsForSelectedPeriod": {
     "description": "Tells the user why a chart is empty."
-  },
-  "review": "Review:",
-  "@review": {
-    "description": "Review for the configured transaction"
-  },
-  "type": "Type:",
-  "@type": {
-    "description": "Type of the configured transaction"
-  },
-  "category": "Category:",
-  "@category": {
-    "description": "Category of the configured transaction"
   },
   "addTransaction": "Add transaction",
   "@addTransaction": {
@@ -190,10 +142,6 @@
   "addSnapshot": "Add snapshot",
   "@addSnapshot": {
     "description": "Title for add snapshot form"
-  },
-  "amount": "Amount:",
-  "@amount": {
-    "description": "Amount of the configured transaction"
   },
   "optionalDescription": "Description (Optional)",
   "@optionalDescription": {
@@ -486,10 +434,6 @@
   "richestManOnEarth": "Congratulations! If you continue saving at this rate, you will be the richest person on earth soon.",
   "@richestManOnEarth": {
     "description": "Explainatory text for when the maximum compound interest limit is reached."
-  },
-  "wealthStatisticsTitle": "Details",
-  "@wealthStatisticsTitle": {
-    "description": "Details."
   },
   "wealthSplitTitle": "Asset Allocation",
   "@wealthSplitTitle": {

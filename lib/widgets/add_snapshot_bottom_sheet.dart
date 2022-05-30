@@ -83,7 +83,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: DropdownButtonFormField<InvestmentCategory>(
-                            hint: Text(language.selectCategoryForTransaction),
+                            hint: Text(language.selectCategory),
                             borderRadius: BorderRadius.circular(15),
                             menuMaxHeight: 300,
                             alignment: Alignment.center,

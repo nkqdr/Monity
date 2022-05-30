@@ -164,26 +164,28 @@ class _WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var showcaseProvider =
         Provider.of<ShowcaseProvider>(context, listen: false);
+    var language = AppLocalizations.of(context)!;
     return CustomBottomSheet(
       child: Container(
         constraints: const BoxConstraints(maxHeight: 500),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: const Text(
-              'Welcome!',
-              style: TextStyle(
+            child: Text(
+              language.welcome,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 28,
               ),
             ),
           ),
-          const Text(
-              'It seems like this is your first time using Monity. Would you like to take a quick tour?'),
+          Text(
+            language.welcome_page_description,
+          ),
           const Spacer(),
           Center(
             child: AdaptiveFilledButton(
-              child: Text('Yes, please!'),
+              child: Text(language.yes_please),
               onPressed: () {
                 showcaseProvider.setUserWantsTour(true);
                 Navigator.of(context).pop();
@@ -194,7 +196,7 @@ class _WelcomePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 20.0, top: 10.0),
             child: Center(
               child: AdaptiveTextButton(
-                text: 'No thanks, I know my way around.',
+                text: language.no_thanks,
                 onPressed: () async {
                   await showcaseProvider.setShowcase();
                   Navigator.of(context).pop();

@@ -1,5 +1,5 @@
 {
-   "remainingDays": "Days left:",
+  "remainingDays": "Days left:",
   "@remainingDays": {
     "description": "Remaining days in a month"
   },
@@ -490,5 +490,22 @@
   "faq": "FAQ",
   "@faq": {
     "description": "Title for faq page."
+  },
+
+  "welcome": "Welcome!",
+  "@welcome": {
+    "description": "Title for welcome page."
+  },
+  "welcome_page_description": "It seems like this is your first time using Monity. Would you like to take a quick tour?",
+  "@welcome_page_description": {
+    "description": "Description for welcome page."
+  },
+  "yes_please": "Yes, please!",
+  "@yes_please": {
+    "yes_please": "Button Text"
+  },
+  "no_thanks": "No thanks, I know my way around.",
+  "@no_thanks": {
+    "no_thanks": "Button Text"
   }
 }

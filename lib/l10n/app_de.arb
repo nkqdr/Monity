@@ -121,5 +121,10 @@
   "selectTransactionType": "Wähle einen Transaktionstyp aus",
   "general": "Allgemein",
   "configuration": "Konfiguration",
-  "faq": "FAQ"
+  "faq": "FAQ",
+  
+  "welcome": "Willkommen!",
+  "welcome_page_description": "Es scheint, als würdest du Monity zum ersten Mal benutzen. Möchtest du eine kurze Tour machen?",
+  "yes_please": "Ja, bitte!",
+  "no_thanks": "Nein, danke. Ich kenne mich schon aus."
 }

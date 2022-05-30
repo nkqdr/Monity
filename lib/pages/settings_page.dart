@@ -56,9 +56,8 @@ class SettingsPage extends StatelessWidget {
             children: [
               CustomShowcase(
                 showcaseKey: showcaseKeys.generalSettingsKey,
-                title: 'This is the settings page',
-                description:
-                    'Here you can find all of the settings to view information and customize your app.',
+                title: language.this_is_settings_page,
+                description: language.this_is_settings_page_desc,
                 child: Column(
                   children: [
                     CustomSection(
@@ -85,8 +84,7 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         CustomShowcase(
                           showcaseKey: showcaseKeys.configurationSettingsKey,
-                          description:
-                              "Start by setting yourself a monthly spending limit and creating transaction categories like 'Food' or 'Freetime'.",
+                          description: language.start_set_limit_and_categories,
                           disableBackdropClick: true,
                           disposeOnTap: true,
                           onTargetClick: () {

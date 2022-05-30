@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: CustomShowcase(
                     showcaseKey: showcaseKeys.transactionsKey,
-                    title: 'Transactions',
-                    description: 'Tap to view the transactions page.',
+                    title: language.transactionsTitle,
+                    description: language.tap_to_view_transactions,
                     overlayPadding:
                         const EdgeInsets.only(left: 30, right: 30, bottom: 20),
                     disableBackdropClick: true,
@@ -107,8 +107,8 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: CustomShowcase(
                     showcaseKey: showcaseKeys.dashboardKey,
-                    title: 'Dashboard',
-                    description: 'Tap to view the dashboard page.',
+                    title: language.dashboardTitle,
+                    description: language.tap_to_view_dashboard,
                     overlayPadding:
                         const EdgeInsets.only(left: 30, right: 30, bottom: 20),
                     disableBackdropClick: true,

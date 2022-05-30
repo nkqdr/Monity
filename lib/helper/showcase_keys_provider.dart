@@ -4,6 +4,7 @@ import 'package:finance_buddy/backend/key_value_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShowcaseProvider extends ChangeNotifier {
   final GlobalKey dashboardKey = GlobalKey();
@@ -27,6 +28,7 @@ class ShowcaseProvider extends ChangeNotifier {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -94,6 +96,7 @@ class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var language = AppLocalizations.of(context)!;
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -113,19 +116,19 @@ class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Wrap(
             children: [
-              const Text(
-                'Good Job!',
-                style: TextStyle(
+              Text(
+                language.good_job,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 28,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
                 child: Text(
-                  'You succesfully completed the introduction. Have fun exploring the rest of Monity! If you have any further questions, please refer to the Help-Section in the settings.',
-                  style: TextStyle(color: Colors.white),
+                  language.introduction_completed,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
               AnimatedContainer(
@@ -142,13 +145,13 @@ class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 50.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 50.0),
                 child: Center(
                   child: Text(
-                    'Swipe down to continue!',
+                    language.swipe_down_to_continue,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,

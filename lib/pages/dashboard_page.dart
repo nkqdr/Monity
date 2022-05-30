@@ -25,7 +25,8 @@ class Dashboard extends StatelessWidget {
         title: language.dashboardTitle,
         right: CustomShowcase(
           showcaseKey: showcaseKeys.settingsKey,
-          description: 'Tap here to view the settings',
+          title: language.settingsTitle,
+          description: language.tap_to_view_settings,
           disposeOnTap: false,
           onTargetClick: () {
             Navigator.of(context)
@@ -62,9 +63,8 @@ class Dashboard extends StatelessWidget {
         Row(
           children: [
             CustomShowcase(
-              title: 'Good Job!',
-              description:
-                  'Now that you have configured your limit, this tile shows you information for the current month. If you long-press this, you also see a visualization of your spending behavior',
+              title: language.good_job,
+              description: language.current_month_tile_showcase,
               showcaseKey: showcaseKeys.currentMonthKey,
               child: const CurrentMonthTile(),
             ),

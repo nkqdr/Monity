@@ -80,8 +80,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
         ),
         right: CustomShowcase(
           showcaseKey: showcaseKeys.addTransactionKey,
-          description:
-              "Tap here to create your first transaction. \n(Don't worry, you can delete it later.) \n\nWith every transaction that you save, your dashboard will populate more, and you'll get a clearer insight into your personal finances. ",
+          description: language.tap_to_create_transaction,
           disableBackdropClick: true,
           disposeOnTap: true,
           onTargetClick: _handleAddTransaction,

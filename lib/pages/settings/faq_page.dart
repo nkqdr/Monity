@@ -61,14 +61,6 @@ class FaqPage extends StatelessWidget {
                     )
                   ],
                 ),
-                _CustomExpansionTile(
-                  title: 'Some Question',
-                  children: [
-                    ListTile(
-                      title: Text('Some Answer'),
-                    ),
-                  ],
-                ),
               ],
             ),
             CustomSection(
@@ -77,7 +69,7 @@ class FaqPage extends StatelessWidget {
               children: [
                 _CustomExpansionTile(
                   title: 'Some Question',
-                  leading: '💸',
+                  leading: '🔁',
                   children: [
                     ListTile(
                       title: Text('Some Answer'),
@@ -85,14 +77,6 @@ class FaqPage extends StatelessWidget {
                     ListTile(
                       title: Text('Some Answer'),
                     )
-                  ],
-                ),
-                _CustomExpansionTile(
-                  title: 'Some Question',
-                  children: [
-                    ListTile(
-                      title: Text('Some Answer'),
-                    ),
                   ],
                 ),
               ],

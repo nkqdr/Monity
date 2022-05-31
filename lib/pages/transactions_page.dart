@@ -41,12 +41,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Future _refreshTransactions([bool init = false]) async {
     setState(() => isLoading = true);
     transactions = await FinancesDatabase.instance.readAllTransactions();
-    months = transactions
-        .map((e) => DateTime(e.date.year, e.date.month))
-        .toSet()
-        .toList();
-    transactionCategories =
-        await FinancesDatabase.instance.readAllTransactionCategories();
+    months = transactions.map((e) => DateTime(e.date.year, e.date.month)).toSet().toList();
+    transactionCategories = await FinancesDatabase.instance.readAllTransactionCategories();
     if (init) {
       selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
@@ -58,7 +54,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
-    DateFormat dateFormatter = Utils.getDateFormatter(context);
+    DateFormat dateFormatter = Utils.getDateFormatter(context, includeDay: false);
 
     var language = AppLocalizations.of(context)!;
     return View(
@@ -127,9 +123,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   return TransactionTile(
                     transaction: e,
                     refreshFunction: _refreshTransactions,
-                    category: transactionCategories
-                        .where((c) => c.id == e.categoryId)
-                        .first,
+                    category: transactionCategories.where((c) => c.id == e.categoryId).first,
                   );
                 }).toList(),
               ),
@@ -142,9 +136,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   void _filterTransactions(String searchValue) {
     List<Transaction> newCurrentTransactions = currentTransactions.where((e) {
       if (e.description != null) {
-        return e.description!
-                .toLowerCase()
-                .contains(searchValue.toLowerCase()) ||
+        return e.description!.toLowerCase().contains(searchValue.toLowerCase()) ||
             transactionCategories
                 .where((c) => c.id == e.categoryId)
                 .first
@@ -161,9 +153,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   }
 
   List<Transaction> _getTransactionsFor(DateTime date) {
-    return transactions
-        .where((e) => e.date.year == date.year && e.date.month == date.month)
-        .toList();
+    return transactions.where((e) => e.date.year == date.year && e.date.month == date.month).toList();
   }
 
   Future _handleFilterTransactions(DateFormat dateFormatter) async {
@@ -172,10 +162,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
         context: context,
         title: language.filterTransactions,
         message: language.selectMonthDescription,
-        actions: [
-          ...months.reversed.map((e) => AlertDialogAction(
-              key: e.toString(), label: dateFormatter.format(e)))
-        ]);
+        actions: [...months.reversed.map((e) => AlertDialogAction(key: e.toString(), label: dateFormatter.format(e)))]);
     if (result != null) {
       setState(() {
         selectedMonth = DateTime.parse(result);
@@ -193,8 +180,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
         ),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: const AddTransactionBottomSheet(),
           );
         });
@@ -203,7 +189,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
     }
     await _refreshTransactions();
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
-    showcaseKeys.startTourIfNeeded(context, [showcaseKeys.dashboardKey],
-        delay: const Duration(milliseconds: 200));
+    showcaseKeys.startTourIfNeeded(context, [showcaseKeys.dashboardKey], delay: const Duration(milliseconds: 200));
   }
 }

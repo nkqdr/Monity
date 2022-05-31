@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Utils {
-  static Iterable<E> mapIndexed<E, T>(
-      Iterable<T> items, E Function(int index, T item) f) sync* {
+  static Iterable<E> mapIndexed<E, T>(Iterable<T> items, E Function(int index, T item) f) sync* {
     var index = 0;
 
     for (final item in items) {
@@ -16,14 +15,14 @@ class Utils {
     }
   }
 
-  static DateFormat getDateFormatter(BuildContext context) {
+  static DateFormat getDateFormatter(BuildContext context, {bool includeDay = true}) {
     final provider = Provider.of<LanguageProvider>(context);
+    String localeString = provider.locale?.languageCode ?? Localizations.localeOf(context).toString();
     DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
+    if (includeDay) {
+      dateFormatter = DateFormat.yMMMMd(localeString);
     } else {
-      dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
+      dateFormatter = DateFormat.yMMMM(localeString);
     }
     return dateFormatter;
   }
@@ -36,8 +35,7 @@ class Utils {
     await HapticFeedback.lightImpact();
   }
 
-  static String getCorrectTitleFromKey(
-      String categoryKey, AppLocalizations language) {
+  static String getCorrectTitleFromKey(String categoryKey, AppLocalizations language) {
     switch (categoryKey) {
       case "Invested":
         return language.invested;

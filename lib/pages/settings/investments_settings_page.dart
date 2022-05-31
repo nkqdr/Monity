@@ -14,8 +14,7 @@ class InvestmentsSettingsPage extends StatefulWidget {
   const InvestmentsSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<InvestmentsSettingsPage> createState() =>
-      _InvestmentsSettingsPageState();
+  State<InvestmentsSettingsPage> createState() => _InvestmentsSettingsPageState();
 }
 
 class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
@@ -38,44 +37,45 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     return View(
-        appBar: CustomAppBar(
-          title: language.investments,
-          left: IconButton(
-            icon: const Icon(
-              Icons.chevron_left,
-            ),
-            splashRadius: 18,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+      appBar: CustomAppBar(
+        title: language.investments,
+        left: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
           ),
+          splashRadius: 18,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        fixedAppBar: true,
-        children: [
-          CustomSection(
-            title: language.investmentCategoriesTitle,
-            subtitle: language.investmentCategoriesDescription,
-            trailing: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              child: const Icon(
-                Icons.add,
-                color: Colors.blue,
-              ),
-              onTap: _handleAddCategory,
+      ),
+      fixedAppBar: true,
+      children: [
+        CustomSection(
+          title: language.investmentCategoriesTitle,
+          subtitle: language.investmentCategoriesDescription,
+          trailing: InkWell(
+            borderRadius: BorderRadius.circular(15),
+            child: const Icon(
+              Icons.add,
+              color: Colors.blue,
             ),
-            children: isLoading
-                ? [const Center(child: AdaptiveProgressIndicator())]
-                : [
-                    ...categories.map(
-                      (e) => CategoryTile(
-                        category: e,
-                        categories: categories,
-                        refreshCallback: _refreshCategories,
-                      ),
+            onTap: _handleAddCategory,
+          ),
+          children: isLoading
+              ? [const Center(child: AdaptiveProgressIndicator())]
+              : [
+                  ...categories.map(
+                    (e) => CategoryTile(
+                      category: e,
+                      categories: categories,
+                      refreshCallback: _refreshCategories,
                     ),
-                  ],
-          )
-        ]);
+                  ),
+                ],
+        )
+      ],
+    );
   }
 
   Future _handleAddCategory() async {
@@ -87,21 +87,18 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
         ),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: CategoryBottomSheet(
               mode: CategoryBottomSheetMode.add,
               categories: categories,
               hasLabelDropdown: true,
               onSubmit: (s) {
-                FinancesDatabase.instance
-                    .createInvestmentCategory(InvestmentCategory(
+                FinancesDatabase.instance.createInvestmentCategory(InvestmentCategory(
                   name: s,
                 ));
               },
               onSubmitWithLabel: (s, AssetLabel? l) {
-                FinancesDatabase.instance
-                    .createInvestmentCategory(InvestmentCategory(
+                FinancesDatabase.instance.createInvestmentCategory(InvestmentCategory(
                   name: s,
                   label: l?.title,
                 ));

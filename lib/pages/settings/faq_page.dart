@@ -25,62 +25,56 @@ class FaqPage extends StatelessWidget {
         ),
       ),
       fixedAppBar: true,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: const [
-            CustomSection(
-              title: 'General',
-              titlePadding: 10,
+      children: const [
+        CustomSection(
+          title: 'General',
+          titlePadding: 10,
+          children: [
+            _CustomExpansionTile(
+              title: 'Is my data stored securely?',
+              //leading: '🔒',
               children: [
-                _CustomExpansionTile(
-                  title: 'Is my data stored securely?',
-                  //leading: '🔒',
-                  children: [
-                    ListTile(
-                      title: Text('Some Answer'),
-                    ),
-                  ],
+                ListTile(
+                  title: Text('Some Answer'),
                 ),
               ],
             ),
-            CustomSection(
-              title: 'Wealth Page',
-              titlePadding: 10,
+          ],
+        ),
+        CustomSection(
+          title: 'Wealth Page',
+          titlePadding: 10,
+          children: [
+            _CustomExpansionTile(
+              title: 'Some Question',
+              //leading: '💸',
               children: [
-                _CustomExpansionTile(
-                  title: 'Some Question',
-                  //leading: '💸',
-                  children: [
-                    ListTile(
-                      title: Text('Some Answer'),
-                    ),
-                    ListTile(
-                      title: Text('Some Answer'),
-                    )
-                  ],
+                ListTile(
+                  title: Text('Some Answer'),
                 ),
+                ListTile(
+                  title: Text('Some Answer'),
+                )
               ],
             ),
-            CustomSection(
-              title: 'Transactions Page',
-              titlePadding: 10,
+          ],
+        ),
+        CustomSection(
+          title: 'Transactions Page',
+          titlePadding: 10,
+          children: [
+            _CustomExpansionTile(
+              title: 'Some Question',
+              //leading: '🔁',
               children: [
-                _CustomExpansionTile(
-                  title: 'Some Question',
-                  //leading: '🔁',
-                  children: [
-                    ListTile(
-                      title: Text('Some Answer'),
-                    ),
-                    ListTile(
-                      title: Text('Some Answer'),
-                    )
-                  ],
+                ListTile(
+                  title: Text('Some Answer'),
                 ),
+                ListTile(
+                  title: Text('Some Answer'),
+                )
               ],
-            )
+            ),
           ],
         ),
       ],

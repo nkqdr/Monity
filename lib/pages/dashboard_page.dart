@@ -36,8 +36,7 @@ class Dashboard extends StatelessWidget {
               ),
             )
                 .then((value) {
-              showcaseKeys.startTourIfNeeded(context,
-                  [showcaseKeys.currentMonthKey, showcaseKeys.transactionsKey],
+              showcaseKeys.startTourIfNeeded(context, [showcaseKeys.currentMonthKey, showcaseKeys.transactionsKey],
                   delay: const Duration(milliseconds: 200));
             });
           },
@@ -71,21 +70,17 @@ class Dashboard extends StatelessWidget {
             const PerformanceTile(),
           ],
         ),
-        Column(
-          children: [
-            PieChartDashboardTile(
-              title: language.income_plural,
-              type: TransactionType.income,
-              colorTheme: PieChartColors.green,
-            ),
-            PieChartDashboardTile(
-              title: language.expenses,
-              type: TransactionType.expense,
-              colorTheme: PieChartColors.red,
-            ),
-            const CashFlowTile(),
-          ],
+        PieChartDashboardTile(
+          title: language.income_plural,
+          type: TransactionType.income,
+          colorTheme: PieChartColors.green,
         ),
+        PieChartDashboardTile(
+          title: language.expenses,
+          type: TransactionType.expense,
+          colorTheme: PieChartColors.red,
+        ),
+        const CashFlowTile(),
         const SizedBox(
           height: 50,
         ),

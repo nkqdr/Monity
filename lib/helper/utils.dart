@@ -29,9 +29,9 @@ class Utils {
 
   static playErrorFeedback() async {
     await HapticFeedback.lightImpact();
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 150));
     await HapticFeedback.lightImpact();
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 150));
     await HapticFeedback.lightImpact();
   }
 

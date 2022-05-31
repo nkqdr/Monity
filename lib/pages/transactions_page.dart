@@ -55,8 +55,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Widget build(BuildContext context) {
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
     DateFormat dateFormatter = Utils.getDateFormatter(context, includeDay: false);
-
     var language = AppLocalizations.of(context)!;
+
     return View(
       appBar: CustomAppBar(
         title: language.transactionsTitle,
@@ -123,7 +123,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   return TransactionTile(
                     transaction: e,
                     refreshFunction: _refreshTransactions,
-                    category: transactionCategories.where((c) => c.id == e.categoryId).first,
+                    category: transactionCategories.firstWhere((c) => c.id == e.categoryId),
                   );
                 }).toList(),
               ),

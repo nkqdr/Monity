@@ -21,8 +21,7 @@ class TransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
       child: TransactionContextMenu(
@@ -30,34 +29,20 @@ class TransactionTile extends StatelessWidget {
         transactionCategory: category,
         handleDelete: () => _handleDeleteTransaction(context),
         child: Material(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    // (widget.transaction.type == TransactionType.income
-                    //     ? Colors.green[600] as Color
-                    //     : Colors.red[600] as Color),
-                    Theme.of(context).scaffoldBackgroundColor,
-                    (transaction.type == TransactionType.income
-                        ? Colors.green[600] as Color
-                        : Colors.red[600] as Color),
-                  ],
-                  stops: const [
-                    0.1,
-                    1
-                  ]),
-              // border: Border.all(
-              //     color: widget.transaction.type == TransactionType.income
-              //         ? Colors.green.withOpacity(1)
-              //         : Colors.red.withOpacity(1),
-              //     width: 1),
+              borderRadius: BorderRadius.circular(15),
+              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+                Theme.of(context).scaffoldBackgroundColor,
+                (transaction.type == TransactionType.income ? Colors.green[600] as Color : Colors.red[600] as Color),
+              ], stops: const [
+                0.1,
+                1
+              ]),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15),
               child: SizedBox(
                 height: 75,
                 child: Row(
@@ -65,15 +50,6 @@ class TransactionTile extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        // SizedBox(
-                        //   width: 10,
-                        //   child: Container(
-                        //     color: widget.transaction.type ==
-                        //             TransactionType.income
-                        //         ? Colors.green
-                        //         : Colors.red,
-                        //   ),
-                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: Column(
@@ -81,8 +57,7 @@ class TransactionTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 200),
+                                constraints: const BoxConstraints(maxWidth: 200),
                                 child: Text(
                                   category.name,
                                   style: const TextStyle(
@@ -97,10 +72,9 @@ class TransactionTile extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color:
-                                      transaction.type == TransactionType.income
-                                          ? Theme.of(context).hintColor
-                                          : Theme.of(context).errorColor,
+                                  color: transaction.type == TransactionType.income
+                                      ? Theme.of(context).hintColor
+                                      : Theme.of(context).errorColor,
                                 ),
                               )
                             ],
@@ -119,11 +93,7 @@ class TransactionTile extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .color!
-                                  .withOpacity(0.8),
+                              color: Theme.of(context).textTheme.bodyText1!.color!.withOpacity(0.8),
                             ),
                           ),
                         ),

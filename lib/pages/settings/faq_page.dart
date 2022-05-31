@@ -36,7 +36,7 @@ class FaqPage extends StatelessWidget {
               children: [
                 _CustomExpansionTile(
                   title: 'Is my data stored securely?',
-                  leading: '🔒',
+                  //leading: '🔒',
                   children: [
                     ListTile(
                       title: Text('Some Answer'),
@@ -51,7 +51,7 @@ class FaqPage extends StatelessWidget {
               children: [
                 _CustomExpansionTile(
                   title: 'Some Question',
-                  leading: '💸',
+                  //leading: '💸',
                   children: [
                     ListTile(
                       title: Text('Some Answer'),
@@ -69,7 +69,7 @@ class FaqPage extends StatelessWidget {
               children: [
                 _CustomExpansionTile(
                   title: 'Some Question',
-                  leading: '🔁',
+                  //leading: '🔁',
                   children: [
                     ListTile(
                       title: Text('Some Answer'),

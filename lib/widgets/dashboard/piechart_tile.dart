@@ -44,14 +44,10 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
         .toList();
     switch (dataIndex) {
       case 0:
-        _transactions = _transactions
-            .where((element) => element.date.month == DateTime.now().month)
-            .toList();
+        _transactions = _transactions.where((element) => element.date.month == DateTime.now().month).toList();
         break;
       case 1:
-        _transactions = _transactions
-            .where((element) => element.date.year == DateTime.now().year)
-            .toList();
+        _transactions = _transactions.where((element) => element.date.year == DateTime.now().year).toList();
         break;
     }
     _datapoints = await _buildDatapoints();
@@ -71,16 +67,12 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
 
     return PieChartTileContextMenu(
       title: widget.title,
-      timeInterval: dataIndex == 0
-          ? language.thisMonth
-          : (dataIndex == 1 ? language.thisYear : language.maxTime),
+      timeInterval: dataIndex == 0 ? language.thisMonth : (dataIndex == 1 ? language.thisYear : language.maxTime),
       dataPoints: _allDataPoints,
       transactionType: widget.type,
       child: DashboardTile(
         title: widget.title,
-        subtitle: dataIndex == 0
-            ? language.thisMonth
-            : (dataIndex == 1 ? language.thisYear : language.maxTime),
+        subtitle: dataIndex == 0 ? language.thisMonth : (dataIndex == 1 ? language.thisYear : language.maxTime),
         subtitleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -155,22 +147,17 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
     for (var key in transactionsByCategory.keys) {
       var newKey = await FinancesDatabase.instance.readTransactionCategory(key);
       if (newKey == null) continue;
-      datapointMap.putIfAbsent(
-          newKey,
-          () => transactionsByCategory[key]!.fold(
-              0, (previousValue, element) => previousValue + element.amount));
+      datapointMap.putIfAbsent(newKey,
+          () => transactionsByCategory[key]!.fold(0, (previousValue, element) => previousValue + element.amount));
     }
     assert(transactionsByCategory.keys.length == datapointMap.keys.length);
     var sortedKeys = datapointMap.keys.toList(growable: false)
       ..sort((k1, k2) => datapointMap[k1]!.compareTo(datapointMap[k2] as num));
     LinkedHashMap<TransactionCategory, double> sortedMap =
-        LinkedHashMap.fromIterable(sortedKeys.reversed,
-            key: (k) => k, value: (k) => datapointMap[k]!);
+        LinkedHashMap.fromIterable(sortedKeys.reversed, key: (k) => k, value: (k) => datapointMap[k]!);
 
-    _allDataPoints = sortedMap.keys
-        .map((TransactionCategory e) =>
-            PieChartDatapoint(name: e.name, amount: sortedMap[e]!))
-        .toList();
+    _allDataPoints =
+        sortedMap.keys.map((TransactionCategory e) => PieChartDatapoint(name: e.name, amount: sortedMap[e]!)).toList();
     List<PieChartDatapoint> datapoints = [];
     bool builtOthers = false;
     for (var category in sortedMap.keys) {
@@ -184,14 +171,11 @@ class _PieChartDashboardTileState extends State<PieChartDashboardTile> {
       } else {
         if (!builtOthers) {
           builtOthers = true;
-          datapoints.add(PieChartDatapoint(
-              name: language.others, amount: datapointMap[category]!));
+          datapoints.add(PieChartDatapoint(name: language.others, amount: datapointMap[category]!));
         }
         var prevValue = datapoints.last.amount;
         datapoints.removeLast();
-        datapoints.add(PieChartDatapoint(
-            name: language.others,
-            amount: prevValue + datapointMap[category]!));
+        datapoints.add(PieChartDatapoint(name: language.others, amount: prevValue + datapointMap[category]!));
       }
     }
     return datapoints;

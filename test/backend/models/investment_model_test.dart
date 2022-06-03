@@ -1,11 +1,12 @@
 import 'package:monity/backend/models/investment_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monity/helper/config_provider.dart';
 
 void main() {
   test('investment category correctly converts to JSON', () {
-    const categoryOne = InvestmentCategory(name: "Bank");
+    var categoryOne = InvestmentCategory(name: "Bank", label: ConfigProvider.noneAssetLabel.title);
     var json = categoryOne.toJson();
-    Map<String, Object?> expected = {"_id": null, "name": "Bank", "label": null};
+    Map<String, Object?> expected = {"_id": null, "name": "Bank", "label": "None"};
     expect(json, expected);
 
     const categoryTwo = InvestmentCategory(name: "Depot", id: 51, label: "Invested");
@@ -15,12 +16,12 @@ void main() {
   });
 
   test('investment category converts from JSON', () {
-    Map<String, Object?> categoryOneJSON = {"_id": 1, "name": "Bank", "label": null};
-    const expectOne = InvestmentCategory(name: "Bank", id: 1);
+    Map<String, Object?> categoryOneJSON = {"_id": 1, "name": "Bank", "label": "None"};
+    var expectOne = InvestmentCategory(name: "Bank", id: 1, label: ConfigProvider.noneAssetLabel.title);
     expect(expectOne.equals(InvestmentCategory.fromJson(categoryOneJSON)), true);
 
-    Map<String, Object?> categoryTwoJSON = {"_id": null, "name": "Bank", "label": null};
-    const expectTwo = InvestmentCategory(name: "Bank");
+    Map<String, Object?> categoryTwoJSON = {"_id": null, "name": "Bank", "label": "None"};
+    var expectTwo = InvestmentCategory(name: "Bank", label: ConfigProvider.noneAssetLabel.title);
     expect(expectTwo.equals(InvestmentCategory.fromJson(categoryTwoJSON)), true);
 
     Map<String, Object?> categoryThreeJSON = {"_id": null, "name": "Bank", "label": "Saved"};
@@ -29,10 +30,10 @@ void main() {
   });
 
   test('investment category copy method', () {
-    const category = InvestmentCategory(name: "Cash");
+    var category = InvestmentCategory(name: "Cash", label: ConfigProvider.noneAssetLabel.title);
 
     var copyOne = category.copy(name: "Bank", id: 1);
-    Map<String, Object?> expectOneJSON = {"_id": 1, "name": "Bank", "label": null};
+    Map<String, Object?> expectOneJSON = {"_id": 1, "name": "Bank", "label": "None"};
     expect(copyOne.toJson(), expectOneJSON);
 
     var copyTwo = category.copy(label: "Invested");

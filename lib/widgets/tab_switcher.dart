@@ -82,8 +82,8 @@ class _TabSwitcherState extends State<TabSwitcher> {
               height: 2,
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
+                    topLeft: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
                   ),
                   color: Theme.of(context).secondaryHeaderColor.withOpacity(0.4)),
             ),
@@ -94,7 +94,7 @@ class _TabSwitcherState extends State<TabSwitcher> {
                 height: 2,
                 width: (MediaQuery.of(context).size.width - 30) / widget.tabs.length,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                   color: Theme.of(context).secondaryHeaderColor,
                 ),
               ),

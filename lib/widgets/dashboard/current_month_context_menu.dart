@@ -23,22 +23,20 @@ class CurrentMonthContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     bool showRemainingGraphic = false;
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         animation.addListener(() {
           if (animation.status == AnimationStatus.reverse) {
             showRemainingGraphic = false;
-          } else if (animation.status == AnimationStatus.forward &&
-              animation.value > 0.3) {
+          } else if (animation.status == AnimationStatus.forward && animation.value > 0.3) {
             showRemainingGraphic = true;
           }
         });
         return Material(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
             height: max(MediaQuery.of(context).size.height / 3, 280),
@@ -68,18 +66,15 @@ class CurrentMonthContextMenu extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      language.remainingDays +
-                                          " $daysRemaining",
+                                      language.remainingDays + " $daysRemaining",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .secondaryHeaderColor,
+                                        color: Theme.of(context).secondaryHeaderColor,
                                       ),
                                     ),
                                     const SizedBox(height: 20),
@@ -90,8 +85,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .secondaryHeaderColor,
+                                            color: Theme.of(context).secondaryHeaderColor,
                                           ),
                                         ),
                                         const SizedBox(
@@ -100,15 +94,10 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                         showRemainingGraphic
                                             ? Text(
                                                 remainingAmount! >= 0
-                                                    ? "+" +
-                                                        currencyFormat.format(
-                                                            remainingAmount)
-                                                    : currencyFormat.format(
-                                                        remainingAmount),
+                                                    ? "+" + currencyFormat.format(remainingAmount)
+                                                    : currencyFormat.format(remainingAmount),
                                                 style: TextStyle(
-                                                  color: remainingAmount! >= 0
-                                                      ? Colors.green
-                                                      : Colors.red,
+                                                  color: remainingAmount! >= 0 ? Colors.green : Colors.red,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -119,15 +108,12 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                     const SizedBox(height: 50),
                                     if (remainingAmount! > monthlyLimit!)
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10.0),
+                                        padding: const EdgeInsets.only(right: 10.0),
                                         child: Text(
-                                          language
-                                              .percentageHighBecauseOfOverflow,
+                                          language.percentageHighBecauseOfOverflow,
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color: Theme.of(context)
-                                                .secondaryHeaderColor,
+                                            color: Theme.of(context).secondaryHeaderColor,
                                           ),
                                         ),
                                       ),
@@ -136,39 +122,23 @@ class CurrentMonthContextMenu extends StatelessWidget {
                               ),
                               showRemainingGraphic
                                   ? Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width -
-                                                  40) /
-                                              3,
-                                      height: max(
-                                          MediaQuery.of(context).size.height /
-                                                  4 -
-                                              20,
-                                          180),
+                                      width: (MediaQuery.of(context).size.width - 40) / 3,
+                                      height: max(MediaQuery.of(context).size.height / 4 - 20, 180),
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            colors: [
-                                              Colors.green,
-                                              Theme.of(context).cardColor
-                                            ],
+                                            colors: [Colors.green, Theme.of(context).cardColor],
                                             stops: remainingAmount! <= 0
                                                 ? [0, 0]
                                                 : [
-                                                    (remainingAmount! /
-                                                        monthlyLimit!),
-                                                    (remainingAmount! /
-                                                        monthlyLimit!)
+                                                    (remainingAmount! / monthlyLimit!),
+                                                    (remainingAmount! / monthlyLimit!)
                                                   ],
                                             begin: Alignment.bottomCenter,
                                             end: Alignment.topCenter,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                          borderRadius: BorderRadius.circular(15),
                                           border: Border.all(
-                                              color: remainingAmount! <= 0
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                              width: 4)),
+                                              color: remainingAmount! <= 0 ? Colors.red : Colors.green, width: 4)),
                                       child: Center(
                                         child: Text(
                                           "${(max((remainingAmount! / monthlyLimit!) * 100, 0)).toStringAsFixed(0)}%",

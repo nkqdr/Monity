@@ -27,7 +27,7 @@ class CategoryTile<T extends Category> extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           color: Theme.of(context).cardColor,
         ),
         child: Padding(

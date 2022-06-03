@@ -121,7 +121,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
               constraints: const BoxConstraints(minHeight: 50),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
               ),
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),

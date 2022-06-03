@@ -219,7 +219,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                         minHeight: 100.0,
                       ),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(15),
                         color: Theme.of(context).cardColor,
                       ),
                       child: touchedIndex == -1

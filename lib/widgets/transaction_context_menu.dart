@@ -32,7 +32,7 @@ class TransactionContextMenu extends StatelessWidget {
       previewBuilder: (context, animation, child) {
         return Material(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
             height: transaction.description != ""

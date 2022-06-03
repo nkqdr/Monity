@@ -90,7 +90,7 @@ class TransactionsSettingsPage extends StatelessWidget {
           titlePadding: 10,
           subtitle: language.categoriesDescription,
           trailing: InkWell(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             child: const Icon(
               Icons.add,
               color: Colors.blue,

@@ -106,10 +106,10 @@ class SettingsPage extends StatelessWidget {
                       groupItems: true,
                       title: language.help,
                       children: [
-                        SettingNavButton(
-                          name: language.faq,
-                          destination: const FaqPage(),
-                        ),
+                        // SettingNavButton(
+                        //   name: language.faq,
+                        //   destination: const FaqPage(),
+                        // ),
                         SettingNavButton(
                           name: language.about,
                           destination: const HelpPage(),

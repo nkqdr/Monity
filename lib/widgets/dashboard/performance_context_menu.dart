@@ -78,7 +78,7 @@ class PerformanceContextMenu extends StatelessWidget {
             });
             return Material(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 40,
                 height: MediaQuery.of(context).size.height / 3,

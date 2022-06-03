@@ -33,7 +33,7 @@ class HelpPage extends StatelessWidget {
           children: [
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
                 child: SizedBox(
                   width: 100,
                   height: 100,
@@ -84,7 +84,7 @@ class HelpPage extends StatelessWidget {
       applicationName: "Monity",
       applicationVersion: appVersion,
       applicationIcon: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         child: SizedBox(
           width: 100,
           height: 100,

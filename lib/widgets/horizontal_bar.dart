@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:finance_buddy/backend/models/transaction_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,8 +20,7 @@ class HorizontalBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return Container(
       decoration: BoxDecoration(
         color: type == TransactionType.expense ? Colors.red : Colors.green,
@@ -33,8 +32,7 @@ class HorizontalBar extends StatelessWidget {
         ),
       ),
       height: 40,
-      width: min(
-          max((MediaQuery.of(context).size.width / 1.1) * (amount * size), 75),
+      width: min(max((MediaQuery.of(context).size.width / 1.1) * (amount * size), 75),
           MediaQuery.of(context).size.width - 145),
       child: Center(
         child: Text(
@@ -52,9 +50,7 @@ class HorizontalBar extends StatelessWidget {
   List<Color> _getGradient() {
     if (type != null) {
       return [
-        type == TransactionType.expense
-            ? Colors.red[900] as Color
-            : Colors.green[900] as Color,
+        type == TransactionType.expense ? Colors.red[900] as Color : Colors.green[900] as Color,
         type == TransactionType.expense ? Colors.red : Colors.green,
       ];
     }

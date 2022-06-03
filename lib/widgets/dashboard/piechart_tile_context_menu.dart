@@ -1,7 +1,7 @@
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart';
-import 'package:finance_buddy/widgets/horizontal_bar.dart';
-import 'package:finance_buddy/widgets/pie_chart.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/widgets/custom_cupertino_context_menu_action.dart';
+import 'package:monity/widgets/horizontal_bar.dart';
+import 'package:monity/widgets/pie_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,8 +22,7 @@ class PieChartTileContextMenu extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PieChartTileContextMenu> createState() =>
-      _PieChartTileContextMenuState();
+  State<PieChartTileContextMenu> createState() => _PieChartTileContextMenuState();
 }
 
 class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
@@ -155,12 +154,8 @@ class _PieChartTileContextMenuState extends State<PieChartTileContextMenu> {
                                 ),
                                 showPercentage
                                     ? Text(
-                                        (e.amount / totalSum * 100)
-                                                .toStringAsFixed(1) +
-                                            "%",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .secondaryHeaderColor),
+                                        (e.amount / totalSum * 100).toStringAsFixed(1) + "%",
+                                        style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
                                       )
                                     : Container(),
                               ],

@@ -1,9 +1,9 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/interfaces.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/category_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -51,8 +51,7 @@ class CategoryTile extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                    if (category is InvestmentCategory &&
-                        (category as InvestmentCategory).label != null)
+                    if (category is InvestmentCategory && (category as InvestmentCategory).label != null)
                       Row(
                         children: [
                           Padding(
@@ -70,17 +69,14 @@ class CategoryTile extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            Utils.getCorrectTitleFromKey(
-                                (category as InvestmentCategory).label!,
-                                language),
+                            Utils.getCorrectTitleFromKey((category as InvestmentCategory).label!, language),
                             style: TextStyle(
                               color: Theme.of(context).secondaryHeaderColor,
                             ),
                           ),
                         ],
                       ),
-                    if (category is InvestmentCategory &&
-                        (category as InvestmentCategory).label == null)
+                    if (category is InvestmentCategory && (category as InvestmentCategory).label == null)
                       Text(
                         language.noLabel,
                         style: TextStyle(
@@ -113,12 +109,8 @@ class CategoryTile extends StatelessWidget {
   }
 
   Color _getColorForLabel(BuildContext context, String label) {
-    var allLabels =
-        Provider.of<ConfigProvider>(context).assetAllocationCategories;
-    return allLabels
-        .where((element) => element.title == label)
-        .first
-        .displayColor;
+    var allLabels = Provider.of<ConfigProvider>(context).assetAllocationCategories;
+    return allLabels.where((element) => element.title == label).first.displayColor;
   }
 
   Future _handleEdit(BuildContext context) async {
@@ -131,23 +123,18 @@ class CategoryTile extends StatelessWidget {
         ),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: CategoryBottomSheet(
               mode: CategoryBottomSheetMode.edit,
               hasLabelDropdown: hasLabelDropdown,
-              label: hasLabelDropdown
-                  ? (category as InvestmentCategory).label
-                  : null,
+              label: hasLabelDropdown ? (category as InvestmentCategory).label : null,
               categories: categories,
               placeholder: category.name,
               onSubmit: (s) async {
                 await category.copy(name: s).updateSelf();
               },
               onSubmitWithLabel: (s, l) async {
-                await (category as InvestmentCategory)
-                    .copy(name: s, label: l?.title)
-                    .updateSelf();
+                await (category as InvestmentCategory).copy(name: s, label: l?.title).updateSelf();
               },
             ),
           );

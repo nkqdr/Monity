@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

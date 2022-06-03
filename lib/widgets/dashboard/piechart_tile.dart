@@ -1,10 +1,10 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/widgets/dashboard/piechart_tile_context_menu.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/widgets/dashboard/piechart_tile_context_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/dashboard_tile.dart';
-import 'package:finance_buddy/widgets/pie_chart.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/dashboard_tile.dart';
+import 'package:monity/widgets/pie_chart.dart';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 

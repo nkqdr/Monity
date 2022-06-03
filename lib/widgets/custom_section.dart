@@ -1,4 +1,4 @@
-import 'package:finance_buddy/helper/utils.dart';
+import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 
 class CustomSection extends StatelessWidget {
@@ -33,8 +33,7 @@ class CustomSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-                left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
+            padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -48,8 +47,7 @@ class CustomSection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: titleSize ?? 22,
                           fontWeight: titleWeight ?? FontWeight.bold,
-                          color: titleColor ??
-                              Theme.of(context).secondaryHeaderColor,
+                          color: titleColor ?? Theme.of(context).secondaryHeaderColor,
                         ),
                       ),
                     trailing ?? Container(),
@@ -63,9 +61,7 @@ class CustomSection extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: TextStyle(
-                        color: Theme.of(context).secondaryHeaderColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
+                        color: Theme.of(context).secondaryHeaderColor, fontSize: 14, fontWeight: FontWeight.w500),
                   )
               ],
             ),
@@ -73,11 +69,9 @@ class CustomSection extends StatelessWidget {
           if (groupItems)
             ...Utils.mapIndexed(children, (index, Widget item) {
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                 child: ClipRRect(
-                  borderRadius: getBorderRadius(index, children.length) ??
-                      BorderRadius.circular(0),
+                  borderRadius: getBorderRadius(index, children.length) ?? BorderRadius.circular(0),
                   child: item,
                 ),
               );
@@ -100,12 +94,10 @@ class CustomSection extends StatelessWidget {
       if (length == 1) {
         return const BorderRadius.all(Radius.circular(15));
       }
-      return const BorderRadius.only(
-          topLeft: Radius.circular(15), topRight: Radius.circular(15));
+      return const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15));
     }
     if (index == length - 1) {
-      return const BorderRadius.only(
-          bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15));
+      return const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15));
     }
     return null;
   }

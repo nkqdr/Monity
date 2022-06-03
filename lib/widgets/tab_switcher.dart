@@ -1,4 +1,4 @@
-import 'package:finance_buddy/helper/utils.dart';
+import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,12 +63,9 @@ class _TabSwitcherState extends State<TabSwitcher> {
                         child: Text(
                           e.title.toUpperCase(),
                           style: TextStyle(
-                            fontWeight:
-                                _currentIndex == i ? FontWeight.bold : null,
+                            fontWeight: _currentIndex == i ? FontWeight.bold : null,
                             fontSize: 12,
-                            color: _currentIndex == i
-                                ? null
-                                : Theme.of(context).secondaryHeaderColor,
+                            color: _currentIndex == i ? null : Theme.of(context).secondaryHeaderColor,
                           ),
                         ),
                       ),
@@ -88,18 +85,14 @@ class _TabSwitcherState extends State<TabSwitcher> {
                     topLeft: Radius.circular(20),
                     bottomLeft: Radius.circular(20),
                   ),
-                  color:
-                      Theme.of(context).secondaryHeaderColor.withOpacity(0.4)),
+                  color: Theme.of(context).secondaryHeaderColor.withOpacity(0.4)),
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 200),
-              left: (MediaQuery.of(context).size.width - 30) /
-                  widget.tabs.length *
-                  _currentIndex,
+              left: (MediaQuery.of(context).size.width - 30) / widget.tabs.length * _currentIndex,
               child: Container(
                 height: 2,
-                width: (MediaQuery.of(context).size.width - 30) /
-                    widget.tabs.length,
+                width: (MediaQuery.of(context).size.width - 30) / widget.tabs.length,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Theme.of(context).secondaryHeaderColor,

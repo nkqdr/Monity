@@ -1,4 +1,4 @@
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:monity/l10n/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

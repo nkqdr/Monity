@@ -1,7 +1,7 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/dashboard_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

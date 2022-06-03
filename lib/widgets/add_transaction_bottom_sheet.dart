@@ -1,9 +1,9 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/custom_textfield.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
+import 'package:monity/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -12,8 +12,7 @@ class AddTransactionBottomSheet extends StatefulWidget {
   const AddTransactionBottomSheet({Key? key}) : super(key: key);
 
   @override
-  _AddTransactionBottomSheetState createState() =>
-      _AddTransactionBottomSheetState();
+  _AddTransactionBottomSheetState createState() => _AddTransactionBottomSheetState();
 }
 
 class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
@@ -22,8 +21,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   TransactionCategory? _transactionCategory;
   double? _givenAmount;
   bool _showTransactionTypeHint = false;
-  final Future<List<TransactionCategory>> _categories =
-      FinancesDatabase.instance.readAllTransactionCategories();
+  final Future<List<TransactionCategory>> _categories = FinancesDatabase.instance.readAllTransactionCategories();
   final _descriptionController = TextEditingController();
 
   Future _handleAddTransaction() async {
@@ -88,12 +86,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                             value: _transactionCategory,
                             enableFeedback: true,
                             isExpanded: true,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
+                            decoration: const InputDecoration(border: InputBorder.none),
                             autovalidateMode: AutovalidateMode.disabled,
-                            items: snapshot.data!
-                                .map<DropdownMenuItem<TransactionCategory>>(
-                                    (e) {
+                            items: snapshot.data!.map<DropdownMenuItem<TransactionCategory>>((e) {
                               return DropdownMenuItem<TransactionCategory>(
                                 value: e,
                                 child: Text(e.name),
@@ -103,8 +98,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                               setState(() => _transactionCategory = cat);
                             },
                             validator: (TransactionCategory? cat) {
-                              if (!snapshot.data!.contains(cat) ||
-                                  cat == null) {
+                              if (!snapshot.data!.contains(cat) || cat == null) {
                                 return language.invalidInput;
                               }
                               return null;
@@ -139,14 +133,11 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      setState(
-                          () => _transactionType = TransactionType.expense);
+                      setState(() => _transactionType = TransactionType.expense);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.expense
-                              ? Colors.red
-                              : Colors.grey),
+                          _transactionType == TransactionType.expense ? Colors.red : Colors.grey),
                     ),
                     child: Text(language.expense),
                   ),
@@ -156,9 +147,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.income
-                              ? Colors.green
-                              : Colors.grey),
+                          _transactionType == TransactionType.income ? Colors.green : Colors.grey),
                     ),
                     child: Text(language.income),
                   ),
@@ -171,8 +160,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 child: Center(
                   child: Text(
                     language.selectTransactionType,
-                    style: TextStyle(
-                        color: Theme.of(context).errorColor, fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).errorColor, fontSize: 12),
                   ),
                 ),
               ),
@@ -188,8 +176,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(10),
               child: TextFormField(
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
                 decoration: const InputDecoration.collapsed(hintText: "0,00"),
                 validator: (String? val) {
                   double x = 0;
@@ -214,8 +201,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             // Optional description
             CustomTextField(
               controller: _descriptionController,
-              decoration: InputDecoration.collapsed(
-                  hintText: language.optionalDescription),
+              decoration: InputDecoration.collapsed(hintText: language.optionalDescription),
             ),
 
             // Save button
@@ -230,16 +216,13 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                         onPressed: snapshot.hasData && snapshot.data!.isEmpty
                             ? null
                             : () {
-                                bool isValid =
-                                    _formKey.currentState!.validate();
+                                bool isValid = _formKey.currentState!.validate();
                                 if (_transactionType == null) {
-                                  setState(
-                                      () => _showTransactionTypeHint = true);
+                                  setState(() => _showTransactionTypeHint = true);
                                   Utils.playErrorFeedback();
                                   return;
                                 } else {
-                                  setState(
-                                      () => _showTransactionTypeHint = false);
+                                  setState(() => _showTransactionTypeHint = false);
                                 }
                                 if (isValid) {
                                   _handleAddTransaction();
@@ -250,11 +233,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                               },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              snapshot.hasData && snapshot.data!.isEmpty
-                                  ? Colors.grey
-                                  : Colors.green),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                              snapshot.hasData && snapshot.data!.isEmpty ? Colors.grey : Colors.green),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
                         ),
                         child: Text(language.saveButton),
                       ),

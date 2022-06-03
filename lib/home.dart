@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/helper/showcase_keys_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_filled_button.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/custom_showcase.dart';
+import 'package:monity/helper/showcase_keys_provider.dart';
+import 'package:monity/widgets/adaptive_filled_button.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
+import 'package:monity/widgets/custom_showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

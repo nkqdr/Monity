@@ -1,10 +1,10 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/helper/showcase_keys_provider.dart';
-import 'package:finance_buddy/home.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/theme/custom_themes.dart';
-import 'package:finance_buddy/theme/theme_provider.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/showcase_keys_provider.dart';
+import 'package:monity/home.dart';
+import 'package:monity/l10n/language_provider.dart';
+import 'package:monity/theme/custom_themes.dart';
+import 'package:monity/theme/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +15,7 @@ void main() async {
   bool? firstStartUp = await KeyValueDatabase.getFirstStartup();
   ThemeMode mode = await KeyValueDatabase.getTheme();
   Locale? locale = await KeyValueDatabase.getLocale();
-  bool? budgetOverflowEnabled =
-      await KeyValueDatabase.getBudgetOverflowEnabled();
+  bool? budgetOverflowEnabled = await KeyValueDatabase.getBudgetOverflowEnabled();
   double? monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
   runApp(MyApp(
     initialTheme: mode,
@@ -47,10 +46,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (_) => LanguageProvider(locale: selectedLocale)),
-        ChangeNotifierProvider(
-            create: (_) => ThemeProvider(themeMode: initialTheme)),
+        ChangeNotifierProvider(create: (_) => LanguageProvider(locale: selectedLocale)),
+        ChangeNotifierProvider(create: (_) => ThemeProvider(themeMode: initialTheme)),
         ChangeNotifierProvider(
           create: (_) => ConfigProvider(
             budgetOverflowEnabled: budgetOverflowEnabled,

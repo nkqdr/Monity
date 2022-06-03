@@ -1,12 +1,12 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/category_tile.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/category_tile.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/category_bottom_sheet.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

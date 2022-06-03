@@ -1,7 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/widgets/transaction_context_menu.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/widgets/transaction_context_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

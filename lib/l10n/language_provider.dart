@@ -1,4 +1,4 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
+import 'package:monity/backend/key_value_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

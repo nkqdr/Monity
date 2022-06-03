@@ -1,5 +1,5 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/interfaces.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String tableTransaction = "transaction_base";
@@ -11,14 +11,7 @@ enum TransactionType {
 }
 
 class TransactionFields {
-  static const List<String> values = [
-    id,
-    description,
-    category,
-    amount,
-    date,
-    type
-  ];
+  static const List<String> values = [id, description, category, amount, date, type];
   static const String id = "_id";
   static const String description = "description";
   static const String category = "category_id";

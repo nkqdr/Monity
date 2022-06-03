@@ -1,4 +1,4 @@
-import 'package:finance_buddy/main.dart';
+import 'package:monity/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,8 +32,7 @@ void main() {
     expect(find.text('Wealth'), findsOneWidget);
   });
 
-  testWidgets('Instructions are not shown if the boolean is set to false',
-      (tester) async {
+  testWidgets('Instructions are not shown if the boolean is set to false', (tester) async {
     await tester.pumpWidget(const MyApp(
       initialTheme: ThemeMode.system,
       shouldShowInstructions: false,

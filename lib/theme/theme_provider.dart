@@ -1,4 +1,4 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
+import 'package:monity/backend/key_value_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,8 +11,7 @@ class ThemeProvider extends ChangeNotifier {
 
   void setThemeMode(ThemeMode mode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int value =
-        mode == ThemeMode.system ? 0 : (mode == ThemeMode.light ? 1 : 2);
+    int value = mode == ThemeMode.system ? 0 : (mode == ThemeMode.light ? 1 : 2);
     await prefs.setInt(appearanceKey, value);
     themeMode = mode;
     notifyListeners();

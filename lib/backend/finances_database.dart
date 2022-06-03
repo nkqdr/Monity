@@ -1,6 +1,6 @@
-import 'package:finance_buddy/backend/models/transaction_model.dart' as model;
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/types.dart';
+import 'package:monity/backend/models/transaction_model.dart' as model;
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/types.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -48,8 +48,7 @@ class FinancesDatabase {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path,
-        version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async {
@@ -86,20 +85,17 @@ class FinancesDatabase {
     )
     ''');
     if (version == 2) {
-      await db.execute(
-          "ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
+      await db.execute("ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
     }
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion == 1 && newVersion == 2) {
-      db.execute(
-          "ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
+      db.execute("ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
     }
   }
 
-  Future<model.Transaction> createTransaction(
-      model.Transaction transaction) async {
+  Future<model.Transaction> createTransaction(model.Transaction transaction) async {
     final db = await instance.database;
     final id = await db.insert(model.tableTransaction, transaction.toJson());
     return transaction.copy(id: id);
@@ -122,8 +118,7 @@ class FinancesDatabase {
 
   Future<List<model.Transaction>> readAllTransactions() async {
     final db = await instance.database;
-    final result = await db.query(model.tableTransaction,
-        orderBy: "${model.TransactionFields.date} ASC");
+    final result = await db.query(model.tableTransaction, orderBy: "${model.TransactionFields.date} ASC");
     return result.map((e) => model.Transaction.fromJson(e)).toList();
   }
 
@@ -136,11 +131,9 @@ class FinancesDatabase {
     );
   }
 
-  Future<model.TransactionCategory> createTransactionCategory(
-      model.TransactionCategory category) async {
+  Future<model.TransactionCategory> createTransactionCategory(model.TransactionCategory category) async {
     final db = await instance.database;
-    final id =
-        await db.insert(model.tableTransactionCategory, category.toJson());
+    final id = await db.insert(model.tableTransactionCategory, category.toJson());
     return category.copy(id: id);
   }
 
@@ -161,13 +154,12 @@ class FinancesDatabase {
 
   Future<List<model.TransactionCategory>> readAllTransactionCategories() async {
     final db = await instance.database;
-    final result = await db.query(model.tableTransactionCategory,
-        orderBy: "${model.TransactionCategoryFields.name} ASC");
+    final result =
+        await db.query(model.tableTransactionCategory, orderBy: "${model.TransactionCategoryFields.name} ASC");
     return result.map((e) => model.TransactionCategory.fromJson(e)).toList();
   }
 
-  Future<int> updateTransactionCategory(
-      model.TransactionCategory category) async {
+  Future<int> updateTransactionCategory(model.TransactionCategory category) async {
     final db = await instance.database;
     return db.update(
       model.tableTransactionCategory,
@@ -179,8 +171,7 @@ class FinancesDatabase {
 
   Future<int> deleteTransactionCategory(int id) async {
     final db = await instance.database;
-    await db.delete(model.tableTransaction,
-        where: "${model.TransactionFields.category} = ?", whereArgs: [id]);
+    await db.delete(model.tableTransaction, where: "${model.TransactionFields.category} = ?", whereArgs: [id]);
     return await db.delete(
       model.tableTransactionCategory,
       where: "${model.TransactionCategoryFields.id} = ?",
@@ -188,8 +179,7 @@ class FinancesDatabase {
     );
   }
 
-  Future<InvestmentCategory> createInvestmentCategory(
-      InvestmentCategory category) async {
+  Future<InvestmentCategory> createInvestmentCategory(InvestmentCategory category) async {
     final db = await instance.database;
     final id = await db.insert(tableInvestmentCategory, category.toJson());
     return category.copy(id: id);
@@ -198,9 +188,7 @@ class FinancesDatabase {
   Future<InvestmentCategory?> readInvestmentCategory(int id) async {
     final db = await instance.database;
     final maps = await db.query(tableInvestmentCategory,
-        columns: InvestmentCategoryFields.values,
-        where: "${model.TransactionCategoryFields.id} = ?",
-        whereArgs: [id]);
+        columns: InvestmentCategoryFields.values, where: "${model.TransactionCategoryFields.id} = ?", whereArgs: [id]);
     if (maps.isNotEmpty) {
       return InvestmentCategory.fromJson(maps.first);
     }
@@ -209,8 +197,7 @@ class FinancesDatabase {
 
   Future<List<InvestmentCategory>> readAllInvestmentCategories() async {
     final db = await instance.database;
-    final result = await db.query(tableInvestmentCategory,
-        orderBy: "${InvestmentCategoryFields.name} ASC");
+    final result = await db.query(tableInvestmentCategory, orderBy: "${InvestmentCategoryFields.name} ASC");
     return result.map((e) => InvestmentCategory.fromJson(e)).toList();
   }
 
@@ -226,8 +213,7 @@ class FinancesDatabase {
 
   Future<int> deleteInvestmentCategory(int id) async {
     final db = await instance.database;
-    await db.delete(tableInvestmentSnapshot,
-        where: "${InvestmentSnapshotFields.categoryId} = ?", whereArgs: [id]);
+    await db.delete(tableInvestmentSnapshot, where: "${InvestmentSnapshotFields.categoryId} = ?", whereArgs: [id]);
     return await db.delete(
       tableInvestmentCategory,
       where: "${InvestmentCategoryFields.id} = ?",
@@ -237,8 +223,7 @@ class FinancesDatabase {
 
   Future<int> deleteInvestmentSnapshot(int id) async {
     final db = await instance.database;
-    return await db.delete(tableInvestmentSnapshot,
-        where: "${InvestmentSnapshotFields.id} = ?", whereArgs: [id]);
+    return await db.delete(tableInvestmentSnapshot, where: "${InvestmentSnapshotFields.id} = ?", whereArgs: [id]);
   }
 
   Future<List<InvestmentSnapshot>> readInvestmentSnapshotFor(int id) async {
@@ -253,24 +238,20 @@ class FinancesDatabase {
 
   Future<List<InvestmentSnapshot>> readAllInvestmentSnapshots() async {
     final db = await instance.database;
-    final result = await db.query(tableInvestmentSnapshot,
-        orderBy: "${InvestmentSnapshotFields.date} ASC");
+    final result = await db.query(tableInvestmentSnapshot, orderBy: "${InvestmentSnapshotFields.date} ASC");
     return result.map((e) => InvestmentSnapshot.fromJson(e)).toList();
   }
 
-  Future<InvestmentSnapshot> createInvestmentSnapshot(
-      InvestmentSnapshot snapshot) async {
+  Future<InvestmentSnapshot> createInvestmentSnapshot(InvestmentSnapshot snapshot) async {
     final db = await instance.database;
     final id = await db.insert(tableInvestmentSnapshot, snapshot.toJson());
     return snapshot.copy(id: id);
   }
 
-  Future<InvestmentSnapshot?> readLastSnapshotFor(
-      {required InvestmentCategory category}) async {
+  Future<InvestmentSnapshot?> readLastSnapshotFor({required InvestmentCategory category}) async {
     final db = await instance.database;
-    final snapshots = await db.query(tableInvestmentSnapshot,
-        where: "${InvestmentSnapshotFields.categoryId} = ?",
-        whereArgs: [category.id]);
+    final snapshots = await db
+        .query(tableInvestmentSnapshot, where: "${InvestmentSnapshotFields.categoryId} = ?", whereArgs: [category.id]);
     if (snapshots.isEmpty) {
       return null;
     }
@@ -293,11 +274,7 @@ class FinancesDatabase {
     List<WealthDataPoint> result = [];
     var snapshots = await readAllInvestmentSnapshots();
     // Get the unique dates as x values
-    var uniqueDates = snapshots
-        .map((e) => e.date)
-        .map((e) => DateTime(e.year, e.month, e.day))
-        .toSet()
-        .toList();
+    var uniqueDates = snapshots.map((e) => e.date).map((e) => DateTime(e.year, e.month, e.day)).toSet().toList();
     // Create a map with category ids as keys and the list of all snapshots for these categories as their values
     Map<int, List<InvestmentSnapshot>> snapshotsInCategories = {};
     for (var e in snapshots) {
@@ -312,9 +289,7 @@ class FinancesDatabase {
       List<InvestmentSnapshot> relevantList = [];
       for (var list in snapshotsInCategories.values) {
         List<InvestmentSnapshot> listCopy = List.from(list);
-        listCopy.removeWhere((e) =>
-            DateTime(e.date.year, e.date.month, e.date.day)
-                .isAfter(uniqueDates[i]));
+        listCopy.removeWhere((e) => DateTime(e.date.year, e.date.month, e.date.day).isAfter(uniqueDates[i]));
         if (listCopy.isNotEmpty) {
           relevantList.add(listCopy.last);
         }

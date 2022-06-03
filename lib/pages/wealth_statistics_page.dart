@@ -1,14 +1,14 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_indicator.dart';
-import 'package:finance_buddy/widgets/horizontal_bar.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_indicator.dart';
+import 'package:monity/widgets/horizontal_bar.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -63,20 +63,16 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   }
 
   Future _refreshInvestmentCategories() async {
-    List<AssetLabel> labelTitles =
-        Provider.of<ConfigProvider>(context).assetAllocationCategories;
+    List<AssetLabel> labelTitles = Provider.of<ConfigProvider>(context).assetAllocationCategories;
     setState(() => isLoading = true);
-    var investmentCategories =
-        await FinancesDatabase.instance.readAllInvestmentCategories();
-    investmentCategories =
-        investmentCategories.where((e) => e.label != null).toList();
+    var investmentCategories = await FinancesDatabase.instance.readAllInvestmentCategories();
+    investmentCategories = investmentCategories.where((e) => e.label != null).toList();
     if (investmentCategories.isEmpty) {
       noContent = true;
     }
     List<InvestmentSnapshot> lastSnapshots = [];
     for (var i = 0; i < investmentCategories.length; i++) {
-      var snapshot = await FinancesDatabase.instance
-          .readLastSnapshotFor(category: investmentCategories[i]);
+      var snapshot = await FinancesDatabase.instance.readLastSnapshotFor(category: investmentCategories[i]);
       if (snapshot != null && snapshot.amount >= 0) {
         lastSnapshots.add(snapshot);
       }
@@ -88,15 +84,13 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
     for (var i = 0; i < labelTitles.length; i++) {
       // Find relevant Investments and their last snapshots for this allocation.
       List<CategoryWithSnapshot> relevantCategoriesWithSnapshot = [];
-      List<InvestmentCategory> relevantCategories = investmentCategories
-          .where((element) => element.label == labelTitles[i].title)
-          .toList();
+      List<InvestmentCategory> relevantCategories =
+          investmentCategories.where((element) => element.label == labelTitles[i].title).toList();
       for (var j = 0; j < relevantCategories.length; j++) {
-        var lastSnapshot = await FinancesDatabase.instance
-            .readLastSnapshotFor(category: relevantCategories[j]);
+        var lastSnapshot = await FinancesDatabase.instance.readLastSnapshotFor(category: relevantCategories[j]);
         if (lastSnapshot != null && lastSnapshot.amount > 0) {
-          relevantCategoriesWithSnapshot.add(CategoryWithSnapshot(
-              category: relevantCategories[j], snapshot: lastSnapshot));
+          relevantCategoriesWithSnapshot
+              .add(CategoryWithSnapshot(category: relevantCategories[j], snapshot: lastSnapshot));
         }
       }
       // Calculate total sum
@@ -104,15 +98,12 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       for (var element in relevantCategoriesWithSnapshot) {
         sum += element.snapshot.amount;
       }
-      relevantCategoriesWithSnapshot
-          .sort(((a, b) => b.snapshot.amount.compareTo(a.snapshot.amount)));
+      relevantCategoriesWithSnapshot.sort(((a, b) => b.snapshot.amount.compareTo(a.snapshot.amount)));
       // Set the correct percentage for this allocation
       labelTitles[i].percentage = sum / totalSum * 100;
       // Add this allocation to the list
       var newAllocation = DisplayAssetAllocation(
-          label: labelTitles[i],
-          totalSum: sum,
-          relevantCategories: relevantCategoriesWithSnapshot);
+          label: labelTitles[i], totalSum: sum, relevantCategories: relevantCategoriesWithSnapshot);
       allAllocations.add(newAllocation);
     }
     setState(() => isLoading = false);
@@ -122,8 +113,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
 
     return View(
       appBar: CustomAppBar(
@@ -174,17 +164,13 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: Utils.mapIndexed(allAllocations,
-                        (index, DisplayAssetAllocation item) {
+                    children: Utils.mapIndexed(allAllocations, (index, DisplayAssetAllocation item) {
                       return Indicator(
                         color: item.label.displayColor,
-                        text: Utils.getCorrectTitleFromKey(
-                            item.label.title, language),
+                        text: Utils.getCorrectTitleFromKey(item.label.title, language),
                         isSquare: false,
                         size: touchedIndex == index ? 18 : 16,
-                        textColor: touchedIndex == index
-                            ? null
-                            : Theme.of(context).secondaryHeaderColor,
+                        textColor: touchedIndex == index ? null : Theme.of(context).secondaryHeaderColor,
                       );
                     }).toList(),
                   ),
@@ -195,8 +181,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                           aspectRatio: 1,
                           child: PieChart(
                             PieChartData(
-                              pieTouchData: PieTouchData(touchCallback:
-                                  (FlTouchEvent event, pieTouchResponse) {
+                              pieTouchData: PieTouchData(touchCallback: (FlTouchEvent event, pieTouchResponse) {
                                 setState(() {
                                   if (pieTouchResponse == null) {
                                     return;
@@ -205,8 +190,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                     touchedIndex = -1;
                                     return;
                                   }
-                                  int newIndex = pieTouchResponse
-                                      .touchedSection!.touchedSectionIndex;
+                                  int newIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
                                   if (newIndex > -1 || event is FlTapUpEvent) {
                                     if (newIndex != touchedIndex) {
                                       HapticFeedback.lightImpact();
@@ -253,28 +237,20 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         Utils.getCorrectTitleFromKey(
-                                            allAllocations[touchedIndex]
-                                                .label
-                                                .title,
-                                            language),
+                                            allAllocations[touchedIndex].label.title, language),
                                         style: const TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        currencyFormat.format(
-                                            allAllocations[touchedIndex]
-                                                .totalSum),
+                                        currencyFormat.format(allAllocations[touchedIndex].totalSum),
                                         style: TextStyle(
-                                          color: allAllocations[touchedIndex]
-                                                      .totalSum >=
-                                                  0
+                                          color: allAllocations[touchedIndex].totalSum >= 0
                                               ? Theme.of(context).hintColor
                                               : Theme.of(context).errorColor,
                                           fontSize: 18,
@@ -288,13 +264,10 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                   ),
                                   Column(
                                     children: [
-                                      ...Utils.mapIndexed(
-                                          allAllocations[touchedIndex]
-                                              .relevantCategories,
+                                      ...Utils.mapIndexed(allAllocations[touchedIndex].relevantCategories,
                                           (i, CategoryWithSnapshot e) {
                                         return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               e.category.name,
@@ -309,29 +282,17 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                                               children: [
                                                 HorizontalBar(
                                                   amount: e.snapshot.amount,
-                                                  size: 1 /
-                                                      allAllocations[
-                                                              touchedIndex]
-                                                          .totalSum,
-                                                  color: allAllocations[
-                                                          touchedIndex]
-                                                      .label
-                                                      .displayColor,
+                                                  size: 1 / allAllocations[touchedIndex].totalSum,
+                                                  color: allAllocations[touchedIndex].label.displayColor,
                                                 ),
                                                 const SizedBox(
                                                   width: 15,
                                                 ),
                                                 Text(
-                                                  (e.snapshot.amount /
-                                                              allAllocations[
-                                                                      touchedIndex]
-                                                                  .totalSum *
-                                                              100)
+                                                  (e.snapshot.amount / allAllocations[touchedIndex].totalSum * 100)
                                                           .toStringAsFixed(1) +
                                                       "%",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .secondaryHeaderColor),
+                                                  style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
                                                 )
                                               ],
                                             ),
@@ -352,8 +313,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
     );
   }
 
-  List<PieChartSectionData> getSections(
-      List<DisplayAssetAllocation> allocations) {
+  List<PieChartSectionData> getSections(List<DisplayAssetAllocation> allocations) {
     // If the smallest fraction is too small and would make the chart look bad, give it some of the width of the biggest fraction.
     var labelTitles = allocations.map((e) => e.label);
     double minValue = double.maxFinite;
@@ -376,21 +336,15 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? 22.0 : 16.0;
       final radius = isTouched ? 90.0 : 80.0;
-      double percentage =
-          item.percentage == null ? 0 : item.percentage as double;
+      double percentage = item.percentage == null ? 0 : item.percentage as double;
       return PieChartSectionData(
         color: item.displayColor,
         value: (adaptPercentages && maxValue == item.percentage)
             ? item.percentage! - adaptionRange
-            : (adaptPercentages && minValue == item.percentage!
-                ? item.percentage! + adaptionRange
-                : item.percentage),
+            : (adaptPercentages && minValue == item.percentage! ? item.percentage! + adaptionRange : item.percentage),
         title: percentage.toStringAsFixed(1) + "%",
         radius: radius,
-        titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff)),
+        titleStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
       );
     }).toList();
   }

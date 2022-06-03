@@ -1,9 +1,9 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';

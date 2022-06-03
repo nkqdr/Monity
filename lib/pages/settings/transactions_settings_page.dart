@@ -1,15 +1,15 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/category_tile.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/category_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/category_tile.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/category_bottom_sheet.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,8 +19,7 @@ class TransactionsSettingsPage extends StatefulWidget {
   const TransactionsSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<TransactionsSettingsPage> createState() =>
-      _TransactionsSettingsPageState();
+  State<TransactionsSettingsPage> createState() => _TransactionsSettingsPageState();
 }
 
 class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
@@ -45,8 +44,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return View(
       appBar: CustomAppBar(
         title: language.transactionsSettings,
@@ -76,9 +74,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
                     ? const AdaptiveProgressIndicator()
                     : Row(children: [
                         Text(
-                          monthlyLimit != null
-                              ? language.yourMonthlyLimit
-                              : language.noMonthlyLimit,
+                          monthlyLimit != null ? language.yourMonthlyLimit : language.noMonthlyLimit,
                           style: monthlyLimit != null
                               ? null
                               : TextStyle(
@@ -152,8 +148,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       cancelLabel: language.abort,
     );
     if (dialogResult == OkCancelResult.ok) {
-      await Provider.of<ConfigProvider>(context, listen: false)
-          .deleteMonthlyLimit();
+      await Provider.of<ConfigProvider>(context, listen: false).deleteMonthlyLimit();
       await _refreshCategories();
     }
   }
@@ -166,11 +161,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       message: language.enterNewMonthlyLimit,
       okLabel: language.saveButton,
       cancelLabel: language.abort,
-      textFields: [
-        const DialogTextField(
-            keyboardType:
-                TextInputType.numberWithOptions(decimal: true, signed: false))
-      ],
+      textFields: [const DialogTextField(keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false))],
     );
     if (dialogResult != null) {
       var amountString = dialogResult.first.replaceAll(",", ".");
@@ -180,8 +171,7 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
       } catch (e) {
         return;
       }
-      Provider.of<ConfigProvider>(context, listen: false)
-          .setMonthlyLimit(limit);
+      Provider.of<ConfigProvider>(context, listen: false).setMonthlyLimit(limit);
       await _refreshCategories();
     }
   }
@@ -195,14 +185,12 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
         ),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: CategoryBottomSheet(
               mode: CategoryBottomSheetMode.add,
               categories: categories,
               onSubmit: (s) {
-                FinancesDatabase.instance
-                    .createTransactionCategory(TransactionCategory(name: s));
+                FinancesDatabase.instance.createTransactionCategory(TransactionCategory(name: s));
               },
             ),
           );

@@ -1,19 +1,19 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/pages/wealth_category_page.dart';
-import 'package:finance_buddy/pages/wealth_statistics_page.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/add_snapshot_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/dashboard_tile.dart';
-import 'package:finance_buddy/widgets/investment_tile.dart';
-import 'package:finance_buddy/widgets/tab_switcher.dart';
-import 'package:finance_buddy/widgets/view.dart';
-import 'package:finance_buddy/widgets/wealth_chart.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/pages/wealth_category_page.dart';
+import 'package:monity/pages/wealth_statistics_page.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/add_snapshot_bottom_sheet.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/dashboard_tile.dart';
+import 'package:monity/widgets/investment_tile.dart';
+import 'package:monity/widgets/tab_switcher.dart';
+import 'package:monity/widgets/view.dart';
+import 'package:monity/widgets/wealth_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -52,34 +52,21 @@ class _WealthPageState extends State<WealthPage> {
     switch (dataIndex) {
       case 0:
         newDataPoints = Utils.mapIndexed(
-            allDataPoints
-                .where((e) =>
-                    e.time.isAfter(DateTime(now.year, now.month - 1, now.day)))
-                .toList(),
-            (index, WealthDataPoint item) =>
-                FlSpot(index.toDouble(), item.value)).toList();
+            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year, now.month - 1, now.day))).toList(),
+            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
         break;
       case 1:
         newDataPoints = Utils.mapIndexed(
-            allDataPoints
-                .where((e) =>
-                    e.time.isAfter(DateTime(now.year - 1, now.month, now.day)))
-                .toList(),
-            (index, WealthDataPoint item) =>
-                FlSpot(index.toDouble(), item.value)).toList();
+            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year - 1, now.month, now.day))).toList(),
+            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
         break;
       case 2:
         newDataPoints = Utils.mapIndexed(
-            allDataPoints
-                .where((e) =>
-                    e.time.isAfter(DateTime(now.year - 5, now.month, now.day)))
-                .toList(),
-            (index, WealthDataPoint item) =>
-                FlSpot(index.toDouble(), item.value)).toList();
+            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year - 5, now.month, now.day))).toList(),
+            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
         break;
       default:
-        newDataPoints =
-            Utils.mapIndexed(allDataPoints, (index, WealthDataPoint item) {
+        newDataPoints = Utils.mapIndexed(allDataPoints, (index, WealthDataPoint item) {
           return FlSpot(index.toDouble(), item.value);
         }).toList();
     }
@@ -103,8 +90,7 @@ class _WealthPageState extends State<WealthPage> {
   Widget build(BuildContext context) {
     DateFormat dateFormatter = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(
@@ -160,8 +146,7 @@ class _WealthPageState extends State<WealthPage> {
                 ),
               ),
         Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
           child: TabSwitcher(
             startIndex: dataIndex,
             tabs: [
@@ -201,8 +186,7 @@ class _WealthPageState extends State<WealthPage> {
               : [
                   ...categories.map((e) => GestureDetector(
                         onTap: () async {
-                          await Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) {
                             return WealthCategoryPage(category: e);
                           }));
                           _refreshCategories();
@@ -249,20 +233,15 @@ class _WealthPageState extends State<WealthPage> {
         ),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: const AddSnapshotBottomSheet(),
           );
         });
     _refreshCategories();
   }
 
-  void _handleChartTouch(
-      FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
-    if (event is FlTapUpEvent ||
-        event is FlPanCancelEvent ||
-        event is FlPanEndEvent ||
-        event is FlLongPressEnd) {
+  void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
+    if (event is FlTapUpEvent || event is FlPanCancelEvent || event is FlPanEndEvent || event is FlLongPressEnd) {
       setState(() {
         subtitle = "";
         _indexLine = null;
@@ -281,28 +260,22 @@ class _WealthPageState extends State<WealthPage> {
           case 0:
             currentXValues = allDataPoints
                 .map((e) => e.time)
-                .where((element) => element.isAfter(DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month - 1,
-                    DateTime.now().day)))
+                .where((element) =>
+                    element.isAfter(DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day)))
                 .toList();
             break;
           case 1:
             currentXValues = allDataPoints
                 .map((e) => e.time)
-                .where((element) => element.isAfter(DateTime(
-                    DateTime.now().year - 1,
-                    DateTime.now().month,
-                    DateTime.now().day)))
+                .where((element) =>
+                    element.isAfter(DateTime(DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)))
                 .toList();
             break;
           case 2:
             currentXValues = allDataPoints
                 .map((e) => e.time)
-                .where((element) => element.isAfter(DateTime(
-                    DateTime.now().year - 5,
-                    DateTime.now().month,
-                    DateTime.now().day)))
+                .where((element) =>
+                    element.isAfter(DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day)))
                 .toList();
             break;
           default:
@@ -310,8 +283,7 @@ class _WealthPageState extends State<WealthPage> {
         }
         setState(() {
           displayWealth = value;
-          subtitle = dateFormat.format(
-              currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
+          subtitle = dateFormat.format(currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,
             color: Theme.of(context).secondaryHeaderColor,

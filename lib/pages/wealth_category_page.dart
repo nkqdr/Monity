@@ -1,11 +1,11 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_cupertino_context_menu_action.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,8 +34,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
 
   Future _refreshSnapshots() async {
     setState(() => isLoading = true);
-    snapshots = await FinancesDatabase.instance
-        .readInvestmentSnapshotFor(widget.category.id!);
+    snapshots = await FinancesDatabase.instance.readInvestmentSnapshotFor(widget.category.id!);
     snapshots.sort((a, b) => a.date.compareTo(b.date));
     setState(() => isLoading = false);
   }
@@ -44,8 +43,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
   Widget build(BuildContext context) {
     DateFormat dateFormatter = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(
@@ -90,8 +88,7 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                         )
                       ],
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                         margin: const EdgeInsets.only(bottom: 10),
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,

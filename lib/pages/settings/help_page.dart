@@ -1,6 +1,6 @@
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

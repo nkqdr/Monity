@@ -1,10 +1,10 @@
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/custom_textfield.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/interfaces.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
+import 'package:monity/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,9 +77,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(
-              widget.mode == CategoryBottomSheetMode.add
-                  ? language.newCategoryName
-                  : language.editCategoryNewName,
+              widget.mode == CategoryBottomSheetMode.add ? language.newCategoryName : language.editCategoryNewName,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -121,10 +119,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
                         alignment: Alignment.center,
                         borderRadius: BorderRadius.circular(20),
                         underline: Container(),
-                        items: Provider.of<ConfigProvider>(context)
-                            .assetAllocationCategories
-                            .map(buildMenuItem)
-                            .toList(),
+                        items:
+                            Provider.of<ConfigProvider>(context).assetAllocationCategories.map(buildMenuItem).toList(),
                         onChanged: (value) {
                           setState(() => _selectedLabel = value);
                           if (!isTextFieldEmpty) {
@@ -139,10 +135,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
                       ? null
                       : () {
                           setState(() => _selectedLabel = null);
-                          setState(() => isButtonDisabled =
-                              _categoryNameController.text ==
-                                      widget.placeholder &&
-                                  widget.label == _selectedLabel?.title);
+                          setState(() => isButtonDisabled = _categoryNameController.text == widget.placeholder &&
+                              widget.label == _selectedLabel?.title);
                         },
                 ),
               ],
@@ -153,13 +147,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
               child: ElevatedButton(
                 onPressed: isButtonDisabled ? null : _handleSubmit,
                 style: isButtonDisabled
-                    ? ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).secondaryHeaderColor))
+                    ? ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).secondaryHeaderColor))
                     : null,
-                child: Text(widget.mode == CategoryBottomSheetMode.add
-                    ? language.addCategoryButton
-                    : language.saveButton),
+                child:
+                    Text(widget.mode == CategoryBottomSheetMode.add ? language.addCategoryButton : language.saveButton),
               ),
             ),
           ),
@@ -177,10 +168,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   }
 
   void _handleChangeTextField(String value) {
-    if (value.trim() != "" &&
-        widget.categories
-            .where((element) => element.name == value.trim())
-            .isEmpty) {
+    if (value.trim() != "" && widget.categories.where((element) => element.name == value.trim()).isEmpty) {
       setState(() => isTextFieldEmpty = false);
       setState(() {
         isButtonDisabled = false;

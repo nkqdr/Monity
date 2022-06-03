@@ -1,8 +1,8 @@
-import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/theme/theme_provider.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/multiple_choice_select.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/l10n/language_provider.dart';
+import 'package:monity/theme/theme_provider.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/multiple_choice_select.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,8 +13,7 @@ class AppearancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context);
-    final LanguageProvider _languageProvider =
-        Provider.of<LanguageProvider>(context);
+    final LanguageProvider _languageProvider = Provider.of<LanguageProvider>(context);
     var language = AppLocalizations.of(context)!;
 
     return View(
@@ -35,12 +34,9 @@ class AppearancePage extends StatelessWidget {
         MultipleChoiceSection<ThemeMode>(
           title: language.theme,
           options: [
-            MultipleChoiceOption(
-                name: language.system, value: ThemeMode.system),
-            MultipleChoiceOption(
-                name: language.lightTheme, value: ThemeMode.light),
-            MultipleChoiceOption(
-                name: language.darkTheme, value: ThemeMode.dark),
+            MultipleChoiceOption(name: language.system, value: ThemeMode.system),
+            MultipleChoiceOption(name: language.lightTheme, value: ThemeMode.light),
+            MultipleChoiceOption(name: language.darkTheme, value: ThemeMode.dark),
           ],
           value: _themeProvider.themeMode,
           onChanged: (value) => setThemeMode(context, value),

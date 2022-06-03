@@ -1,5 +1,5 @@
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';

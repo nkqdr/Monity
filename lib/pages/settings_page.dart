@@ -1,16 +1,16 @@
-import 'package:finance_buddy/helper/showcase_keys_provider.dart';
-import 'package:finance_buddy/pages/settings/appearance_page.dart';
-import 'package:finance_buddy/pages/settings/faq_page.dart';
-import 'package:finance_buddy/pages/settings/help_page.dart';
-import 'package:finance_buddy/pages/settings/investments_settings_page.dart';
-import 'package:finance_buddy/pages/settings/options_page.dart';
-import 'package:finance_buddy/pages/settings/system_settings_page.dart';
-import 'package:finance_buddy/pages/settings/transactions_settings_page.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/custom_showcase.dart';
-import 'package:finance_buddy/widgets/setting_nav_button.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/helper/showcase_keys_provider.dart';
+import 'package:monity/pages/settings/appearance_page.dart';
+import 'package:monity/pages/settings/faq_page.dart';
+import 'package:monity/pages/settings/help_page.dart';
+import 'package:monity/pages/settings/investments_settings_page.dart';
+import 'package:monity/pages/settings/options_page.dart';
+import 'package:monity/pages/settings/system_settings_page.dart';
+import 'package:monity/pages/settings/transactions_settings_page.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/custom_showcase.dart';
+import 'package:monity/widgets/setting_nav_button.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +28,7 @@ class SettingsPage extends StatelessWidget {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       showcaseKeys.startTourIfNeeded(
         myContext!,
-        [
-          showcaseKeys.generalSettingsKey,
-          showcaseKeys.configurationSettingsKey
-        ],
+        [showcaseKeys.generalSettingsKey, showcaseKeys.configurationSettingsKey],
         delay: const Duration(milliseconds: 200),
       );
     });
@@ -90,8 +87,7 @@ class SettingsPage extends StatelessWidget {
                           onTargetClick: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const TransactionsSettingsPage(),
+                                builder: (context) => const TransactionsSettingsPage(),
                               ),
                             );
                           },

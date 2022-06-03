@@ -1,8 +1,8 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -15,21 +15,19 @@ class AddSnapshotBottomSheet extends StatefulWidget {
 
 class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Future<List<InvestmentCategory>> _categories =
-      FinancesDatabase.instance.readAllInvestmentCategories();
+  final Future<List<InvestmentCategory>> _categories = FinancesDatabase.instance.readAllInvestmentCategories();
   InvestmentCategory? _investmentCategory;
   double? _givenAmount;
 
   Future _handleAddSnapshot() async {
     if (_investmentCategory == null) return;
-    InvestmentSnapshot? lastSnapshot = await FinancesDatabase.instance
-        .readLastSnapshotFor(category: _investmentCategory!);
+    InvestmentSnapshot? lastSnapshot =
+        await FinancesDatabase.instance.readLastSnapshotFor(category: _investmentCategory!);
     if (lastSnapshot != null &&
         lastSnapshot.date.day == DateTime.now().day &&
         lastSnapshot.date.month == DateTime.now().month &&
         lastSnapshot.date.year == DateTime.now().year) {
-      await FinancesDatabase.instance
-          .deleteInvestmentSnapshot(lastSnapshot.id!);
+      await FinancesDatabase.instance.deleteInvestmentSnapshot(lastSnapshot.id!);
     }
 
     if (_givenAmount == null) {
@@ -90,11 +88,9 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                             value: _investmentCategory,
                             enableFeedback: true,
                             isExpanded: true,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
+                            decoration: const InputDecoration(border: InputBorder.none),
                             autovalidateMode: AutovalidateMode.disabled,
-                            items: snapshot.data!
-                                .map<DropdownMenuItem<InvestmentCategory>>((e) {
+                            items: snapshot.data!.map<DropdownMenuItem<InvestmentCategory>>((e) {
                               return DropdownMenuItem<InvestmentCategory>(
                                 value: e,
                                 child: Text(e.name),
@@ -104,8 +100,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                               setState(() => _investmentCategory = cat);
                             },
                             validator: (InvestmentCategory? cat) {
-                              if (!snapshot.data!.contains(cat) ||
-                                  cat == null) {
+                              if (!snapshot.data!.contains(cat) || cat == null) {
                                 return language.invalidInput;
                               }
                               return null;
@@ -143,8 +138,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(10),
               child: TextFormField(
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
                 decoration: const InputDecoration.collapsed(hintText: "0,00"),
                 validator: (String? val) {
                   double x = 0;
@@ -176,11 +170,8 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            snapshot.hasData && snapshot.data!.isEmpty
-                                ? Colors.grey
-                                : Colors.green),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
+                            snapshot.hasData && snapshot.data!.isEmpty ? Colors.grey : Colors.green),
+                        foregroundColor: MaterialStateProperty.all(Colors.white),
                       ),
                       onPressed: snapshot.hasData && snapshot.data!.isEmpty
                           ? null

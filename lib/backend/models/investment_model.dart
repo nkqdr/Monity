@@ -1,5 +1,5 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/interfaces.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String tableInvestmentCategory = "investment_category";

@@ -8,6 +8,7 @@ const String firstStartupKey = 'IS_FIRST_START_UP';
 const String budgetOverflowEnabledKey = "BUDGET_OVERFLOW_ENABLED";
 const String budgetOverflowKey = "BUDGET_OVERFLOW";
 const String lastBackupCreatedKey = "LAST_BACKUP_CREATED";
+const String disableRecurringTransactionsKey = "DISABLE_RECURRING_TRANSACTIONS";
 
 const List<String> keyList = [
   'APPEARANCE',
@@ -26,9 +27,7 @@ class KeyValueDatabase {
     if (value == null) {
       return ThemeMode.system;
     }
-    ThemeMode mode = value == 0
-        ? ThemeMode.system
-        : (value == 1 ? ThemeMode.light : ThemeMode.dark);
+    ThemeMode mode = value == 0 ? ThemeMode.system : (value == 1 ? ThemeMode.light : ThemeMode.dark);
     return mode;
   }
 

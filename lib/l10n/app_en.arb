@@ -411,6 +411,10 @@
   "@wealthSplitTitle": {
     "description": "Title of the wealth split section."
   },
+  "overflow": "Overflow",
+  "@overflow": {
+    "description": "Option title for overflow section"
+  },
   "enableOverflow": "Enable overflow:",
   "@enableOverflow": {
     "description": "Option title for enabling overflow"
@@ -474,6 +478,18 @@
   "lastBackupCreatedOn": "Last Backup created on: ",
   "@lastBackupCreatedOn": {
     "description": "Describes when the last backup has been created."
+  },
+  "recurringTransactions": "Recurring Transactions",
+  "@recurringTransactions": {
+    "description": "Section title for recurring transactions settings."
+  },
+  "recurringTransactionsSubtitle": "These transactions will automatically be registered at the beginning of every month.",
+  "@recurringTransactionsSubtitle": {
+    "description": "Section subtitle for recurring transactions settings."
+  },
+  "disable": "Disable",
+  "@disable": {
+    "description": "Disable option in settings."
   },
 
 

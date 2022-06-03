@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
+import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/showcase_keys_provider.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/adaptive_progress_indicator.dart';
@@ -45,9 +46,36 @@ class _TransactionsPageState extends State<TransactionsPage> {
     if (init) {
       selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
+
     currentTransactions = _getTransactionsFor(selectedMonth);
     displayedTransactions = currentTransactions.reversed.toList();
+    print("HERE");
     setState(() => isLoading = false);
+  }
+
+  Future _addRecurringTransactions() async {
+    var recurringTransactions = await FinancesDatabase.instance.readAllTransactions(recurring: true);
+    if (recurringTransactions.isEmpty) return;
+    List<Transaction> newTransactions = [];
+    for (var transaction in recurringTransactions) {
+      var newTransaction = await FinancesDatabase.instance.createTransaction(
+        Transaction(
+          categoryId: transaction.categoryId,
+          amount: transaction.amount,
+          description: transaction.description,
+          date: DateTime.now(),
+          type: transaction.type,
+        ),
+      );
+      if (newTransaction != null) {
+        newTransactions.add(newTransaction);
+      }
+    }
+    setState(() {
+      selectedMonth = DateTime.now();
+      displayedTransactions.addAll(newTransactions);
+    });
+    _refreshTransactions();
   }
 
   @override
@@ -56,6 +84,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
     var transactionCategories = Provider.of<ListProvider<TransactionCategory>>(context).list;
     DateFormat dateFormatter = Utils.getDateFormatter(context, includeDay: false);
     var language = AppLocalizations.of(context)!;
+
+    if ((!isLoading && displayedTransactions.isEmpty)) {
+      bool shouldAddRecurring = !Provider.of<ConfigProvider>(context).disableRecurringTransactions;
+      if (shouldAddRecurring) {
+        _addRecurringTransactions();
+      }
+    }
 
     return View(
       appBar: CustomAppBar(

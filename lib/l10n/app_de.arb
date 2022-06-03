@@ -101,6 +101,7 @@
   "notEnoughSnapshots": "Du hast noch nicht genügend Einträge in der Sektion 'Vermögen' gespeichert.",
   "introductionTitle": "Einführung",
   "richestManOnEarth": "Herzlichen Glückwunsch! Wenn du weiterhin in diesem Tempo sparst, wirst du bald der reichste Mensch der Welt sein.",
+  "overflow": "Überlauf",
   "enableOverflow": "Überlauf aktivieren:",
   "wealthSplitTitle": "Vermögensaufteilung",
   "newCategoryLabel": "Wähle einen Bezeichner für diese Geldanlage:",
@@ -118,6 +119,9 @@
   "load_success": "Erfolgreich geladen!",
   "save_success": "Erfolgreich gespeichert!",
   "lastBackupCreatedOn": "Letztes Backup erstellt am: ",
+  "recurringTransactions": "Wiederkehrende Transaktionen",
+  "recurringTransactionsSubtitle": "Diese Transaktionen werden automatisch zu Beginn eines jeden Monats registriert.",
+  "disable": "Deaktivieren",
 
 
 

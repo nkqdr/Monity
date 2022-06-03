@@ -48,7 +48,7 @@ class FinancesDatabase {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+    return await openDatabase(path, version: 3, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async {
@@ -84,27 +84,62 @@ class FinancesDatabase {
       FOREIGN KEY(${InvestmentSnapshotFields.categoryId}) REFERENCES $tableInvestmentCategory(${InvestmentCategoryFields.id})
     )
     ''');
-    if (version == 2) {
+    if (version >= 2) {
       await db.execute("ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
+    }
+    if (version >= 3) {
+      await db.execute('''
+    CREATE TABLE ${model.tableRecurringTransaction} (
+      ${model.TransactionFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${model.TransactionFields.description} TEXT,
+      ${model.TransactionFields.category} INTEGER NOT NULL,
+      ${model.TransactionFields.amount} REAL NOT NULL,
+      ${model.TransactionFields.date} TEXT NOT NULL,
+      ${model.TransactionFields.type} INTEGER NOT NULL,
+      FOREIGN KEY(${model.TransactionFields.category}) REFERENCES ${model.tableTransactionCategory}(${model.TransactionCategoryFields.id})
+    )
+    ''');
     }
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    if (oldVersion == 1 && newVersion == 2) {
+    print("Updating");
+    if (oldVersion < 2) {
       db.execute("ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
+    }
+    if (oldVersion < 3) {
+      db.execute('''
+    CREATE TABLE ${model.tableRecurringTransaction} (
+      ${model.TransactionFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${model.TransactionFields.description} TEXT,
+      ${model.TransactionFields.category} INTEGER NOT NULL,
+      ${model.TransactionFields.amount} REAL NOT NULL,
+      ${model.TransactionFields.date} TEXT NOT NULL,
+      ${model.TransactionFields.type} INTEGER NOT NULL,
+      FOREIGN KEY(${model.TransactionFields.category}) REFERENCES ${model.tableTransactionCategory}(${model.TransactionCategoryFields.id})
+    )
+    ''');
     }
   }
 
-  Future<model.Transaction> createTransaction(model.Transaction transaction) async {
+  Future<model.Transaction?> createTransaction(model.Transaction transaction, {bool recurring = false}) async {
     final db = await instance.database;
-    final id = await db.insert(model.tableTransaction, transaction.toJson());
+    final int id;
+    try {
+      id = await db.insert(
+        recurring ? model.tableRecurringTransaction : model.tableTransaction,
+        transaction.toJson(),
+      );
+    } catch (e) {
+      return null;
+    }
     return transaction.copy(id: id);
   }
 
-  Future<model.Transaction?> readTransaction(int id) async {
+  Future<model.Transaction?> readTransaction(int id, {bool recurring = false}) async {
     final db = await instance.database;
     final maps = await db.query(
-      model.tableTransaction,
+      recurring ? model.tableRecurringTransaction : model.tableTransaction,
       columns: model.TransactionFields.values,
       where: "${model.TransactionFields.id} = ?",
       whereArgs: [id],
@@ -116,16 +151,19 @@ class FinancesDatabase {
     return null;
   }
 
-  Future<List<model.Transaction>> readAllTransactions() async {
+  Future<List<model.Transaction>> readAllTransactions({bool recurring = false}) async {
     final db = await instance.database;
-    final result = await db.query(model.tableTransaction, orderBy: "${model.TransactionFields.date} ASC");
+    final result = await db.query(
+      recurring ? model.tableRecurringTransaction : model.tableTransaction,
+      orderBy: "${model.TransactionFields.date} ASC",
+    );
     return result.map((e) => model.Transaction.fromJson(e)).toList();
   }
 
-  Future<int> deleteTransaction(int id) async {
+  Future<int> deleteTransaction(int id, {bool recurring = false}) async {
     final db = await instance.database;
     return await db.delete(
-      model.tableTransaction,
+      recurring ? model.tableRecurringTransaction : model.tableTransaction,
       where: "${model.TransactionFields.id} = ?",
       whereArgs: [id],
     );

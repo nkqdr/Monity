@@ -10,7 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddTransactionBottomSheet extends StatefulWidget {
-  const AddTransactionBottomSheet({Key? key}) : super(key: key);
+  final bool isRecurring;
+
+  const AddTransactionBottomSheet({
+    Key? key,
+    this.isRecurring = false,
+  }) : super(key: key);
 
   @override
   _AddTransactionBottomSheetState createState() => _AddTransactionBottomSheetState();
@@ -29,13 +34,16 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     if (_givenAmount == null) {
       return;
     }
-    FinancesDatabase.instance.createTransaction(Transaction(
-      amount: _givenAmount!,
-      date: DateTime.now(),
-      type: _transactionType ?? TransactionType.expense,
-      categoryId: category,
-      description: _descriptionController.text,
-    ));
+    FinancesDatabase.instance.createTransaction(
+      Transaction(
+        amount: _givenAmount!,
+        date: DateTime.now(),
+        type: _transactionType ?? TransactionType.expense,
+        categoryId: category,
+        description: _descriptionController.text,
+      ),
+      recurring: widget.isRecurring,
+    );
   }
 
   @override

@@ -21,6 +21,7 @@ class ConfigProvider extends ChangeNotifier {
     ),
   ];
   bool budgetOverflowEnabled;
+  late bool disableRecurringTransactions;
   double? monthlyLimit;
   DateTime? lastBackupCreated;
 
@@ -35,6 +36,14 @@ class ConfigProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? dateString = prefs.getString(lastBackupCreatedKey);
     lastBackupCreated = dateString != null ? DateTime.parse(dateString) : null;
+    disableRecurringTransactions = prefs.getBool(disableRecurringTransactionsKey) ?? false;
+  }
+
+  Future setDisableRecurringTransactions(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    disableRecurringTransactions = value;
+    await prefs.setBool(disableRecurringTransactionsKey, value);
+    notifyListeners();
   }
 
   Future setLastBackupCreated(DateTime time) async {

@@ -3,6 +3,7 @@ import 'package:monity/helper/interfaces.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String tableTransaction = "transaction_base";
+const String tableRecurringTransaction = "recurring_transaction_base";
 const String tableTransactionCategory = "transaction_category";
 
 enum TransactionType {
@@ -63,6 +64,11 @@ class Transaction {
       date: DateTime.parse(json[TransactionFields.date] as String),
       type: TransactionType.values[json[TransactionFields.type] as int],
     );
+  }
+
+  @override
+  String toString() {
+    return "Transaction with ID: $id, TYPE: $type, DESCRIPTION: $description, CATEGORY_ID: $categoryId";
   }
 
   Transaction copy({

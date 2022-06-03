@@ -1,8 +1,10 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/key_value_database.dart';
 import 'package:monity/helper/config_provider.dart';
+import 'package:monity/pages/settings/recurring_transactions_page.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/setting_nav_button.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,7 +19,7 @@ class OptionsPage extends StatelessWidget {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
-    bool enableOverflow = Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
+    var configProvider = Provider.of<ConfigProvider>(context);
     Future<double?> currentOverflow = KeyValueDatabase.getBudgetOverflow();
 
     return View(
@@ -39,46 +41,44 @@ class OptionsPage extends StatelessWidget {
         // Option to carry over the remaining budget into the next month.
         CustomSection(
           groupItems: true,
+          title: language.overflow,
           subtitle: language.remainingBudgetOverflow,
           children: [
-            Container(
-              color: Theme.of(context).cardColor,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          language.enableOverflow,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Switch.adaptive(value: enableOverflow, onChanged: (value) => _toggleOverflow(context, value))
-                      ],
+            _BooleanSetting(
+              title: language.enableOverflow,
+              value: configProvider.budgetOverflowEnabled,
+              onChanged: (value) => _toggleOverflow(context, value),
+              additionalInfoOnActive: FutureBuilder(
+                future: currentOverflow,
+                builder: ((context, snapshot) {
+                  return Text(
+                    "${language.currentOverflow} ${currencyFormat.format(snapshot.hasData ? snapshot.data : 0)}",
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
                     ),
-                    if (enableOverflow)
-                      FutureBuilder(
-                        future: currentOverflow,
-                        builder: ((context, snapshot) {
-                          return Text(
-                            "${language.currentOverflow} ${currencyFormat.format(snapshot.hasData ? snapshot.data : 0)}",
-                            style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                          );
-                        }),
-                      )
-                  ],
-                ),
+                  );
+                }),
               ),
-            ),
+            )
           ],
         ),
+        CustomSection(
+          title: language.recurringTransactions,
+          subtitle: language.recurringTransactionsSubtitle,
+          groupItems: true,
+          children: [
+            SettingNavButton(
+              name: language.edit,
+              destination: const RecurringTransactions(),
+            ),
+            _BooleanSetting(
+              title: language.disable,
+              value: configProvider.disableRecurringTransactions,
+              onChanged: configProvider.setDisableRecurringTransactions,
+              isDestructive: true,
+            )
+          ],
+        )
       ],
     );
   }
@@ -97,5 +97,55 @@ class OptionsPage extends StatelessWidget {
       }
     }
     Provider.of<ConfigProvider>(context, listen: false).setBudgetOverflow(value);
+  }
+}
+
+class _BooleanSetting extends StatelessWidget {
+  final String title;
+  final bool value;
+  final Widget? additionalInfoOnActive;
+  final bool isDestructive;
+  final void Function(bool) onChanged;
+  const _BooleanSetting({
+    Key? key,
+    this.additionalInfoOnActive,
+    this.isDestructive = false,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).cardColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: isDestructive ? Theme.of(context).errorColor : null,
+                    fontSize: 18,
+                  ),
+                ),
+                Switch.adaptive(
+                  value: value,
+                  onChanged: onChanged,
+                  activeColor: Theme.of(context).errorColor,
+                )
+              ],
+            ),
+            if (additionalInfoOnActive != null && value) additionalInfoOnActive!
+          ],
+        ),
+      ),
+    );
   }
 }

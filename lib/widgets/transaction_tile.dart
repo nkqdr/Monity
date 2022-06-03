@@ -10,10 +10,12 @@ class TransactionTile extends StatelessWidget {
   final Transaction transaction;
   final TransactionCategory category;
   final Function? refreshFunction;
+  final bool isRecurring;
 
   const TransactionTile({
     Key? key,
     this.refreshFunction,
+    this.isRecurring = false,
     required this.transaction,
     required this.category,
   }) : super(key: key);
@@ -117,7 +119,7 @@ class TransactionTile extends StatelessWidget {
         message: language.sureDeleteTransaction,
         isDestructiveAction: true);
     if (result == OkCancelResult.ok) {
-      FinancesDatabase.instance.deleteTransaction(transaction.id as int);
+      FinancesDatabase.instance.deleteTransaction(transaction.id as int, recurring: isRecurring);
       refreshFunction!();
     }
   }

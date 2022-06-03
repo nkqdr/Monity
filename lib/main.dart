@@ -1,4 +1,8 @@
+import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/showcase_keys_provider.dart';
 import 'package:monity/home.dart';
@@ -56,7 +60,23 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ShowcaseProvider(showShowcase: shouldShowInstructions),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ListProvider<TransactionCategory>(
+            fetchFunction: FinancesDatabase.instance.readAllTransactionCategories,
+            createFunction: FinancesDatabase.instance.createTransactionCategory,
+            deleteFunction: FinancesDatabase.instance.deleteTransactionCategory,
+            updateFunction: FinancesDatabase.instance.updateTransactionCategory,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ListProvider<InvestmentCategory>(
+            fetchFunction: FinancesDatabase.instance.readAllInvestmentCategories,
+            createFunction: FinancesDatabase.instance.createInvestmentCategory,
+            deleteFunction: FinancesDatabase.instance.deleteInvestmentCategory,
+            updateFunction: FinancesDatabase.instance.updateInvestmentCategory,
+          ),
+        ),
       ],
       builder: (context, _) {
         final languageProvider = Provider.of<LanguageProvider>(context);

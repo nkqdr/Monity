@@ -98,6 +98,11 @@ class TransactionCategory extends Category {
     );
   }
 
+  @override
+  String toString() {
+    return "TransactionCategory with ID: $id, NAME: $name";
+  }
+
   Map<String, Object?> toJson() {
     return {
       TransactionCategoryFields.id: id,
@@ -128,5 +133,13 @@ class TransactionCategory extends Category {
   @override
   String getDeleteMessage(AppLocalizations language) {
     return language.sureDeleteCategory;
+  }
+
+  @override
+  bool equals(Category other) {
+    if (other is! TransactionCategory) {
+      return false;
+    }
+    return id == other.id && name == other.name;
   }
 }

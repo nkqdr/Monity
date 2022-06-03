@@ -8,6 +8,7 @@ abstract class Category {
 
   Category copy({int? id, String? name});
   String getDeleteMessage(AppLocalizations language);
+  bool equals(Category other);
 
   Future<int> updateSelf();
   Future<int> deleteSelf();

@@ -1,7 +1,5 @@
-import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/investment_model.dart';
-import 'package:monity/helper/types.dart';
-import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/widgets/category_tile.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_section.dart';
@@ -9,29 +7,10 @@ import 'package:monity/widgets/category_bottom_sheet.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
-class InvestmentsSettingsPage extends StatefulWidget {
+class InvestmentsSettingsPage extends StatelessWidget {
   const InvestmentsSettingsPage({Key? key}) : super(key: key);
-
-  @override
-  State<InvestmentsSettingsPage> createState() => _InvestmentsSettingsPageState();
-}
-
-class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
-  bool isLoading = false;
-  late List<InvestmentCategory> categories;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshCategories();
-  }
-
-  Future _refreshCategories() async {
-    setState(() => isLoading = true);
-    categories = await FinancesDatabase.instance.readAllInvestmentCategories();
-    setState(() => isLoading = false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,25 +39,17 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
               Icons.add,
               color: Colors.blue,
             ),
-            onTap: _handleAddCategory,
+            onTap: () => _handleAddCategory(context),
           ),
-          children: isLoading
-              ? [const Center(child: AdaptiveProgressIndicator())]
-              : [
-                  ...categories.map(
-                    (e) => CategoryTile(
-                      category: e,
-                      categories: categories,
-                      refreshCallback: _refreshCategories,
-                    ),
-                  ),
-                ],
+          children: const [
+            _InvestmentCategoriesList(),
+          ],
         )
       ],
     );
   }
 
-  Future _handleAddCategory() async {
+  Future _handleAddCategory(BuildContext context) async {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -88,24 +59,27 @@ class _InvestmentsSettingsPageState extends State<InvestmentsSettingsPage> {
         builder: (context) {
           return Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: CategoryBottomSheet(
+            child: const CategoryBottomSheet<InvestmentCategory>(
               mode: CategoryBottomSheetMode.add,
-              categories: categories,
               hasLabelDropdown: true,
-              onSubmit: (s) {
-                FinancesDatabase.instance.createInvestmentCategory(InvestmentCategory(
-                  name: s,
-                ));
-              },
-              onSubmitWithLabel: (s, AssetLabel? l) {
-                FinancesDatabase.instance.createInvestmentCategory(InvestmentCategory(
-                  name: s,
-                  label: l?.title,
-                ));
-              },
             ),
           );
         });
-    _refreshCategories();
+  }
+}
+
+class _InvestmentCategoriesList extends StatelessWidget {
+  const _InvestmentCategoriesList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var categoriesProvider = Provider.of<ListProvider<InvestmentCategory>>(context);
+    return Column(
+      children: [
+        ...categoriesProvider.list.map(
+          (e) => CategoryTile(category: e),
+        ),
+      ],
+    );
   }
 }

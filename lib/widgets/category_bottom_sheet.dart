@@ -1,3 +1,4 @@
+import 'package:monity/backend/models/investment_model.dart';
 import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/interfaces.dart';
 import 'package:monity/helper/types.dart';
@@ -5,6 +6,8 @@ import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/adaptive_text_button.dart';
 import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:monity/widgets/custom_textfield.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,31 +17,25 @@ enum CategoryBottomSheetMode {
   edit,
 }
 
-class CategoryBottomSheet extends StatefulWidget {
+class CategoryBottomSheet<T extends Category> extends StatefulWidget {
   final CategoryBottomSheetMode mode;
-  final String? placeholder;
-  final Function(String) onSubmit;
-  final Function(String, AssetLabel?)? onSubmitWithLabel;
-  final List<Category> categories;
+  final T? category;
   final bool? hasLabelDropdown;
   final String? label;
 
   const CategoryBottomSheet({
     Key? key,
-    this.placeholder,
+    this.category,
     this.hasLabelDropdown,
-    this.onSubmitWithLabel,
     this.label,
-    required this.onSubmit,
     required this.mode,
-    required this.categories,
   }) : super(key: key);
 
   @override
-  _CategoryBottomSheetState createState() => _CategoryBottomSheetState();
+  _CategoryBottomSheetState<T> createState() => _CategoryBottomSheetState<T>();
 }
 
-class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
+class _CategoryBottomSheetState<T extends Category> extends State<CategoryBottomSheet<T>> {
   final _categoryNameController = TextEditingController();
   late bool isButtonDisabled;
   late bool isTextFieldEmpty;
@@ -47,8 +44,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.placeholder != null) {
-      _categoryNameController.text = widget.placeholder!;
+    if (widget.category?.name != null) {
+      _categoryNameController.text = widget.category!.name;
     }
     isButtonDisabled = true;
     isTextFieldEmpty = _categoryNameController.text == "";
@@ -68,6 +65,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+    ListProvider<T> categoriesProvider = Provider.of<ListProvider<T>>(context);
 
     return CustomBottomSheet(
       child: Column(
@@ -86,9 +84,9 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
           ),
           CustomTextField(
             controller: _categoryNameController,
-            onChanged: _handleChangeTextField,
+            onChanged: (v) => _handleChangeTextField(v, categoriesProvider.list),
             decoration: InputDecoration.collapsed(
-              hintText: widget.placeholder ?? language.newCategoryNameHint,
+              hintText: widget.category?.name ?? language.newCategoryNameHint,
             ),
           ),
           if (widget.hasLabelDropdown == true)
@@ -135,7 +133,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
                       ? null
                       : () {
                           setState(() => _selectedLabel = null);
-                          setState(() => isButtonDisabled = _categoryNameController.text == widget.placeholder &&
+                          setState(() => isButtonDisabled = _categoryNameController.text == widget.category?.name &&
                               widget.label == _selectedLabel?.title);
                         },
                 ),
@@ -167,8 +165,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
     );
   }
 
-  void _handleChangeTextField(String value) {
-    if (value.trim() != "" && widget.categories.where((element) => element.name == value.trim()).isEmpty) {
+  void _handleChangeTextField(String value, List<Category>? categories) {
+    if (value.trim() != "" &&
+        categories != null &&
+        categories.where((element) => element.name == value.trim()).isEmpty) {
       setState(() => isTextFieldEmpty = false);
       setState(() {
         isButtonDisabled = false;
@@ -183,12 +183,22 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
   void _handleSubmit() {
     Navigator.of(context).pop();
     String value = _categoryNameController.text.trim();
-    if (widget.hasLabelDropdown == null || !widget.hasLabelDropdown!) {
-      widget.onSubmit(value);
-    } else if (widget.onSubmitWithLabel != null) {
-      widget.onSubmitWithLabel!(value, _selectedLabel);
-    } else {
-      widget.onSubmit(value);
+    ListProvider categoriesProvider;
+    if (T == TransactionCategory) {
+      categoriesProvider = Provider.of<ListProvider<TransactionCategory>>(context, listen: false);
+      if (widget.mode == CategoryBottomSheetMode.add) {
+        categoriesProvider.insert(TransactionCategory(name: value));
+      } else if (widget.mode == CategoryBottomSheetMode.edit) {
+        categoriesProvider.update(widget.category!.id!, widget.category!.copy(name: value));
+      }
+    } else if (T == InvestmentCategory) {
+      categoriesProvider = Provider.of<ListProvider<InvestmentCategory>>(context, listen: false);
+      if (widget.mode == CategoryBottomSheetMode.add) {
+        categoriesProvider.insert(InvestmentCategory(name: value, label: _selectedLabel?.title));
+      } else if (widget.mode == CategoryBottomSheetMode.edit) {
+        categoriesProvider.update(widget.category!.id!,
+            (widget.category as InvestmentCategory).copy(name: value, label: _selectedLabel?.title));
+      }
     }
   }
 }

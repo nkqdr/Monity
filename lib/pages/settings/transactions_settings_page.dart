@@ -1,9 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:monity/backend/finances_database.dart';
-import 'package:monity/backend/key_value_database.dart';
 import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/config_provider.dart';
-import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/adaptive_text_button.dart';
 import 'package:monity/widgets/category_tile.dart';
 import 'package:monity/widgets/custom_appbar.dart';
@@ -15,36 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TransactionsSettingsPage extends StatefulWidget {
+class TransactionsSettingsPage extends StatelessWidget {
   const TransactionsSettingsPage({Key? key}) : super(key: key);
-
-  @override
-  State<TransactionsSettingsPage> createState() => _TransactionsSettingsPageState();
-}
-
-class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
-  late List<TransactionCategory> categories;
-  late double? monthlyLimit;
-  bool isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshCategories();
-  }
-
-  Future _refreshCategories() async {
-    setState(() => isLoading = true);
-    categories = await FinancesDatabase.instance.readAllTransactionCategories();
-    monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
-    setState(() => isLoading = false);
-  }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
+    double? monthlyLimit = Provider.of<ConfigProvider>(context).monthlyLimit;
     return View(
       appBar: CustomAppBar(
         title: language.transactionsSettings,
@@ -70,26 +47,26 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                child: isLoading
-                    ? const AdaptiveProgressIndicator()
-                    : Row(children: [
-                        Text(
-                          monthlyLimit != null ? language.yourMonthlyLimit : language.noMonthlyLimit,
-                          style: monthlyLimit != null
-                              ? null
-                              : TextStyle(
-                                  color: Theme.of(context).secondaryHeaderColor,
-                                ),
-                        ),
-                        if (monthlyLimit != null)
-                          Text(
-                            currencyFormat.format(monthlyLimit),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).hintColor,
+                child: Row(
+                  children: [
+                    Text(
+                      monthlyLimit != null ? language.yourMonthlyLimit : language.noMonthlyLimit,
+                      style: monthlyLimit != null
+                          ? null
+                          : TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
                             ),
-                          )
-                      ]),
+                    ),
+                    if (monthlyLimit != null)
+                      Text(
+                        currencyFormat.format(monthlyLimit),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      )
+                  ],
+                ),
               ),
             ),
             Row(
@@ -97,12 +74,12 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               children: [
                 AdaptiveTextButton(
                   text: language.changeMonthlyLimit,
-                  onPressed: _handleSetMonthlyLimit,
+                  onPressed: () => _handleSetMonthlyLimit(context),
                 ),
                 AdaptiveTextButton(
                   text: language.deleteMonthlyLimit,
                   isDescructive: true,
-                  onPressed: _handleDeleteMonthlyLimit,
+                  onPressed: () => _handleDeleteMonthlyLimit(context),
                 ),
               ],
             ),
@@ -110,7 +87,6 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
         ),
         CustomSection(
           title: language.categories,
-          //titleSize: 18,
           titlePadding: 10,
           subtitle: language.categoriesDescription,
           trailing: InkWell(
@@ -119,25 +95,17 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
               Icons.add,
               color: Colors.blue,
             ),
-            onTap: _handleAddCategory,
+            onTap: () => _handleAddCategory(context),
           ),
-          children: isLoading
-              ? [const Center(child: AdaptiveProgressIndicator())]
-              : [
-                  ...categories.map(
-                    (e) => CategoryTile(
-                      category: e,
-                      categories: categories,
-                      refreshCallback: _refreshCategories,
-                    ),
-                  ),
-                ],
-        ),
+          children: const [
+            TransactionCategoriesList(),
+          ],
+        )
       ],
     );
   }
 
-  Future _handleDeleteMonthlyLimit() async {
+  Future _handleDeleteMonthlyLimit(BuildContext context) async {
     var language = AppLocalizations.of(context)!;
     var dialogResult = await showOkCancelAlertDialog(
       context: context,
@@ -149,11 +117,10 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
     );
     if (dialogResult == OkCancelResult.ok) {
       await Provider.of<ConfigProvider>(context, listen: false).deleteMonthlyLimit();
-      await _refreshCategories();
     }
   }
 
-  Future _handleSetMonthlyLimit() async {
+  Future _handleSetMonthlyLimit(BuildContext context) async {
     var language = AppLocalizations.of(context)!;
     var dialogResult = await showTextInputDialog(
       context: context,
@@ -172,11 +139,10 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
         return;
       }
       Provider.of<ConfigProvider>(context, listen: false).setMonthlyLimit(limit);
-      await _refreshCategories();
     }
   }
 
-  Future _handleAddCategory() async {
+  Future _handleAddCategory(BuildContext context) async {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -186,15 +152,28 @@ class _TransactionsSettingsPageState extends State<TransactionsSettingsPage> {
         builder: (context) {
           return Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: CategoryBottomSheet(
+            child: const CategoryBottomSheet<TransactionCategory>(
               mode: CategoryBottomSheetMode.add,
-              categories: categories,
-              onSubmit: (s) {
-                FinancesDatabase.instance.createTransactionCategory(TransactionCategory(name: s));
-              },
             ),
           );
         });
-    _refreshCategories();
+  }
+}
+
+class TransactionCategoriesList extends StatelessWidget {
+  const TransactionCategoriesList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var _categoriesList = Provider.of<ListProvider<TransactionCategory>>(context);
+    return Column(
+      children: [
+        ..._categoriesList.list.map(
+          (e) => CategoryTile<TransactionCategory>(
+            category: e,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/interfaces.dart';
 import 'package:monity/helper/utils.dart';
@@ -8,21 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class CategoryTile extends StatelessWidget {
-  final Category category;
-  final Function refreshCallback;
-  final List<Category> categories;
+class CategoryTile<T extends Category> extends StatelessWidget {
+  final T category;
 
   const CategoryTile({
     Key? key,
-    required this.refreshCallback,
     required this.category,
-    required this.categories,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Container(
@@ -116,34 +115,35 @@ class CategoryTile extends StatelessWidget {
   Future _handleEdit(BuildContext context) async {
     bool hasLabelDropdown = category is InvestmentCategory;
     await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: CategoryBottomSheet(
-              mode: CategoryBottomSheetMode.edit,
-              hasLabelDropdown: hasLabelDropdown,
-              label: hasLabelDropdown ? (category as InvestmentCategory).label : null,
-              categories: categories,
-              placeholder: category.name,
-              onSubmit: (s) async {
-                await category.copy(name: s).updateSelf();
-              },
-              onSubmitWithLabel: (s, l) async {
-                await (category as InvestmentCategory).copy(name: s, label: l?.title).updateSelf();
-              },
-            ),
-          );
-        });
-    refreshCallback();
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: CategoryBottomSheet(
+            mode: CategoryBottomSheetMode.edit,
+            hasLabelDropdown: hasLabelDropdown,
+            label: hasLabelDropdown ? (category as InvestmentCategory).label : null,
+            category: category,
+          ),
+        );
+      },
+    );
   }
 
   Future _handleDelete(BuildContext context) async {
     var language = AppLocalizations.of(context)!;
+    ListProvider categoriesListProvider;
+    if (category is TransactionCategory) {
+      categoriesListProvider = Provider.of<ListProvider<TransactionCategory>>(context, listen: false);
+    } else if (category is InvestmentCategory) {
+      categoriesListProvider = Provider.of<ListProvider<InvestmentCategory>>(context, listen: false);
+    } else {
+      return;
+    }
     var dialogResult = await showOkCancelAlertDialog(
       context: context,
       title: language.attention,
@@ -153,8 +153,7 @@ class CategoryTile extends StatelessWidget {
       cancelLabel: language.abort,
     );
     if (dialogResult == OkCancelResult.ok) {
-      await category.deleteSelf();
-      refreshCallback();
+      categoriesListProvider.delete(category);
     }
   }
 }

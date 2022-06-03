@@ -23,8 +23,17 @@ class InvestmentCategory extends Category {
     required String name,
   }) : super(id: id, name: name);
 
-  bool equals(InvestmentCategory other) {
+  @override
+  bool equals(Category other) {
+    if (other is! InvestmentCategory) {
+      return false;
+    }
     return label == other.label && id == other.id && name == other.name;
+  }
+
+  @override
+  String toString() {
+    return "InvestmentCategory with ID: $id, NAME: $name, LABEL: $label";
   }
 
   Map<String, Object?> toJson() {
@@ -52,7 +61,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: id ?? this.id,
       name: name ?? this.name,
-      label: label ?? this.label,
+      label: label,
     );
   }
 

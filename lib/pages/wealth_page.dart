@@ -55,7 +55,6 @@ class _WealthPageState extends State<WealthPage> {
 
   Future _refreshCategories() async {
     setState(() => isLoading = true);
-    displayedDataPoints = [];
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
     _refreshDataPoints();
     displayWealth = _getCurrentWealth();
@@ -100,6 +99,7 @@ class _WealthPageState extends State<WealthPage> {
                 child: Expanded(
                   child: displayedDataPoints.length > 1
                       ? WealthChart(
+                          //key: Key("wealth-chart-${displayedDataPoints.length}"),
                           currentWealth: _getCurrentWealth(),
                           spots: displayedDataPoints,
                           indexLine: _indexLine,
@@ -217,6 +217,7 @@ class _WealthPageState extends State<WealthPage> {
         );
       },
     );
+    _refreshCategories();
   }
 
   void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {

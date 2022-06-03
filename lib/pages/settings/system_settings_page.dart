@@ -189,7 +189,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                   text: language.generateBackup,
                 ),
                 AdaptiveTextButton(
-                  onPressed: _handleLoadBackup,
+                  onPressed: () => _handleLoadBackup(context),
                   text: language.loadBackup,
                 ),
               ],
@@ -221,7 +221,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
   }
 
-  Future _handleLoadBackup() async {
+  Future _handleLoadBackup(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     var language = AppLocalizations.of(context)!;
     if (result != null) {
@@ -250,6 +250,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
         title: language.load_success,
         message: language.backupRestoredSuccessfully,
       );
+      await Provider.of<ListProvider<TransactionCategory>>(context).fetchList();
+      await Provider.of<ListProvider<InvestmentCategory>>(context).fetchList();
       _refreshDatabaseSize();
     } else {
       // User canceled the picker

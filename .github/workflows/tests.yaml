@@ -1,9 +1,14 @@
 name: Monity-Automated-Tests
 on: [push, workflow_dispatch]
 jobs:
-  drive:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '2.10.2'
+        architecture: x64
+    - run: flutter pub get
     - run: flutter test
+    - run: flutter build ios --release --no-codesign

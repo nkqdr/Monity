@@ -2,7 +2,6 @@ import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/utils.dart';
-import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:monity/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

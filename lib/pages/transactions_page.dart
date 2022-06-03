@@ -1,6 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/finances_database.dart';
-import 'package:monity/backend/models/investment_model.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/showcase_keys_provider.dart';

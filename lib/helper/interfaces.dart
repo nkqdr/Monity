@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:monity/helper/types.dart';
+import 'package:monity/helper/utils.dart';
 
 abstract class Category {
   final int? id;
@@ -17,8 +18,15 @@ abstract class Category {
 }
 
 abstract class DataPointFilterStrategy {
-  final int index = -1;
+  int get index;
+  DateTime get limitDate;
 
-  List<FlSpot> filterDataPoints(List<WealthDataPoint> allDataPoints);
-  List<DateTime> getXValues(List<WealthDataPoint> allDataPoints);
+  List<FlSpot> filterDataPoints(List<WealthDataPoint> allDataPoints) {
+    return Utils.mapIndexed(allDataPoints.where((e) => e.time.isAfter(limitDate)).toList(),
+        (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
+  }
+
+  List<DateTime> getXValues(List<WealthDataPoint> allDataPoints) {
+    return allDataPoints.where((element) => element.time.isAfter(limitDate)).map((e) => e.time).toList();
+  }
 }

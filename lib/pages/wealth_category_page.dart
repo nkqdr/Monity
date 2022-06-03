@@ -77,49 +77,51 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                   )
                 ]
               : [
-                  ...snapshots.reversed.map((e) {
-                    return CupertinoContextMenu(
-                      actions: [
-                        CustomCupertinoContextMenuAction(
-                          child: Text(language.delete),
-                          trailingIcon: CupertinoIcons.delete,
-                          isDestructiveAction: true,
-                          onPressed: () => _handleDeleteSnapshot(e),
-                        )
-                      ],
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Material(
-                          color: Theme.of(context).cardColor,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                dateFormatter.format(e.date),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                  ...snapshots.reversed.map(
+                    (e) {
+                      return CupertinoContextMenu(
+                        actions: [
+                          CustomCupertinoContextMenuAction(
+                            child: Text(language.delete),
+                            trailingIcon: CupertinoIcons.delete,
+                            isDestructiveAction: true,
+                            onPressed: () => _handleDeleteSnapshot(e),
+                          )
+                        ],
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Material(
+                            color: Theme.of(context).cardColor,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  dateFormatter.format(e.date),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                currencyFormat.format(e.amount),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).secondaryHeaderColor,
+                                Text(
+                                  currencyFormat.format(e.amount),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).secondaryHeaderColor,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  })
+                      );
+                    },
+                  )
                 ]),
     );
   }

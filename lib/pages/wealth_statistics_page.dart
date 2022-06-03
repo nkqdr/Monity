@@ -66,7 +66,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
     List<AssetLabel> labelTitles = Provider.of<ConfigProvider>(context).assetAllocationCategories;
     setState(() => isLoading = true);
     var investmentCategories = await FinancesDatabase.instance.readAllInvestmentCategories();
-    investmentCategories = investmentCategories.where((e) => e.label != null).toList();
+    investmentCategories = investmentCategories.where((e) => e.label != ConfigProvider.noneAssetLabel.title).toList();
     if (investmentCategories.isEmpty) {
       noContent = true;
     }

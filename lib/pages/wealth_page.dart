@@ -1,6 +1,7 @@
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/investment_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
+import 'package:monity/helper/interfaces.dart';
 import 'package:monity/helper/types.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/pages/wealth_category_page.dart';
@@ -37,9 +38,8 @@ class _WealthPageState extends State<WealthPage> {
   String subtitle = "";
   late List<WealthDataPoint> allDataPoints;
   late List<FlSpot> displayedDataPoints;
-  int dataIndex = 1;
+  DataPointFilterStrategy dataFilter = _LastYearFilterStrategy();
   bool isLoading = false;
-  bool wealthChartKey = false;
 
   @override
   void initState() {
@@ -48,31 +48,8 @@ class _WealthPageState extends State<WealthPage> {
   }
 
   void _refreshDataPoints() {
-    var now = DateTime.now();
-    List<FlSpot> newDataPoints = [];
-    switch (dataIndex) {
-      case 0:
-        newDataPoints = Utils.mapIndexed(
-            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year, now.month - 1, now.day))).toList(),
-            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
-        break;
-      case 1:
-        newDataPoints = Utils.mapIndexed(
-            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year - 1, now.month, now.day))).toList(),
-            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
-        break;
-      case 2:
-        newDataPoints = Utils.mapIndexed(
-            allDataPoints.where((e) => e.time.isAfter(DateTime(now.year - 5, now.month, now.day))).toList(),
-            (index, WealthDataPoint item) => FlSpot(index.toDouble(), item.value)).toList();
-        break;
-      default:
-        newDataPoints = Utils.mapIndexed(allDataPoints, (index, WealthDataPoint item) {
-          return FlSpot(index.toDouble(), item.value);
-        }).toList();
-    }
     setState(() {
-      displayedDataPoints = newDataPoints;
+      displayedDataPoints = dataFilter.filterDataPoints(allDataPoints);
     });
   }
 
@@ -82,7 +59,6 @@ class _WealthPageState extends State<WealthPage> {
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
     _refreshDataPoints();
     displayWealth = _getCurrentWealth();
-    wealthChartKey = !wealthChartKey;
     setState(() => isLoading = false);
   }
 
@@ -124,7 +100,6 @@ class _WealthPageState extends State<WealthPage> {
                 child: Expanded(
                   child: displayedDataPoints.length > 1
                       ? WealthChart(
-                          key: ValueKey<bool>(wealthChartKey),
                           currentWealth: _getCurrentWealth(),
                           spots: displayedDataPoints,
                           indexLine: _indexLine,
@@ -149,7 +124,7 @@ class _WealthPageState extends State<WealthPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
           child: TabSwitcher(
-            startIndex: dataIndex,
+            startIndex: dataFilter.index,
             tabs: [
               TabElement(
                 title: language.month,
@@ -206,8 +181,21 @@ class _WealthPageState extends State<WealthPage> {
     );
   }
 
+  DataPointFilterStrategy _getStrategyFromIndex(int index) {
+    switch (index) {
+      case 0:
+        return _LastMonthFilterStrategy();
+      case 1:
+        return _LastYearFilterStrategy();
+      case 2:
+        return _LastFiveYearsFilterStrategy();
+      default:
+        return _MaxFilterStrategy();
+    }
+  }
+
   void _tabSwitcherCallback(int index) {
-    setState(() => dataIndex = index);
+    setState(() => dataFilter = _getStrategyFromIndex(index));
     _refreshDataPoints();
   }
 
@@ -217,18 +205,18 @@ class _WealthPageState extends State<WealthPage> {
 
   Future _handleAddSnapshot() async {
     await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const AddSnapshotBottomSheet(),
-          );
-        });
-    _refreshCategories();
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: const AddSnapshotBottomSheet(),
+        );
+      },
+    );
   }
 
   void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
@@ -246,36 +234,9 @@ class _WealthPageState extends State<WealthPage> {
 
       if (value != null && value != displayWealth) {
         HapticFeedback.mediumImpact();
-        List<DateTime> currentXValues;
-        switch (dataIndex) {
-          case 0:
-            currentXValues = allDataPoints
-                .map((e) => e.time)
-                .where((element) =>
-                    element.isAfter(DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day)))
-                .toList();
-            break;
-          case 1:
-            currentXValues = allDataPoints
-                .map((e) => e.time)
-                .where((element) =>
-                    element.isAfter(DateTime(DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)))
-                .toList();
-            break;
-          case 2:
-            currentXValues = allDataPoints
-                .map((e) => e.time)
-                .where((element) =>
-                    element.isAfter(DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day)))
-                .toList();
-            break;
-          default:
-            currentXValues = allDataPoints.map((e) => e.time).toList();
-        }
         setState(() {
           displayWealth = value;
-          // TODO: Look over this line...
-          subtitle = dateFormat.format(currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
+          subtitle = dateFormat.format(dataFilter.getXValues(allDataPoints)[response.lineBarSpots![0].x.toInt()]);
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,
             color: Theme.of(context).secondaryHeaderColor,
@@ -285,4 +246,45 @@ class _WealthPageState extends State<WealthPage> {
       }
     }
   }
+}
+
+class _LastMonthFilterStrategy extends DataPointFilterStrategy {
+  @override
+  int get index => 0;
+
+  @override
+  DateTime get limitDate {
+    var now = DateTime.now();
+    return DateTime(now.year, now.month - 1, now.day);
+  }
+}
+
+class _LastYearFilterStrategy extends DataPointFilterStrategy {
+  @override
+  int get index => 1;
+
+  @override
+  DateTime get limitDate {
+    var now = DateTime.now();
+    return DateTime(now.year - 1, now.month, now.day);
+  }
+}
+
+class _LastFiveYearsFilterStrategy extends DataPointFilterStrategy {
+  @override
+  int get index => 2;
+
+  @override
+  DateTime get limitDate {
+    var now = DateTime.now();
+    return DateTime(now.year - 5, now.month, now.day);
+  }
+}
+
+class _MaxFilterStrategy extends DataPointFilterStrategy {
+  @override
+  int get index => 3;
+
+  @override
+  DateTime get limitDate => DateTime(1, 1, 1);
 }

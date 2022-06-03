@@ -46,9 +46,7 @@ class _SettingNavButtonState extends State<SettingNavButton> {
       child: AnimatedContainer(
         width: double.infinity,
         duration: const Duration(milliseconds: 100),
-        color: _isTapped
-            ? Theme.of(context).canvasColor
-            : Theme.of(context).cardColor,
+        color: _isTapped ? Theme.of(context).canvasColor : Theme.of(context).cardColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           child: Row(
@@ -61,8 +59,9 @@ class _SettingNavButtonState extends State<SettingNavButton> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right,
+                color: Theme.of(context).primaryColor,
               ),
             ],
           ),

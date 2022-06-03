@@ -19,8 +19,9 @@ class InvestmentsSettingsPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: language.investments,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {
@@ -35,9 +36,9 @@ class InvestmentsSettingsPage extends StatelessWidget {
           subtitle: language.investmentCategoriesDescription,
           trailing: InkWell(
             borderRadius: BorderRadius.circular(15),
-            child: const Icon(
+            child: Icon(
               Icons.add,
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
             ),
             onTap: () => _handleAddCategory(context),
           ),

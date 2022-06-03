@@ -72,8 +72,9 @@ class _WealthPageState extends State<WealthPage> {
       appBar: CustomAppBar(
         title: language.wealthTitle,
         right: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.add,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: _handleAddSnapshot,

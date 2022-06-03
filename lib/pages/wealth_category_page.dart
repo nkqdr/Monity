@@ -49,8 +49,9 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
       appBar: CustomAppBar(
         title: widget.category.name,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {

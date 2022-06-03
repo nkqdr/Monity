@@ -13,6 +13,7 @@ class CustomThemes {
     splashColor: Colors.grey[800],
     highlightColor: Colors.grey[900],
     cardColor: Colors.grey[900],
+    primaryColor: Colors.blue,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
@@ -42,6 +43,7 @@ class CustomThemes {
     splashColor: Colors.grey[300],
     highlightColor: Colors.grey[200],
     cardColor: Colors.grey[300],
+    primaryColor: Colors.blue,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.dark,
     ),

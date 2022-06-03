@@ -77,7 +77,7 @@ class _MultipleChoiceSectionState<T> extends State<MultipleChoiceSection<T>> {
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.onBackground,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     )

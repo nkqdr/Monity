@@ -61,8 +61,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
       appBar: CustomAppBar(
         title: language.transactionsTitle,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.filter_alt_rounded,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () => _handleFilterTransactions(dateFormatter),
@@ -74,8 +75,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
           disposeOnTap: true,
           onTargetClick: _handleAddTransaction,
           child: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.add,
+              color: Theme.of(context).primaryColor,
             ),
             splashRadius: 18,
             onPressed: _handleAddTransaction,

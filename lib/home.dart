@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
             child: BottomNavigationBar(
               currentIndex: _currentPage,
               unselectedItemColor: Theme.of(context).colorScheme.onBackground,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
+              selectedItemColor: Theme.of(context).primaryColor,
               onTap: _onItemTapped,
               backgroundColor: Colors.transparent,
               elevation: 0,

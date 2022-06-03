@@ -119,8 +119,9 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       appBar: CustomAppBar(
         title: language.wealthSplitTitle,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {

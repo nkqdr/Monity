@@ -20,8 +20,9 @@ class AppearancePage extends StatelessWidget {
       appBar: CustomAppBar(
         title: language.appearance,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {

@@ -42,8 +42,9 @@ class Dashboard extends StatelessWidget {
           },
           disableBackdropClick: true,
           child: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.settings,
+              color: Theme.of(context).primaryColor,
             ),
             splashRadius: 18,
             onPressed: () async {

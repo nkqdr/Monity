@@ -64,6 +64,23 @@ class _RecurringTransactionsState extends State<RecurringTransactions> {
               future: _recurringTransactions,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height - 150,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(
+                            language.noTransactions,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                   return Column(
                     children: [
                       ...snapshot.data!.map(

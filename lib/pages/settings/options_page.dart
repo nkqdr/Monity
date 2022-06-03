@@ -76,6 +76,7 @@ class OptionsPage extends StatelessWidget {
               value: configProvider.disableRecurringTransactions,
               onChanged: configProvider.setDisableRecurringTransactions,
               isDestructive: true,
+              activeColor: Theme.of(context).errorColor,
             )
           ],
         )
@@ -106,10 +107,12 @@ class _BooleanSetting extends StatelessWidget {
   final Widget? additionalInfoOnActive;
   final bool isDestructive;
   final void Function(bool) onChanged;
+  final Color? activeColor;
   const _BooleanSetting({
     Key? key,
     this.additionalInfoOnActive,
     this.isDestructive = false,
+    this.activeColor,
     required this.title,
     required this.value,
     required this.onChanged,
@@ -138,7 +141,7 @@ class _BooleanSetting extends StatelessWidget {
                 Switch.adaptive(
                   value: value,
                   onChanged: onChanged,
-                  activeColor: Theme.of(context).errorColor,
+                  activeColor: activeColor,
                 )
               ],
             ),

@@ -103,7 +103,6 @@ class FinancesDatabase {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    print("Updating");
     if (oldVersion < 2) {
       db.execute("ALTER TABLE $tableInvestmentCategory ADD COLUMN ${InvestmentCategoryFields.label} TEXT;");
     }

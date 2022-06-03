@@ -33,8 +33,10 @@ class HelpPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Center(
-              child: ClipRRect(
+              child: Material(
                 borderRadius: BorderRadius.circular(15),
+                clipBehavior: Clip.antiAlias,
+                elevation: 10,
                 child: SizedBox(
                   width: 100,
                   height: 100,

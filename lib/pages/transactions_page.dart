@@ -49,7 +49,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
     currentTransactions = _getTransactionsFor(selectedMonth);
     displayedTransactions = currentTransactions.reversed.toList();
-    print("HERE");
     setState(() => isLoading = false);
   }
 

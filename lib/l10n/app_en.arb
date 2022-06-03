@@ -1,13 +1,5 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "lastYear": "Last year",
-  "@lastYear": {
-    "description": "Used for filtering datasets by specific time"
-  },
-   "remainingDays": "Days left:",
+  "remainingDays": "Days left:",
   "@remainingDays": {
     "description": "Remaining days in a month"
   },
@@ -58,10 +50,6 @@
   "lastChange": "Last change:",
   "@lastChange": {
     "description": "String for the last changed date of an investment"
-  },
-  "viewAll": "View all",
-  "@viewAll": {
-    "description": "Text for view-all button"
   },
   "system": "System",
   "@system": {
@@ -131,10 +119,6 @@
   "@saveButton": {
     "description": "Text that appears on a button with save functionality"
   },
-  "whatKindOfTransaction": "What kind of transaction do you want to enter?",
-  "@whatKindOfTransaction": {
-    "description": "Question that asks the user what kind of transaction he wants to enter"
-  },
   "expense": "Expense",
   "@expense": {
     "description": "Expense string"
@@ -143,45 +127,13 @@
   "@income": {
     "description": "Income string"
   },
-  "selectCategoryForTransaction": "Select a category...",
-  "@selectCategoryForTransaction": {
+  "selectCategory": "Select a category...",
+  "@selectCategory": {
     "description": "Tells the user to select a category for this transaction"
-  },
-  "selectCategoryForSnapshot": "Select a category for this snapshot:",
-  "@selectCategoryForSnapshot": {
-    "description": "Tells the user to select a category for this snapshot"
-  },
-  "startTyping": "Start typing...",
-  "@startTyping": {
-    "description": "Indicates to the user that he can just start typing"
-  },
-  "next": "Next",
-  "@next": {
-    "description": "Content for button with next functionality"
-  },
-  "enterAmountOfTransaction": "Enter the amount of this transaction:",
-  "@enterAmountOfTransaction": {
-    "description": "Tells the user to enter the amount of this transaction"
-  },
-  "enterBalanceForInvestment": "Enter the current balance of this investment:",
-  "@enterBalanceForInvestment": {
-    "description": "Tells the user to enter the new balance of this investment"
   },
   "noDatapointsForSelectedPeriod": "There are not enough entries in the selected time period.",
   "@noDatapointsForSelectedPeriod": {
     "description": "Tells the user why a chart is empty."
-  },
-  "review": "Review:",
-  "@review": {
-    "description": "Review for the configured transaction"
-  },
-  "type": "Type:",
-  "@type": {
-    "description": "Type of the configured transaction"
-  },
-  "category": "Category:",
-  "@category": {
-    "description": "Category of the configured transaction"
   },
   "addTransaction": "Add transaction",
   "@addTransaction": {
@@ -190,10 +142,6 @@
   "addSnapshot": "Add snapshot",
   "@addSnapshot": {
     "description": "Title for add snapshot form"
-  },
-  "amount": "Amount:",
-  "@amount": {
-    "description": "Amount of the configured transaction"
   },
   "optionalDescription": "Description (Optional)",
   "@optionalDescription": {
@@ -443,14 +391,6 @@
   "@tapChartForDetails": {
     "description": "Tap chart for details."
   },
-  "finish": "Finish",
-  "@finish": {
-    "description": "Finish."
-  },
-  "showIntroduction": "Show introduction",
-  "@showIntroduction": {
-    "description": "Show introduction."
-  },
   "showAdditionalLicenses": "Additional licenses",
   "@showAdditionalLicenses": {
     "description": "Show introduction."
@@ -463,33 +403,9 @@
   "@introductionTitle": {
     "description": "Introduction."
   },
-  "transactionsIntroduction": "Our transaction system will help you keep track of your income and expenses. Here you can create as many categories as you like to which you can later add individual transactions. \nPopular categories are for example 'Rent', 'Food' and 'Free time'. To make the necessary settings, go to Settings > Transactions in the app.",
-  "@transactionsIntroduction": {
-    "description": "Introduction text that explains transactions to the user."
-  },
-  "transactionsViewIntroduction": "On the transaction page you can see an overview of all entered transactions in a selected month. These transactions always consist of a category, an amount and a type (income or expense). \nAt the top you can filter the list of transactions as you wish.",
-  "@transactionsViewIntroduction": {
-    "description": "Introduction text that explains transactions to the user."
-  },
-  "investmentIntroduction": "Our investment overview helps you keep track of the sum of all your investments and savings. To do this, you first need to define any number of financial investments. Only one name is needed for these financial investments. Common names for financial investments are for example 'Brokerage', 'Savings' or 'Safe'. \nTo define these investments, go to Settings > Investments.",
-  "@investmentIntroduction": {
-    "description": "Introduction text that explains investments to the user."
-  },
-  "investmentViewIntroduction": "In the wealth overview you will now see all your financial investments listed and you can add new entries as you wish. \nFor each day, a maximum of one data point can be created in the graph. All you have to do is to enter the current state of the investment at any time. \nOf course, the more entries, the more accurate the graph.",
-  "@investmentViewIntroduction": {
-    "description": "Introduction text that explains investments to the user."
-  },
-  "dashboardIntroduction": "The Dashboard is your home page. Various statistics are displayed here, which better illustrate the data entered. Moreover, predictions are also made based on your past savings performance and you can always see how much money is left in your budget and how long the current month will last.",
-  "@dashboardIntroduction": {
-    "description": "Introduction text that explains dashboard to the user."
-  },
   "richestManOnEarth": "Congratulations! If you continue saving at this rate, you will be the richest person on earth soon.",
   "@richestManOnEarth": {
     "description": "Explainatory text for when the maximum compound interest limit is reached."
-  },
-  "wealthStatisticsTitle": "Details",
-  "@wealthStatisticsTitle": {
-    "description": "Details."
   },
   "wealthSplitTitle": "Asset Allocation",
   "@wealthSplitTitle": {
@@ -542,5 +458,85 @@
   "configuration": "Configuration",
   "@configuration": {
     "description": "Configuration header to be used inside settings."
+  },
+  "faq": "FAQ",
+  "@faq": {
+    "description": "Title for faq page."
+  },
+  "load_success": "Loaded successfully!",
+  "@load_success": {
+    "description": "Success."
+  },
+  "save_success": "Saved successfully!",
+  "@save_success": {
+    "description": "Success."
+  },
+  "lastBackupCreatedOn": "Last Backup created on: ",
+  "@lastBackupCreatedOn": {
+    "description": "Describes when the last backup has been created."
+  },
+
+
+
+
+  "welcome": "Welcome!",
+  "@welcome": {
+    "description": "Title for welcome page."
+  },
+  "welcome_page_description": "It seems like this is your first time using Monity. Would you like to take a quick tour?",
+  "@welcome_page_description": {
+    "description": "Description for welcome page."
+  },
+  "yes_please": "Yes, please!",
+  "@yes_please": {
+    "description": "Button Text"
+  },
+  "no_thanks": "No thanks, I know my way around.",
+  "@no_thanks": {
+    "description": "Button Text"
+  },
+  "tap_to_view_transactions": "Tap to view the transactions page.",
+  "@tap_to_view_transactions": {
+    "description": "Showcase Text"
+  },
+  "tap_to_view_dashboard": "Tap to view the dashboard page.",
+  "@tap_to_view_dashboard": {
+    "description": "Showcase Text"
+  },
+  "tap_to_view_settings": "Tap to view the settings page.",
+  "@tap_to_view_settings": {
+    "description": "Showcase Text"
+  },
+  "good_job": "Good Job!",
+  "@good_job": {
+    "description": "Showcase Text"
+  },
+  "current_month_tile_showcase": "Now that you have configured your limit, this tile shows you information for the current month. If you long-press this, you also see a visualization of your spending behavior.",
+  "@current_month_tile_showcase": {
+    "description": "Showcase Text"
+  },
+  "this_is_settings_page": "This is the settings page",
+  "@this_is_settings_page": {
+    "description": "Showcase Text"
+  },
+  "this_is_settings_page_desc": "Here you can find all of the settings to view information and customize your app.",
+  "@this_is_settings_page_desc": {
+    "description": "Showcase Text"
+  },
+  "start_set_limit_and_categories": "Start by setting yourself a monthly spending limit and creating transaction categories like 'Food' or 'Freetime'.",
+  "@start_set_limit_and_categories": {
+    "description": "Showcase Text"
+  },
+  "tap_to_create_transaction": "Tap here to create your first transaction. \n(Don't worry, you can delete it later.) \n\nWith every transaction that you save, your dashboard will populate more, and you'll get a clearer insight into your personal finances.",
+  "@tap_to_create_transaction": {
+    "description": "Showcase Text"
+  },
+  "introduction_completed": "You succesfully completed the introduction. Have fun exploring the rest of Monity! If you have any further questions, please refer to the Help-Section in the settings.",
+  "@introduction_completed": {
+    "description": "Showcase Text"
+  },
+  "swipe_down_to_continue": "Swipe down to continue!",
+  "@swipe_down_to_continue": {
+    "description": "Showcase Text"
   }
 }

@@ -1,20 +1,25 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/home.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/theme/custom_themes.dart';
-import 'package:finance_buddy/theme/theme_provider.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/showcase_keys_provider.dart';
+import 'package:monity/home.dart';
+import 'package:monity/l10n/language_provider.dart';
+import 'package:monity/theme/custom_themes.dart';
+import 'package:monity/theme/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   Paint.enableDithering = true;
   bool? firstStartUp = await KeyValueDatabase.getFirstStartup();
   ThemeMode mode = await KeyValueDatabase.getTheme();
   Locale? locale = await KeyValueDatabase.getLocale();
-  bool? budgetOverflowEnabled =
-      await KeyValueDatabase.getBudgetOverflowEnabled();
+  bool? budgetOverflowEnabled = await KeyValueDatabase.getBudgetOverflowEnabled();
   double? monthlyLimit = await KeyValueDatabase.getMonthlyLimit();
   runApp(MyApp(
     initialTheme: mode,
@@ -45,15 +50,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LanguageProvider(locale: selectedLocale)),
+        ChangeNotifierProvider(create: (_) => ThemeProvider(themeMode: initialTheme)),
         ChangeNotifierProvider(
-            create: (_) => LanguageProvider(locale: selectedLocale)),
+          create: (_) => ConfigProvider(
+            budgetOverflowEnabled: budgetOverflowEnabled,
+            monthlyLimit: monthlyLimit,
+          ),
+        ),
         ChangeNotifierProvider(
-            create: (_) => ThemeProvider(themeMode: initialTheme)),
+          create: (_) => ShowcaseProvider(showShowcase: shouldShowInstructions),
+        ),
         ChangeNotifierProvider(
-            create: (_) => ConfigProvider(
-                  budgetOverflowEnabled: budgetOverflowEnabled,
-                  monthlyLimit: monthlyLimit,
-                )),
+          create: (_) => ListProvider<TransactionCategory>(
+            fetchFunction: FinancesDatabase.instance.readAllTransactionCategories,
+            createFunction: FinancesDatabase.instance.createTransactionCategory,
+            deleteFunction: FinancesDatabase.instance.deleteTransactionCategory,
+            updateFunction: FinancesDatabase.instance.updateTransactionCategory,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ListProvider<InvestmentCategory>(
+            fetchFunction: FinancesDatabase.instance.readAllInvestmentCategories,
+            createFunction: FinancesDatabase.instance.createInvestmentCategory,
+            deleteFunction: FinancesDatabase.instance.deleteInvestmentCategory,
+            updateFunction: FinancesDatabase.instance.updateInvestmentCategory,
+          ),
+        ),
       ],
       builder: (context, _) {
         final languageProvider = Provider.of<LanguageProvider>(context);
@@ -80,8 +103,10 @@ class MyApp extends StatelessWidget {
           //   // the app will set it to english but return this to set to Bahasa instead
           //   return const Locale('en', 'US');
           // },
-          home: HomePage(
-            showInstructions: shouldShowInstructions,
+          home: ShowCaseWidget(
+            builder: Builder(
+              builder: (_) => const HomePage(),
+            ),
           ),
         );
       },

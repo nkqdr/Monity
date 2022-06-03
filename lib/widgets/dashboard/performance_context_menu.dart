@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,30 +22,22 @@ class PerformanceContextMenu extends StatelessWidget {
 
   Future<List<WealthDataPoint>> _calculatePredictions() async {
     List<WealthDataPoint> predictions = [];
-    List<WealthDataPoint> allDataPoints =
-        await FinancesDatabase.instance.getAllWealthDatapoints();
+    List<WealthDataPoint> allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
 
     if (allDataPoints.isEmpty) return predictions;
 
     WealthDataPoint oneYearAgo = allDataPoints.lastWhere(
-        (e) => e.time.isBefore(DateTime(
-            DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)),
-        orElse: () => allDataPoints.isEmpty
-            ? WealthDataPoint(time: DateTime.now(), value: 0)
-            : allDataPoints.first);
-    WealthDataPoint currentWealth = allDataPoints.isEmpty
-        ? WealthDataPoint(time: DateTime.now(), value: 0)
-        : allDataPoints.last;
+        (e) => e.time.isBefore(DateTime(DateTime.now().year - 1, DateTime.now().month, DateTime.now().day)),
+        orElse: () => allDataPoints.isEmpty ? WealthDataPoint(time: DateTime.now(), value: 0) : allDataPoints.first);
+    WealthDataPoint currentWealth =
+        allDataPoints.isEmpty ? WealthDataPoint(time: DateTime.now(), value: 0) : allDataPoints.last;
     var difference = currentWealth.value - oneYearAgo.value;
     var percentageDiff = difference / oneYearAgo.value;
     for (var distance in predictionDistances) {
-      double predictionValue = currentWealth.value *
-          pow((100 + (percentageDiff * 100)) / 100, distance);
+      double predictionValue = currentWealth.value * pow((100 + (percentageDiff * 100)) / 100, distance);
       predictions.add(WealthDataPoint(
           time: DateTime(DateTime.now().year + distance),
-          value: predictionValue < maximumAmountOfMoney
-              ? predictionValue
-              : maximumAmountOfMoney));
+          value: predictionValue < maximumAmountOfMoney ? predictionValue : maximumAmountOfMoney));
     }
     return predictions;
   }
@@ -64,14 +56,11 @@ class PerformanceContextMenu extends StatelessWidget {
         if (!predList.hasData) return const AdaptiveProgressIndicator();
 
         if (predList.data!.isEmpty) {
-          currencyFormat = NumberFormat.compactCurrency(
-              locale: locale.toString(), decimalDigits: 2);
+          currencyFormat = NumberFormat.compactCurrency(locale: locale.toString(), decimalDigits: 2);
         } else {
           currencyFormat = predList.data!.last.value < numberFormatThreshold
-              ? NumberFormat.simpleCurrency(
-                  locale: locale.toString(), decimalDigits: 2)
-              : NumberFormat.compactSimpleCurrency(
-                  locale: locale.toString(), decimalDigits: 2);
+              ? NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2)
+              : NumberFormat.compactSimpleCurrency(locale: locale.toString(), decimalDigits: 2);
         }
         return CupertinoContextMenu(
           previewBuilder: (context, animation, child) {
@@ -89,13 +78,12 @@ class PerformanceContextMenu extends StatelessWidget {
             });
             return Material(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 40,
                 height: MediaQuery.of(context).size.height / 3,
                 child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 20.0, left: 20.0, right: 20.0),
+                    padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,9 +103,7 @@ class PerformanceContextMenu extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: Theme.of(context)
-                                      .secondaryHeaderColor
-                                      .withOpacity(animation.value),
+                                  color: Theme.of(context).secondaryHeaderColor.withOpacity(animation.value),
                                 ),
                               ),
                             ),
@@ -125,15 +111,12 @@ class PerformanceContextMenu extends StatelessWidget {
                             ...predList.data!.map((e) => Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            (e.time.year - DateTime.now().year)
-                                                    .toString() +
+                                            (e.time.year - DateTime.now().year).toString() +
                                                 " ${(e.time.year - DateTime.now().year) == 1 ? language.year : language.years}:",
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -145,10 +128,7 @@ class PerformanceContextMenu extends StatelessWidget {
                                               currencyFormat.format(e.value),
                                               style: TextStyle(
                                                 fontSize: 18,
-                                                color: Theme.of(context)
-                                                    .hintColor
-                                                    .withOpacity(
-                                                        animation.value),
+                                                color: Theme.of(context).hintColor.withOpacity(animation.value),
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -165,18 +145,14 @@ class PerformanceContextMenu extends StatelessWidget {
                                 child: Text(language.notEnoughSnapshots,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .secondaryHeaderColor,
+                                      color: Theme.of(context).secondaryHeaderColor,
                                     )),
                               ),
                             ),
-                          if (predList.data!.isNotEmpty &&
-                              predList.data!.last.value == maximumAmountOfMoney)
+                          if (predList.data!.isNotEmpty && predList.data!.last.value == maximumAmountOfMoney)
                             Text(
                               language.richestManOnEarth,
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).secondaryHeaderColor),
+                              style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
                             ),
                         ],
                       ),

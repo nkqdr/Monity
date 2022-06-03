@@ -2,18 +2,27 @@ import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:finance_buddy/backend/database_manager.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/database_manager.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/l10n/language_provider.dart';
+import 'package:monity/theme/theme_provider.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -38,22 +47,23 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   Future _refreshDatabaseSize() async {
     setState(() => isLoading = true);
     databaseSize = await FinancesDatabase.instance.getDatabaseSize();
-    transactionsCount =
-        (await FinancesDatabase.instance.readAllTransactions()).length;
-    snapshotCount =
-        (await FinancesDatabase.instance.readAllInvestmentSnapshots()).length;
+    transactionsCount = (await FinancesDatabase.instance.readAllTransactions()).length;
+    snapshotCount = (await FinancesDatabase.instance.readAllInvestmentSnapshots()).length;
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
+    var configProvider = Provider.of<ConfigProvider>(context);
+    var dateFormatter = Utils.getDateFormatter(context);
     return View(
       appBar: CustomAppBar(
         title: language.system,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {
@@ -73,8 +83,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               width: double.infinity,
               color: Theme.of(context).cardColor,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -104,8 +113,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               width: double.infinity,
               color: Theme.of(context).cardColor,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -135,8 +143,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               width: double.infinity,
               color: Theme.of(context).cardColor,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -178,7 +185,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AdaptiveTextButton(
-                  onPressed: _handleGenerateBackup,
+                  onPressed: () => _handleGenerateBackup(context),
                   text: language.generateBackup,
                 ),
                 AdaptiveTextButton(
@@ -187,6 +194,27 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 ),
               ],
             ),
+            if (configProvider.lastBackupCreated != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: Theme.of(context).secondaryHeaderColor,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    Text(
+                      language.lastBackupCreatedOn + dateFormatter.format(configProvider.lastBackupCreated!),
+                      style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ],
+                ),
+              )
           ],
         ),
       ],
@@ -198,8 +226,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     var language = AppLocalizations.of(context)!;
     if (result != null) {
       File file = File(result.files.single.path!);
-      if (file.path.split("/").last.split(".").last !=
-          DatabaseManager.instance.saveFileType) {
+      if (file.path.split("/").last.split(".").last != DatabaseManager.instance.saveFileType) {
         await showOkAlertDialog(
           context: context,
           title: language.attention,
@@ -220,7 +247,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       }
       await showOkAlertDialog(
         context: context,
-        title: language.attention,
+        title: language.load_success,
         message: language.backupRestoredSuccessfully,
       );
       _refreshDatabaseSize();
@@ -234,10 +261,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (Platform.isIOS) {
       directory = (await getApplicationDocumentsDirectory()).path;
     } else {
-      directory = (await getExternalStorageDirectories(
-              type: StorageDirectory.documents))!
-          .first
-          .path;
+      directory = (await getExternalStorageDirectories(type: StorageDirectory.documents))!.first.path;
     }
     List<FileSystemEntity> files;
     try {
@@ -248,7 +272,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     return files.map((e) => e.path.split("/").last).toList();
   }
 
-  Future _handleGenerateBackup() async {
+  Future _handleGenerateBackup(BuildContext context) async {
     // String? outputFile = await FilePicker.platform.saveFile(
     //   dialogTitle: 'Please select an output file:',
     //   fileName: 'output-file.pdf',
@@ -260,8 +284,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     var language = AppLocalizations.of(context)!;
     List<String> files = await _listofFiles();
     List<String> relevantFileNames = files
-        .where(
-            (e) => e.split(".").last == DatabaseManager.instance.saveFileType)
+        .where((e) => e.split(".").last == DatabaseManager.instance.saveFileType)
         .map((e) => e.split(".").first)
         .toList();
     var dialogResult = await showTextInputDialog(
@@ -273,20 +296,15 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       cancelLabel: language.abort,
       textFields: [
         DialogTextField(validator: (s) {
-          return !relevantFileNames.contains(s)
-              ? null
-              : language.fileAlreadyExists;
+          return !relevantFileNames.contains(s) ? null : language.fileAlreadyExists;
         })
       ],
     );
     if (dialogResult != null) {
-      var result =
-          await DatabaseManager.instance.generateBackup(isEncrypted: true);
+      var result = await DatabaseManager.instance.generateBackup(isEncrypted: true);
       if (Platform.isAndroid) {
         var status = await Permission.storage.status;
-        if (status.isDenied ||
-            status.isRestricted ||
-            status.isPermanentlyDenied) {
+        if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
           var permResult = await Permission.storage.request();
           if (permResult.isGranted) {
             _finishSaving(result, dialogResult.first);
@@ -294,20 +312,18 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           return;
         }
       }
+      Provider.of<ConfigProvider>(context, listen: false).setLastBackupCreated(DateTime.now());
       _finishSaving(result, dialogResult.first);
     }
   }
 
   Future _finishSaving(String result, String fileName) async {
     var language = AppLocalizations.of(context)!;
-    String filePath =
-        await DatabaseManager.instance.saveBackup(result, fileName);
+    String filePath = await DatabaseManager.instance.saveBackup(result, fileName);
     await showOkAlertDialog(
       context: context,
-      title: language.attention,
-      message: Platform.isIOS
-          ? language.savedTo
-          : language.savedToAndroid + "\n" + filePath,
+      title: language.save_success,
+      message: Platform.isIOS ? language.savedTo : language.savedToAndroid + "\n" + filePath,
     );
   }
 
@@ -315,16 +331,13 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1000, i)).toStringAsFixed(decimals)) +
-        ' ' +
-        suffixes[i];
+    return ((bytes / pow(1000, i)).toStringAsFixed(decimals)) + ' ' + suffixes[i];
   }
 
   String _getRandomString(int length) {
     const chars = 'AaBbCcDdEeFfGgHhiJjKkLMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
     Random _rnd = Random();
-    return String.fromCharCodes(Iterable.generate(
-        length, (_) => chars.codeUnitAt(_rnd.nextInt(chars.length))));
+    return String.fromCharCodes(Iterable.generate(length, (_) => chars.codeUnitAt(_rnd.nextInt(chars.length))));
   }
 
   Future _handleDeleteData() async {
@@ -345,6 +358,12 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
     if (dialogResult != null) {
       await FinancesDatabase.instance.deleteDatabase();
+      await KeyValueDatabase.deleteAllData();
+      Provider.of<ListProvider<InvestmentCategory>>(context, listen: false).reset();
+      Provider.of<ListProvider<TransactionCategory>>(context, listen: false).reset();
+      Provider.of<LanguageProvider>(context, listen: false).reset();
+      Provider.of<ConfigProvider>(context, listen: false).reset();
+      Provider.of<ThemeProvider>(context, listen: false).reset();
       _refreshDatabaseSize();
     }
   }

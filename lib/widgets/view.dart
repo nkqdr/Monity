@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -28,50 +28,50 @@ class View extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: Theme.of(context).appBarTheme.systemOverlayStyle
-              as SystemUiOverlayStyle,
+          value: Theme.of(context).appBarTheme.systemOverlayStyle as SystemUiOverlayStyle,
           child: SafeArea(
             bottom: false, //!safeAreaBottomDisabled,
             top: !safeAreaTopDisabled,
             child: safeAreaTopDisabled
                 ? Stack(
                     children: [
-                      ListView(
-                        children: fixedAppBar
-                            ? [
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).viewPadding.top +
-                                          30,
-                                ),
-                                ...children
-                              ]
-                            : [
-                                appBar ?? Container(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                ...children
-                              ],
+                      ListView.builder(
+                        itemCount: fixedAppBar ? children.length + 1 : children.length + 2,
+                        itemBuilder: (context, index) {
+                          if (fixedAppBar) {
+                            if (index == 0) {
+                              return SizedBox(
+                                height: MediaQuery.of(context).viewPadding.top + 30,
+                              );
+                            } else {
+                              return children[index - 1];
+                            }
+                          } else {
+                            if (index == 0) {
+                              return appBar ?? Container();
+                            } else if (index == 1) {
+                              return const SizedBox(
+                                height: 20,
+                              );
+                            } else {
+                              return children[index - 2];
+                            }
+                          }
+                        },
                       ),
                       if (fixedAppBar)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: BackdropFilter(
-                            filter:
-                                ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
+                            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
                             child: Container(
-                              height:
-                                  MediaQuery.of(context).viewPadding.top + 48,
-                              color:
-                                  appBarBackgroundColor ?? Colors.transparent,
+                              height: MediaQuery.of(context).viewPadding.top + 48,
+                              color: appBarBackgroundColor ?? Colors.transparent,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SizedBox(
-                                    height: safeAreaTopDisabled
-                                        ? MediaQuery.of(context).viewPadding.top
-                                        : 0,
+                                    height: safeAreaTopDisabled ? MediaQuery.of(context).viewPadding.top : 0,
                                   ),
                                   appBar ?? Container(),
                                 ],
@@ -81,13 +81,11 @@ class View extends StatelessWidget {
                         ),
                       Container(
                         margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).viewPadding.bottom),
+                            top: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.bottom),
                         height: MediaQuery.of(context).viewPadding.bottom,
                         child: ClipRect(
                           child: BackdropFilter(
-                            filter:
-                                ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
+                            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 20.0),
                             child: Container(
                               color: Colors.transparent,
                             ),
@@ -108,21 +106,28 @@ class View extends StatelessWidget {
       children: [
         if (fixedAppBar) appBar ?? Container(),
         Flexible(
-          child: ListView(
-            children: fixedAppBar
-                ? [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ...children
-                  ]
-                : [
-                    appBar ?? Container(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ...children
-                  ],
+          child: ListView.builder(
+            itemCount: fixedAppBar ? children.length + 1 : children.length + 2,
+            itemBuilder: (context, index) {
+              if (fixedAppBar) {
+                if (index == 0) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                }
+                return children[index - 1];
+              } else {
+                if (index == 0) {
+                  return appBar ?? Container();
+                } else if (index == 1) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                } else {
+                  return children[index - 2];
+                }
+              }
+            },
           ),
         ),
       ],

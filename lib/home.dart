@@ -1,8 +1,13 @@
 import 'dart:ui';
 
-import 'package:finance_buddy/pages/instructions_page.dart';
+import 'package:monity/helper/showcase_keys_provider.dart';
+import 'package:monity/widgets/adaptive_filled_button.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
+import 'package:monity/widgets/custom_showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/dashboard_page.dart';
 import 'pages/wealth_page.dart';
@@ -10,10 +15,8 @@ import 'pages/transactions_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  final bool showInstructions;
   const HomePage({
     Key? key,
-    required this.showInstructions,
   }) : super(key: key);
 
   @override
@@ -26,65 +29,34 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (widget.showInstructions) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        _showInstructions();
-      });
-    }
-  }
-
-  Future _showInstructions() async {
-    double topInsets = (MediaQuery.of(context).viewPadding.top);
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.grey[900],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        isDismissible: false,
-        enableDrag: false,
-        builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).cardColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(15),
-              ),
-              boxShadow: const [
-                BoxShadow(blurRadius: 10),
-              ],
+    var showcaseProvider = Provider.of<ShowcaseProvider>(context, listen: false);
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      if (showcaseProvider.showShowcase) {
+        await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: false,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: topInsets + 10,
-                left: 20,
-                right: 20,
-              ),
-              child: const InstructionsPage(
-                key: Key("instructions-page-widget"),
-              ),
-            ),
-          );
-        });
+            builder: (context) {
+              return const _WelcomePage();
+            });
+      }
+      if (showcaseProvider.userWantsTour) {
+        showcaseProvider.startTourIfNeeded(context, [showcaseProvider.settingsKey]);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-
+    var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
     return Scaffold(
       extendBody: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: Theme.of(context).appBarTheme.systemOverlayStyle
-            as SystemUiOverlayStyle,
+        value: Theme.of(context).appBarTheme.systemOverlayStyle as SystemUiOverlayStyle,
         child: _getCurrentPage(),
       ),
       bottomNavigationBar: Theme(
@@ -102,21 +74,46 @@ class _HomePageState extends State<HomePage> {
             child: BottomNavigationBar(
               currentIndex: _currentPage,
               unselectedItemColor: Theme.of(context).colorScheme.onBackground,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
+              selectedItemColor: Theme.of(context).primaryColor,
               onTap: _onItemTapped,
               backgroundColor: Colors.transparent,
               elevation: 0,
               selectedFontSize: 12,
               items: [
                 BottomNavigationBarItem(
-                  icon: const Icon(
-                    Icons.compare_arrows_rounded,
+                  icon: CustomShowcase(
+                    showcaseKey: showcaseKeys.transactionsKey,
+                    title: language.transactionsTitle,
+                    description: language.tap_to_view_transactions,
+                    overlayPadding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    disableBackdropClick: true,
+                    disposeOnTap: true,
+                    onTargetClick: () {
+                      setState(() => _currentPage = 0);
+                      showcaseKeys.startTourIfNeeded(context, [showcaseKeys.addTransactionKey],
+                          delay: const Duration(milliseconds: 200));
+                    },
+                    child: const Icon(
+                      Icons.compare_arrows_rounded,
+                    ),
                   ),
                   label: language.transactionsTitle,
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(
-                    Icons.bar_chart_rounded,
+                  icon: CustomShowcase(
+                    showcaseKey: showcaseKeys.dashboardKey,
+                    title: language.dashboardTitle,
+                    description: language.tap_to_view_dashboard,
+                    overlayPadding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    disableBackdropClick: true,
+                    disposeOnTap: true,
+                    onTargetClick: () async {
+                      setState(() => _currentPage = 1);
+                      showcaseKeys.showCompletedScreen(context);
+                    },
+                    child: const Icon(
+                      Icons.bar_chart_rounded,
+                    ),
                   ),
                   label: language.dashboardTitle,
                 ),
@@ -151,5 +148,57 @@ class _HomePageState extends State<HomePage> {
       default:
         return Container();
     }
+  }
+}
+
+class _WelcomePage extends StatelessWidget {
+  const _WelcomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var showcaseProvider = Provider.of<ShowcaseProvider>(context, listen: false);
+    var language = AppLocalizations.of(context)!;
+    return CustomBottomSheet(
+      child: Container(
+        constraints: const BoxConstraints(maxHeight: 500),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              language.welcome,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
+            ),
+          ),
+          Text(
+            language.welcome_page_description,
+          ),
+          const Spacer(),
+          Center(
+            child: AdaptiveFilledButton(
+              child: Text(language.yes_please),
+              onPressed: () {
+                showcaseProvider.setUserWantsTour(true);
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0, top: 10.0),
+            child: Center(
+              child: AdaptiveTextButton(
+                text: language.no_thanks,
+                onPressed: () async {
+                  await showcaseProvider.setShowcase();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
   }
 }

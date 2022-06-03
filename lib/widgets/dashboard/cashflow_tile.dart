@@ -1,13 +1,12 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/dashboard_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class CashFlowTile extends StatefulWidget {
   const CashFlowTile({Key? key}) : super(key: key);
@@ -45,15 +44,11 @@ class _CashFlowTileState extends State<CashFlowTile> {
     switch (dataIndex) {
       case 0:
         transactions = allTransactions
-            .where((element) =>
-                element.date.month == DateTime.now().month &&
-                element.date.year == DateTime.now().year)
+            .where((element) => element.date.month == DateTime.now().month && element.date.year == DateTime.now().year)
             .toList();
         break;
       case 1:
-        transactions = allTransactions
-            .where((element) => element.date.year == DateTime.now().year)
-            .toList();
+        transactions = allTransactions.where((element) => element.date.year == DateTime.now().year).toList();
         break;
       default:
         transactions = allTransactions;
@@ -100,23 +95,13 @@ class _CashFlowTileState extends State<CashFlowTile> {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    final provider = Provider.of<LanguageProvider>(context);
-    DateFormat dateFormat;
-    if (provider.locale == null) {
-      dateFormat =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormat = DateFormat.yMMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormat = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return DashboardTile(
       subtitle: titleNum != null
           ? currencyFormat.format(titleNum)
-          : (dataIndex == 0
-              ? language.thisMonth
-              : (dataIndex == 1 ? language.thisYear : language.maxTime)),
+          : (dataIndex == 0 ? language.thisMonth : (dataIndex == 1 ? language.thisYear : language.maxTime)),
       title: subtitle ?? language.cashFlow,
       subtitleStyle: const TextStyle(
         fontWeight: FontWeight.bold,
@@ -171,8 +156,7 @@ class _CashFlowTileState extends State<CashFlowTile> {
                   child: Text(
                     language.noDatapointsForSelectedPeriod,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).secondaryHeaderColor),
+                    style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
                   ),
                 ),
         ),
@@ -205,12 +189,8 @@ class _CashFlowTileState extends State<CashFlowTile> {
     }
   }
 
-  void _handleChartTouch(
-      FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
-    if (event is FlTapUpEvent ||
-        event is FlPanCancelEvent ||
-        event is FlPanEndEvent ||
-        event is FlLongPressEnd) {
+  void _handleChartTouch(FlTouchEvent event, LineTouchResponse? response, DateFormat dateFormat) {
+    if (event is FlTapUpEvent || event is FlPanCancelEvent || event is FlPanEndEvent || event is FlLongPressEnd) {
       setState(() {
         subtitle = null;
         _indexLine = null;
@@ -226,9 +206,7 @@ class _CashFlowTileState extends State<CashFlowTile> {
         HapticFeedback.mediumImpact();
         setState(() {
           titleNum = value;
-          subtitle = index > 0
-              ? dateFormat.format(dates[index - 1])
-              : dateFormat.format(_getStartForInterval());
+          subtitle = index > 0 ? dateFormat.format(dates[index - 1]) : dateFormat.format(_getStartForInterval());
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,
             color: Theme.of(context).secondaryHeaderColor,
@@ -240,11 +218,12 @@ class _CashFlowTileState extends State<CashFlowTile> {
   }
 }
 
-class CashFlowChart extends StatefulWidget {
+class CashFlowChart extends StatelessWidget {
   final List<FlSpot> spots;
   final double maxValue;
   final VerticalLine? indexLine;
   final void Function(FlTouchEvent, LineTouchResponse?)? touchHandler;
+  final double cutOffYValue = 0.0;
 
   const CashFlowChart({
     Key? key,
@@ -257,19 +236,13 @@ class CashFlowChart extends StatefulWidget {
         super(key: key);
 
   @override
-  _CashFlowChartState createState() => _CashFlowChartState();
-}
-
-class _CashFlowChartState extends State<CashFlowChart> {
-  final double cutOffYValue = 0.0;
-  @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
         minX: 0,
-        maxX: widget.spots.length - 1,
-        minY: -widget.maxValue,
-        maxY: widget.maxValue,
+        maxX: spots.length - 1,
+        minY: -maxValue,
+        maxY: maxValue,
         backgroundColor: Colors.transparent,
         extraLinesData: ExtraLinesData(
           horizontalLines: [
@@ -278,14 +251,14 @@ class _CashFlowChartState extends State<CashFlowChart> {
               color: Theme.of(context).secondaryHeaderColor,
             )
           ],
-          verticalLines: widget.indexLine != null ? [widget.indexLine!] : [],
+          verticalLines: indexLine != null ? [indexLine!] : [],
         ),
         titlesData: FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
         gridData: FlGridData(show: false),
         lineTouchData: LineTouchData(
           enabled: false,
-          touchCallback: widget.touchHandler,
+          touchCallback: touchHandler,
         ),
         lineBarsData: [
           LineChartBarData(
@@ -306,7 +279,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
             dotData: FlDotData(show: false),
             barWidth: 4,
             colors: [_getLineColor()],
-            spots: widget.spots,
+            spots: spots,
           )
         ],
       ),
@@ -314,12 +287,12 @@ class _CashFlowChartState extends State<CashFlowChart> {
   }
 
   FlSpot _getLastRelevantSpot() {
-    for (var i = 1; i < widget.spots.length; i++) {
-      if (widget.spots[i].y == 0) {
-        return widget.spots[i - 1];
+    for (var i = 1; i < spots.length; i++) {
+      if (spots[i].y == 0) {
+        return spots[i - 1];
       }
     }
-    return widget.spots.last;
+    return spots.last;
   }
 
   Color _getLineColor() {

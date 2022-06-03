@@ -1,105 +1,67 @@
-import 'package:finance_buddy/backend/models/investment_model.dart';
+import 'package:monity/backend/models/investment_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monity/helper/config_provider.dart';
 
 void main() {
   test('investment category correctly converts to JSON', () {
-    const categoryOne = InvestmentCategory(name: "Bank");
+    var categoryOne = InvestmentCategory(name: "Bank", label: ConfigProvider.noneAssetLabel.title);
     var json = categoryOne.toJson();
-    Map<String, Object?> expected = {
-      "_id": null,
-      "name": "Bank",
-      "label": null
-    };
+    Map<String, Object?> expected = {"_id": null, "name": "Bank", "label": "None"};
     expect(json, expected);
 
-    const categoryTwo =
-        InvestmentCategory(name: "Depot", id: 51, label: "Invested");
+    const categoryTwo = InvestmentCategory(name: "Depot", id: 51, label: "Invested");
     json = categoryTwo.toJson();
     expected = {"_id": 51, "name": "Depot", "label": "Invested"};
     expect(json, expected);
   });
 
   test('investment category converts from JSON', () {
-    Map<String, Object?> categoryOneJSON = {
-      "_id": 1,
-      "name": "Bank",
-      "label": null
-    };
-    const expectOne = InvestmentCategory(name: "Bank", id: 1);
-    expect(
-        expectOne.equals(InvestmentCategory.fromJson(categoryOneJSON)), true);
+    Map<String, Object?> categoryOneJSON = {"_id": 1, "name": "Bank", "label": "None"};
+    var expectOne = InvestmentCategory(name: "Bank", id: 1, label: ConfigProvider.noneAssetLabel.title);
+    expect(expectOne.equals(InvestmentCategory.fromJson(categoryOneJSON)), true);
 
-    Map<String, Object?> categoryTwoJSON = {
-      "_id": null,
-      "name": "Bank",
-      "label": null
-    };
-    const expectTwo = InvestmentCategory(name: "Bank");
-    expect(
-        expectTwo.equals(InvestmentCategory.fromJson(categoryTwoJSON)), true);
+    Map<String, Object?> categoryTwoJSON = {"_id": null, "name": "Bank", "label": "None"};
+    var expectTwo = InvestmentCategory(name: "Bank", label: ConfigProvider.noneAssetLabel.title);
+    expect(expectTwo.equals(InvestmentCategory.fromJson(categoryTwoJSON)), true);
 
-    Map<String, Object?> categoryThreeJSON = {
-      "_id": null,
-      "name": "Bank",
-      "label": "Saved"
-    };
+    Map<String, Object?> categoryThreeJSON = {"_id": null, "name": "Bank", "label": "Saved"};
     const expectThree = InvestmentCategory(name: "Bank", label: "Saved");
-    expect(expectThree.equals(InvestmentCategory.fromJson(categoryThreeJSON)),
-        true);
+    expect(expectThree.equals(InvestmentCategory.fromJson(categoryThreeJSON)), true);
   });
 
   test('investment category copy method', () {
-    const category = InvestmentCategory(name: "Cash");
+    var category = InvestmentCategory(name: "Cash", label: ConfigProvider.noneAssetLabel.title);
 
     var copyOne = category.copy(name: "Bank", id: 1);
-    Map<String, Object?> expectOneJSON = {
-      "_id": 1,
-      "name": "Bank",
-      "label": null
-    };
+    Map<String, Object?> expectOneJSON = {"_id": 1, "name": "Bank", "label": "None"};
     expect(copyOne.toJson(), expectOneJSON);
 
     var copyTwo = category.copy(label: "Invested");
-    Map<String, Object?> expectTwoJSON = {
-      "_id": null,
-      "name": "Cash",
-      "label": "Invested"
-    };
+    Map<String, Object?> expectTwoJSON = {"_id": null, "name": "Cash", "label": "Invested"};
     expect(copyTwo.toJson(), expectTwoJSON);
 
     var copyThree = copyTwo.copy(name: "Depot");
-    Map<String, Object?> expectThreeJSON = {
-      "_id": null,
-      "name": "Depot",
-      "label": "Invested"
-    };
+    Map<String, Object?> expectThreeJSON = {"_id": null, "name": "Depot", "label": "Invested"};
     expect(copyThree.toJson(), expectThreeJSON);
   });
 
   test('investment snapshot converts to JSON', () {
-    var snapshotOne = InvestmentSnapshot(
-        amount: 125.12,
-        date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000),
-        categoryId: 5);
+    var snapshotOne =
+        InvestmentSnapshot(amount: 125.12, date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000), categoryId: 5);
     Map<String, Object?> expectedOne = {
       "_id": null,
       "amount": 125.12,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 5
     };
     expect(snapshotOne.toJson(), expectedOne);
 
     var snapshotTwo = InvestmentSnapshot(
-        id: 25,
-        amount: 1225.12,
-        date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000),
-        categoryId: 5);
+        id: 25, amount: 1225.12, date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000), categoryId: 5);
     Map<String, Object?> expectedTwo = {
       "_id": 25,
       "amount": 1225.12,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 5
     };
     expect(snapshotTwo.toJson(), expectedTwo);
@@ -109,46 +71,33 @@ void main() {
     Map<String, Object?> snapshotOneJSON = {
       "_id": 25,
       "amount": 1225.12,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 5
     };
     var expectOne = InvestmentSnapshot(
-        id: 25,
-        amount: 1225.12,
-        date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000),
-        categoryId: 5);
-    expect(
-        expectOne.equals(InvestmentSnapshot.fromJson(snapshotOneJSON)), true);
+        id: 25, amount: 1225.12, date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000), categoryId: 5);
+    expect(expectOne.equals(InvestmentSnapshot.fromJson(snapshotOneJSON)), true);
 
     Map<String, Object?> snapshotTwoJSON = {
       "_id": null,
       "amount": 125.12,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 5
     };
-    var expectTwo = InvestmentSnapshot(
-        amount: 125.12,
-        date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000),
-        categoryId: 5);
-    expect(
-        expectTwo.equals(InvestmentSnapshot.fromJson(snapshotTwoJSON)), true);
+    var expectTwo =
+        InvestmentSnapshot(amount: 125.12, date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000), categoryId: 5);
+    expect(expectTwo.equals(InvestmentSnapshot.fromJson(snapshotTwoJSON)), true);
   });
 
   test('investment snapshot copy method', () {
     var snapshotOne = InvestmentSnapshot(
-        id: 25,
-        amount: 1225.12,
-        date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000),
-        categoryId: 5);
+        id: 25, amount: 1225.12, date: DateTime.fromMicrosecondsSinceEpoch(1640901600000000), categoryId: 5);
 
     var copyOne = snapshotOne.copy(amount: 150);
     Map<String, Object?> expectOneJSON = {
       "_id": 25,
       "amount": 150,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 5
     };
     expect(copyOne.toJson(), expectOneJSON);
@@ -157,8 +106,7 @@ void main() {
     Map<String, Object?> expectTwoJSON = {
       "_id": 25,
       "amount": 1225.12,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 10
     };
     expect(copyTwo.toJson(), expectTwoJSON);
@@ -167,8 +115,7 @@ void main() {
     Map<String, Object?> expectThreeJSON = {
       "_id": 1,
       "amount": 1500,
-      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000)
-          .toIso8601String(),
+      "date": DateTime.fromMicrosecondsSinceEpoch(1640901600000000).toIso8601String(),
       "category_id": 10
     };
     expect(copyThree.toJson(), expectThreeJSON);

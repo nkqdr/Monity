@@ -16,7 +16,7 @@ class CustomBottomSheet extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
+          top: Radius.circular(15),
         ),
         color: Theme.of(context).cardColor,
         boxShadow: const [

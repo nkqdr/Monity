@@ -1,7 +1,6 @@
-import 'package:finance_buddy/pages/instructions_page.dart';
-import 'package:finance_buddy/widgets/adaptive_text_button.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,8 +16,9 @@ class HelpPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: language.about,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {
@@ -34,7 +34,7 @@ class HelpPage extends StatelessWidget {
           children: [
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
                 child: SizedBox(
                   width: 100,
                   height: 100,
@@ -44,6 +44,16 @@ class HelpPage extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
+              child: Text(
+                "Monity",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 5.0),
               child: Text("Version $appVersion"),
             ),
             const Padding(
@@ -54,15 +64,6 @@ class HelpPage extends StatelessWidget {
         ),
         const SizedBox(
           height: 100,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
-          child: AdaptiveTextButton(
-            text: language.showIntroduction,
-            onPressed: () => _showInstructions(context),
-          ),
         ),
         const SizedBox(height: 5),
         Container(
@@ -84,7 +85,7 @@ class HelpPage extends StatelessWidget {
       applicationName: "Monity",
       applicationVersion: appVersion,
       applicationIcon: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         child: SizedBox(
           width: 100,
           height: 100,
@@ -92,44 +93,5 @@ class HelpPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future _showInstructions(BuildContext context) async {
-    double topInsets = (MediaQuery.of(context).viewPadding.top);
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.grey[900],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).cardColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-              boxShadow: const [
-                BoxShadow(blurRadius: 10),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: topInsets + 10,
-                left: 20,
-                right: 20,
-              ),
-              child: const InstructionsPage(),
-            ),
-          );
-        });
   }
 }

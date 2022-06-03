@@ -1,9 +1,11 @@
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/helper/types.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/helper/types.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigProvider extends ChangeNotifier {
+  static final noneAssetLabel = AssetLabel(title: "None", displayColor: Colors.black);
   List<AssetLabel> assetAllocationCategories = [
     AssetLabel(
       title: "Invested",
@@ -20,28 +22,52 @@ class ConfigProvider extends ChangeNotifier {
   ];
   bool budgetOverflowEnabled;
   double? monthlyLimit;
+  DateTime? lastBackupCreated;
 
   ConfigProvider({
     required this.budgetOverflowEnabled,
     required this.monthlyLimit,
-  });
+  }) {
+    _setUpValues();
+  }
 
-  deleteMonthlyLimit() async {
+  Future _setUpValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? dateString = prefs.getString(lastBackupCreatedKey);
+    lastBackupCreated = dateString != null ? DateTime.parse(dateString) : null;
+  }
+
+  Future setLastBackupCreated(DateTime time) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(lastBackupCreatedKey, time.toIso8601String());
+    notifyListeners();
+  }
+
+  Future deleteMonthlyLimit() async {
     monthlyLimit = null;
-    await KeyValueDatabase.deleteMonthlyLimit();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(monthlyLimitKey);
     notifyListeners();
   }
 
-  setMonthlyLimit(double value) async {
+  Future setMonthlyLimit(double value) async {
     monthlyLimit = value;
-    await KeyValueDatabase.setMonthlyLimit(value);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(monthlyLimitKey, value);
     notifyListeners();
   }
 
-  setBudgetOverflow(bool value) {
+  Future setBudgetOverflow(bool value) async {
     budgetOverflowEnabled = value;
-    KeyValueDatabase.setBudgetOverflowEnabled(value);
-    KeyValueDatabase.deleteBudgetOverflow();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(budgetOverflowEnabledKey, value);
+    await prefs.remove(budgetOverflowKey);
+    notifyListeners();
+  }
+
+  void reset() {
+    budgetOverflowEnabled = false;
+    monthlyLimit = null;
     notifyListeners();
   }
 }

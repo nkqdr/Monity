@@ -1,9 +1,9 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/key_value_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/config_provider.dart';
-import 'package:finance_buddy/widgets/dashboard/current_month_context_menu.dart';
-import 'package:finance_buddy/widgets/dashboard_tile.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/config_provider.dart';
+import 'package:monity/widgets/dashboard/current_month_context_menu.dart';
+import 'package:monity/widgets/dashboard_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -12,11 +12,9 @@ import 'package:provider/provider.dart';
 class CurrentMonthTile extends StatelessWidget {
   const CurrentMonthTile({Key? key}) : super(key: key);
 
-  Widget currentMonthContextMenu(
-      BuildContext context, double? remainingAmount, double? monthlyLimit) {
+  Widget currentMonthContextMenu(BuildContext context, double? remainingAmount, double? monthlyLimit) {
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return CurrentMonthContextMenu(
       daysRemaining: int.parse(_getCurrentDaysRemaining()),
@@ -90,10 +88,8 @@ class CurrentMonthTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double? monthlyLimit = Provider.of<ConfigProvider>(context).monthlyLimit;
-    bool budgetOverflowEnabled =
-        Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
-    Future<double?> remainingAmount =
-        _getRemainingAmount(budgetOverflowEnabled, monthlyLimit);
+    bool budgetOverflowEnabled = Provider.of<ConfigProvider>(context).budgetOverflowEnabled;
+    Future<double?> remainingAmount = _getRemainingAmount(budgetOverflowEnabled, monthlyLimit);
     return FutureBuilder<double?>(
         future: remainingAmount,
         builder: (context, remaining) {
@@ -103,9 +99,8 @@ class CurrentMonthTile extends StatelessWidget {
 
   double _getThisMonthSpentAmount(allTransactions) {
     var currentDate = DateTime.now();
-    var thisMonthTransactions = allTransactions.where((element) =>
-        element.date.month == currentDate.month &&
-        element.date.year == currentDate.year);
+    var thisMonthTransactions = allTransactions
+        .where((element) => element.date.month == currentDate.month && element.date.year == currentDate.year);
 
     double sum = 0;
     for (var month in thisMonthTransactions) {
@@ -116,8 +111,7 @@ class CurrentMonthTile extends StatelessWidget {
     return sum;
   }
 
-  Future<double?> _getRemainingAmount(
-      bool budgetOverflowEnabled, double? monthlyLimit) async {
+  Future<double?> _getRemainingAmount(bool budgetOverflowEnabled, double? monthlyLimit) async {
     var currentDate = DateTime.now();
     var transactions = await FinancesDatabase.instance.readAllTransactions();
     if (transactions.isEmpty) return monthlyLimit;
@@ -125,17 +119,12 @@ class CurrentMonthTile extends StatelessWidget {
 
     var lastTransaction = transactions.last;
 
-    if (lastTransaction.date
-            .isBefore(DateTime(currentDate.year, currentDate.month)) &&
-        budgetOverflowEnabled) {
-      var previousMonthMonth =
-          currentDate.month == 1 ? 12 : currentDate.month - 1;
-      var previousMonthYear =
-          currentDate.month == 1 ? currentDate.year - 1 : currentDate.year;
+    if (lastTransaction.date.isBefore(DateTime(currentDate.year, currentDate.month)) && budgetOverflowEnabled) {
+      var previousMonthMonth = currentDate.month == 1 ? 12 : currentDate.month - 1;
+      var previousMonthYear = currentDate.month == 1 ? currentDate.year - 1 : currentDate.year;
 
-      var lastMonthTransactions = transactions.where((element) =>
-          element.date.month == previousMonthMonth &&
-          element.date.year == previousMonthYear);
+      var lastMonthTransactions = transactions
+          .where((element) => element.date.month == previousMonthMonth && element.date.year == previousMonthYear);
 
       double lastMonthSum = 0;
       for (var month in lastMonthTransactions) {
@@ -155,8 +144,7 @@ class CurrentMonthTile extends StatelessWidget {
 
   String _getCurrentDaysRemaining() {
     DateTime currentDate = DateTime.now();
-    int numberOfDays =
-        DateUtils.getDaysInMonth(currentDate.year, currentDate.month);
+    int numberOfDays = DateUtils.getDaysInMonth(currentDate.year, currentDate.month);
     int daysRemaining = numberOfDays - currentDate.day + 1;
     return daysRemaining.toString();
   }

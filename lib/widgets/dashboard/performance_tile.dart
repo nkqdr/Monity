@@ -1,6 +1,6 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/types.dart';
-import 'package:finance_buddy/widgets/dashboard/performance_context_menu.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/types.dart';
+import 'package:monity/widgets/dashboard/performance_context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../dashboard_tile.dart';
@@ -24,8 +24,7 @@ class _PerformanceTileState extends State<PerformanceTile> {
   }
 
   Future _refreshPerformance() async {
-    var dataPointsList =
-        await FinancesDatabase.instance.getAllWealthDatapoints();
+    var dataPointsList = await FinancesDatabase.instance.getAllWealthDatapoints();
     setState(() {
       dataPoints = dataPointsList;
     });
@@ -35,12 +34,9 @@ class _PerformanceTileState extends State<PerformanceTile> {
     switch (dataIndex) {
       case 0:
         List<WealthDataPoint> relevantDPs = dataPoints
-            .where((e) =>
-                e.time.year == DateTime.now().year &&
-                e.time.month == DateTime.now().month)
+            .where((e) => e.time.year == DateTime.now().year && e.time.month == DateTime.now().month)
             .toList();
-        double firstDataPoint =
-            relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
+        double firstDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
         double lastDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.last.value;
         var currentDifference = lastDataPoint - firstDataPoint;
         setState(() {
@@ -48,11 +44,8 @@ class _PerformanceTileState extends State<PerformanceTile> {
         });
         break;
       case 1:
-        List<WealthDataPoint> relevantDPs = dataPoints
-            .where((e) => e.time.year == DateTime.now().year)
-            .toList();
-        double firstDataPoint =
-            relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
+        List<WealthDataPoint> relevantDPs = dataPoints.where((e) => e.time.year == DateTime.now().year).toList();
+        double firstDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.first.value;
         double lastDataPoint = relevantDPs.isEmpty ? 1 : relevantDPs.last.value;
         var currentDifference = lastDataPoint - firstDataPoint;
         setState(() {
@@ -73,9 +66,7 @@ class _PerformanceTileState extends State<PerformanceTile> {
     return PerformanceContextMenu(
       child: DashboardTile(
         title: language.performanceTitle,
-        subtitle: dataIndex == 0
-            ? language.thisMonth
-            : (dataIndex == 1 ? language.thisYear : language.maxTime),
+        subtitle: dataIndex == 0 ? language.thisMonth : (dataIndex == 1 ? language.thisYear : language.maxTime),
         subtitleStyle: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -121,9 +112,7 @@ class _PerformanceTileState extends State<PerformanceTile> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Icon(
-                currentPerformance >= 0
-                    ? Icons.arrow_upward_rounded
-                    : Icons.arrow_downward_rounded,
+                currentPerformance >= 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
                 size: 60,
                 color: currentPerformance >= 0 ? Colors.green : Colors.red,
               ),

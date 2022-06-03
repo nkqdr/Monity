@@ -1,5 +1,5 @@
-name: finance_buddy
-description: A new Flutter project.
+name: monity
+description: A mobile app that helps you to keep track of your income and expenses.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -53,6 +53,7 @@ dependencies:
   file_picker: ^4.5.1
   flutter_launcher_icons: ^0.9.2
   permission_handler: ^9.2.0
+  showcaseview: ^1.1.5
 
 flutter_native_splash:
   color: "#ffffff"
@@ -90,7 +91,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icon.png
-    - assets/instructions/
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

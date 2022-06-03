@@ -1,15 +1,14 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_appbar.dart';
-import 'package:finance_buddy/widgets/custom_cupertino_context_menu_action.dart';
-import 'package:finance_buddy/widgets/view.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/adaptive_progress_indicator.dart';
+import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_cupertino_context_menu_action.dart';
+import 'package:monity/widgets/view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WealthCategoryPage extends StatefulWidget {
@@ -35,32 +34,24 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
 
   Future _refreshSnapshots() async {
     setState(() => isLoading = true);
-    snapshots = await FinancesDatabase.instance
-        .readInvestmentSnapshotFor(widget.category.id!);
+    snapshots = await FinancesDatabase.instance.readInvestmentSnapshotFor(widget.category.id!);
     snapshots.sort((a, b) => a.date.compareTo(b.date));
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LanguageProvider>(context);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
     return View(
       appBar: CustomAppBar(
         title: widget.category.name,
         left: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
           splashRadius: 18,
           onPressed: () {
@@ -87,50 +78,51 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                   )
                 ]
               : [
-                  ...snapshots.reversed.map((e) {
-                    return CupertinoContextMenu(
-                      actions: [
-                        CustomCupertinoContextMenuAction(
-                          child: Text(language.delete),
-                          trailingIcon: CupertinoIcons.delete,
-                          isDestructiveAction: true,
-                          onPressed: () => _handleDeleteSnapshot(e),
-                        )
-                      ],
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 15),
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Material(
-                          color: Theme.of(context).cardColor,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                dateFormatter.format(e.date),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                  ...snapshots.reversed.map(
+                    (e) {
+                      return CupertinoContextMenu(
+                        actions: [
+                          CustomCupertinoContextMenuAction(
+                            child: Text(language.delete),
+                            trailingIcon: CupertinoIcons.delete,
+                            isDestructiveAction: true,
+                            onPressed: () => _handleDeleteSnapshot(e),
+                          )
+                        ],
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Material(
+                            color: Theme.of(context).cardColor,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  dateFormatter.format(e.date),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                currencyFormat.format(e.amount),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).secondaryHeaderColor,
+                                Text(
+                                  currencyFormat.format(e.amount),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).secondaryHeaderColor,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  })
+                      );
+                    },
+                  )
                 ]),
     );
   }

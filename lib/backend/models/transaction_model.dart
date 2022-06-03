@@ -1,5 +1,5 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/interfaces.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String tableTransaction = "transaction_base";
@@ -11,14 +11,7 @@ enum TransactionType {
 }
 
 class TransactionFields {
-  static const List<String> values = [
-    id,
-    description,
-    category,
-    amount,
-    date,
-    type
-  ];
+  static const List<String> values = [id, description, category, amount, date, type];
   static const String id = "_id";
   static const String description = "description";
   static const String category = "category_id";
@@ -105,6 +98,11 @@ class TransactionCategory extends Category {
     );
   }
 
+  @override
+  String toString() {
+    return "TransactionCategory with ID: $id, NAME: $name";
+  }
+
   Map<String, Object?> toJson() {
     return {
       TransactionCategoryFields.id: id,
@@ -135,5 +133,13 @@ class TransactionCategory extends Category {
   @override
   String getDeleteMessage(AppLocalizations language) {
     return language.sureDeleteCategory;
+  }
+
+  @override
+  bool equals(Category other) {
+    if (other is! TransactionCategory) {
+      return false;
+    }
+    return id == other.id && name == other.name;
   }
 }

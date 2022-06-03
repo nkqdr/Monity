@@ -1,9 +1,8 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/investment_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InvestmentTile extends StatelessWidget {
@@ -16,20 +15,11 @@ class InvestmentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LanguageProvider>(context);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMMd(provider.locale!.languageCode);
-    }
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
-    Future<InvestmentSnapshot?> lastSnapshot =
-        FinancesDatabase.instance.readLastSnapshotFor(category: category);
+    Future<InvestmentSnapshot?> lastSnapshot = FinancesDatabase.instance.readLastSnapshotFor(category: category);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 10, right: 10),
       child: ClipRRect(
@@ -67,9 +57,8 @@ class InvestmentTile extends StatelessWidget {
                           currencyFormat.format(snapshot.data!.amount),
                           style: TextStyle(
                             fontSize: 18,
-                            color: snapshot.data!.amount < 0
-                                ? Theme.of(context).errorColor
-                                : Theme.of(context).hintColor,
+                            color:
+                                snapshot.data!.amount < 0 ? Theme.of(context).errorColor : Theme.of(context).hintColor,
                             fontWeight: FontWeight.bold,
                           ),
                         );

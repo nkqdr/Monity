@@ -1,19 +1,19 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/adaptive_progress_indicator.dart';
-import 'package:finance_buddy/widgets/custom_bottom_sheet.dart';
-import 'package:finance_buddy/widgets/custom_textfield.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/custom_bottom_sheet.dart';
+import 'package:monity/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddTransactionBottomSheet extends StatefulWidget {
   const AddTransactionBottomSheet({Key? key}) : super(key: key);
 
   @override
-  _AddTransactionBottomSheetState createState() =>
-      _AddTransactionBottomSheetState();
+  _AddTransactionBottomSheetState createState() => _AddTransactionBottomSheetState();
 }
 
 class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
@@ -22,8 +22,6 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   TransactionCategory? _transactionCategory;
   double? _givenAmount;
   bool _showTransactionTypeHint = false;
-  final Future<List<TransactionCategory>> _categories =
-      FinancesDatabase.instance.readAllTransactionCategories();
   final _descriptionController = TextEditingController();
 
   Future _handleAddTransaction() async {
@@ -42,6 +40,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    var categories = Provider.of<ListProvider<TransactionCategory>>(context);
     var language = AppLocalizations.of(context)!;
     return CustomBottomSheet(
       child: Form(
@@ -65,71 +64,55 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               ),
             ),
             // Category for transaction
-            FutureBuilder<List<TransactionCategory>>(
-              future: _categories,
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      if (snapshot.data!.isNotEmpty)
-                        Container(
-                          constraints: const BoxConstraints(minHeight: 50),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: DropdownButtonFormField<TransactionCategory>(
-                            hint: Text(language.selectCategoryForTransaction),
-                            borderRadius: BorderRadius.circular(15),
-                            menuMaxHeight: 300,
-                            alignment: Alignment.center,
-                            value: _transactionCategory,
-                            enableFeedback: true,
-                            isExpanded: true,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            autovalidateMode: AutovalidateMode.disabled,
-                            items: snapshot.data!
-                                .map<DropdownMenuItem<TransactionCategory>>(
-                                    (e) {
-                              return DropdownMenuItem<TransactionCategory>(
-                                value: e,
-                                child: Text(e.name),
-                              );
-                            }).toList(),
-                            onChanged: (TransactionCategory? cat) {
-                              setState(() => _transactionCategory = cat);
-                            },
-                            validator: (TransactionCategory? cat) {
-                              if (!snapshot.data!.contains(cat) ||
-                                  cat == null) {
-                                return language.invalidInput;
-                              }
-                              return null;
-                            },
-                          ),
-                        )
-                      else
-                        SizedBox(
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              language.firstCreateCategories,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).secondaryHeaderColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                }
-                return const Center(child: AdaptiveProgressIndicator());
-              }),
-            ),
+            if (categories.list.isEmpty)
+              SizedBox(
+                height: 50,
+                child: Center(
+                  child: Text(
+                    language.firstCreateCategories,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
+                ),
+              )
+            else
+              Container(
+                constraints: const BoxConstraints(minHeight: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: DropdownButtonFormField<TransactionCategory>(
+                  hint: Text(language.selectCategory),
+                  borderRadius: BorderRadius.circular(15),
+                  menuMaxHeight: 300,
+                  alignment: Alignment.center,
+                  value: _transactionCategory,
+                  enableFeedback: true,
+                  isExpanded: true,
+                  decoration: const InputDecoration(border: InputBorder.none),
+                  autovalidateMode: AutovalidateMode.disabled,
+                  items: categories.list.map<DropdownMenuItem<TransactionCategory>>((e) {
+                    return DropdownMenuItem<TransactionCategory>(
+                      value: e,
+                      child: Text(e.name),
+                    );
+                  }).toList(),
+                  onChanged: (TransactionCategory? cat) {
+                    setState(() => _transactionCategory = cat);
+                  },
+                  validator: (TransactionCategory? cat) {
+                    if (!categories.list.contains(cat) || cat == null) {
+                      return language.invalidInput;
+                    }
+                    return null;
+                  },
+                ),
+              ),
 
             // Type of transaction
             Padding(
@@ -139,14 +122,11 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      setState(
-                          () => _transactionType = TransactionType.expense);
+                      setState(() => _transactionType = TransactionType.expense);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.expense
-                              ? Colors.red
-                              : Colors.grey),
+                          _transactionType == TransactionType.expense ? Colors.red : Colors.grey),
                     ),
                     child: Text(language.expense),
                   ),
@@ -156,9 +136,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.income
-                              ? Colors.green
-                              : Colors.grey),
+                          _transactionType == TransactionType.income ? Colors.green : Colors.grey),
                     ),
                     child: Text(language.income),
                   ),
@@ -171,8 +149,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 child: Center(
                   child: Text(
                     language.selectTransactionType,
-                    style: TextStyle(
-                        color: Theme.of(context).errorColor, fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).errorColor, fontSize: 12),
                   ),
                 ),
               ),
@@ -182,14 +159,13 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               constraints: const BoxConstraints(minHeight: 50),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
               ),
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(10),
               child: TextFormField(
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
                 decoration: const InputDecoration.collapsed(hintText: "0,00"),
                 validator: (String? val) {
                   double x = 0;
@@ -214,53 +190,41 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             // Optional description
             CustomTextField(
               controller: _descriptionController,
-              decoration: InputDecoration.collapsed(
-                  hintText: language.optionalDescription),
+              decoration: InputDecoration.collapsed(hintText: language.optionalDescription),
             ),
 
             // Save button
-            FutureBuilder<List<TransactionCategory>>(
-                future: _categories,
-                builder: ((context, snapshot) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 25.0, bottom: 15),
-                    child: Center(
-                      child: ElevatedButton(
-                        key: const Key("save-transaction-button"),
-                        onPressed: snapshot.hasData && snapshot.data!.isEmpty
-                            ? null
-                            : () {
-                                bool isValid =
-                                    _formKey.currentState!.validate();
-                                if (_transactionType == null) {
-                                  setState(
-                                      () => _showTransactionTypeHint = true);
-                                  Utils.playErrorFeedback();
-                                  return;
-                                } else {
-                                  setState(
-                                      () => _showTransactionTypeHint = false);
-                                }
-                                if (isValid) {
-                                  _handleAddTransaction();
-                                  Navigator.of(context).pop();
-                                } else {
-                                  Utils.playErrorFeedback();
-                                }
-                              },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              snapshot.hasData && snapshot.data!.isEmpty
-                                  ? Colors.grey
-                                  : Colors.green),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                        ),
-                        child: Text(language.saveButton),
-                      ),
-                    ),
-                  );
-                })),
+            Padding(
+              padding: const EdgeInsets.only(top: 25.0, bottom: 15),
+              child: Center(
+                child: ElevatedButton(
+                  key: const Key("save-transaction-button"),
+                  onPressed: categories.list.isEmpty
+                      ? null
+                      : () {
+                          bool isValid = _formKey.currentState!.validate();
+                          if (_transactionType == null) {
+                            setState(() => _showTransactionTypeHint = true);
+                            Utils.playErrorFeedback();
+                            return;
+                          } else {
+                            setState(() => _showTransactionTypeHint = false);
+                          }
+                          if (isValid) {
+                            _handleAddTransaction();
+                            Navigator.of(context).pop();
+                          } else {
+                            Utils.playErrorFeedback();
+                          }
+                        },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(categories.list.isEmpty ? Colors.grey : Colors.green),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                  ),
+                  child: Text(language.saveButton),
+                ),
+              ),
+            ),
           ],
         ),
       ),

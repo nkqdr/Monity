@@ -1,5 +1,5 @@
-import 'package:finance_buddy/backend/finances_database.dart';
-import 'package:finance_buddy/helper/interfaces.dart';
+import 'package:monity/backend/finances_database.dart';
+import 'package:monity/helper/interfaces.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String tableInvestmentCategory = "investment_category";
@@ -16,15 +16,24 @@ class InvestmentCategoryFields {
 }
 
 class InvestmentCategory extends Category {
-  final String? label;
+  final String label;
   const InvestmentCategory({
     int? id,
-    this.label,
+    required this.label,
     required String name,
   }) : super(id: id, name: name);
 
-  bool equals(InvestmentCategory other) {
+  @override
+  bool equals(Category other) {
+    if (other is! InvestmentCategory) {
+      return false;
+    }
     return label == other.label && id == other.id && name == other.name;
+  }
+
+  @override
+  String toString() {
+    return "InvestmentCategory with ID: $id, NAME: $name, LABEL: $label";
   }
 
   Map<String, Object?> toJson() {
@@ -39,7 +48,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: json[InvestmentCategoryFields.id] as int?,
       name: json[InvestmentCategoryFields.name] as String,
-      label: json[InvestmentCategoryFields.label] as String?,
+      label: json[InvestmentCategoryFields.label] as String,
     );
   }
 

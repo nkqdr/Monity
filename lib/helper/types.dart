@@ -20,4 +20,9 @@ class AssetLabel {
     required this.displayColor,
     this.percentage,
   });
+
+  @override
+  String toString() {
+    return "AssetLabel with TITLE: $title, COLOR: $displayColor";
+  }
 }

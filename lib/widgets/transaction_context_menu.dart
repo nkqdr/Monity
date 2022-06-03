@@ -1,10 +1,9 @@
-import 'package:finance_buddy/backend/models/transaction_model.dart';
-import 'package:finance_buddy/l10n/language_provider.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import 'custom_cupertino_context_menu_action.dart';
 
@@ -25,22 +24,15 @@ class TransactionContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
-    final provider = Provider.of<LanguageProvider>(context);
     Locale locale = Localizations.localeOf(context);
-    var currencyFormat = NumberFormat.simpleCurrency(
-        locale: locale.toString(), decimalDigits: 2);
-    DateFormat dateFormatter;
-    if (provider.locale == null) {
-      dateFormatter =
-          DateFormat.yMMMd(Localizations.localeOf(context).toString());
-    } else {
-      dateFormatter = DateFormat.yMMMd(provider.locale!.languageCode);
-    }
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
+    DateFormat dateFormatter = Utils.getDateFormatter(context);
+
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         return Material(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
             height: transaction.description != ""
@@ -58,15 +50,12 @@ class TransactionContextMenu extends StatelessWidget {
                         Flexible(
                           child: Text(
                             transactionCategory.name,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
                           dateFormatter.format(transaction.date),
-                          style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Theme.of(context).secondaryHeaderColor, fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
@@ -87,13 +76,9 @@ class TransactionContextMenu extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     Text(
-                      transaction.description != ""
-                          ? language.descriptionDetailTitle
-                          : "",
+                      transaction.description != "" ? language.descriptionDetailTitle : "",
                       style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22),
+                          color: Theme.of(context).secondaryHeaderColor, fontWeight: FontWeight.bold, fontSize: 22),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -109,6 +94,14 @@ class TransactionContextMenu extends StatelessWidget {
         );
       },
       actions: [
+        // CupertinoContextMenuAction(
+        //   child: Text(language.edit),
+        //   trailingIcon: CupertinoIcons.pencil,
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //     _handleEditTransaction();
+        //   },
+        // ),
         CustomCupertinoContextMenuAction(
           child: Text(language.delete),
           isDestructiveAction: true,
@@ -118,14 +111,6 @@ class TransactionContextMenu extends StatelessWidget {
             handleDelete();
           },
         ),
-        // CupertinoContextMenuAction(
-        //   child: Text(language.edit),
-        //   trailingIcon: CupertinoIcons.pencil,
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //     _handleEditTransaction();
-        //   },
-        // ),
       ],
       child: SingleChildScrollView(
         child: child,

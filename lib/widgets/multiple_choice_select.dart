@@ -1,5 +1,5 @@
-import 'package:finance_buddy/helper/utils.dart';
-import 'package:finance_buddy/widgets/custom_section.dart';
+import 'package:monity/helper/utils.dart';
+import 'package:monity/widgets/custom_section.dart';
 import 'package:flutter/material.dart';
 
 class MultipleChoiceOption<T> {
@@ -29,8 +29,7 @@ class MultipleChoiceSection<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MultipleChoiceSection> createState() =>
-      _MultipleChoiceSectionState<T>();
+  State<MultipleChoiceSection> createState() => _MultipleChoiceSectionState<T>();
 }
 
 class _MultipleChoiceSectionState<T> extends State<MultipleChoiceSection<T>> {
@@ -53,8 +52,7 @@ class _MultipleChoiceSectionState<T> extends State<MultipleChoiceSection<T>> {
       groupItems: true,
       title: widget.title,
       subtitle: widget.subtitle,
-      children: Utils.mapIndexed(widget.options,
-          (index, MultipleChoiceOption<T> item) {
+      children: Utils.mapIndexed(widget.options, (index, MultipleChoiceOption<T> item) {
         return GestureDetector(
           onTap: () => _onChange(item.value),
           child: Container(
@@ -79,7 +77,7 @@ class _MultipleChoiceSectionState<T> extends State<MultipleChoiceSection<T>> {
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.onBackground,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     )

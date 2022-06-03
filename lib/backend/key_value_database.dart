@@ -7,36 +7,29 @@ const String monthlyLimitKey = 'MONTHLY_LIMIT';
 const String firstStartupKey = 'IS_FIRST_START_UP';
 const String budgetOverflowEnabledKey = "BUDGET_OVERFLOW_ENABLED";
 const String budgetOverflowKey = "BUDGET_OVERFLOW";
+const String lastBackupCreatedKey = "LAST_BACKUP_CREATED";
+
+const List<String> keyList = [
+  'APPEARANCE',
+  'LANGUAGE',
+  'MONTHLY_LIMIT',
+  'IS_FIRST_START_UP',
+  "BUDGET_OVERFLOW_ENABLED",
+  "BUDGET_OVERFLOW"
+];
 
 class KeyValueDatabase {
-  static Future setTheme(ThemeMode mode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int value =
-        mode == ThemeMode.system ? 0 : (mode == ThemeMode.light ? 1 : 2);
-    await prefs.setInt(appearanceKey, value);
-  }
-
   static Future<ThemeMode> getTheme() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var value = prefs.getInt(appearanceKey);
     if (value == null) {
-      await setTheme(ThemeMode.system);
       return ThemeMode.system;
     }
     ThemeMode mode = value == 0
         ? ThemeMode.system
         : (value == 1 ? ThemeMode.light : ThemeMode.dark);
     return mode;
-  }
-
-  static Future setLanguage(String? languageCode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (languageCode == null) {
-      await prefs.remove(languageKey);
-      return;
-    }
-    await prefs.setString(languageKey, languageCode);
   }
 
   static Future<Locale?> getLocale() async {
@@ -58,21 +51,6 @@ class KeyValueDatabase {
     return limit;
   }
 
-  static Future setMonthlyLimit(double limit) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(monthlyLimitKey, limit);
-  }
-
-  static Future deleteMonthlyLimit() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(monthlyLimitKey);
-  }
-
-  static Future setFirstStartup() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(firstStartupKey, false);
-  }
-
   static Future<bool?> getFirstStartup() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,11 +59,6 @@ class KeyValueDatabase {
       return null;
     }
     return limit;
-  }
-
-  static Future setBudgetOverflowEnabled(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(budgetOverflowEnabledKey, value);
   }
 
   static Future<bool?> getBudgetOverflowEnabled() async {
@@ -112,8 +85,10 @@ class KeyValueDatabase {
     await prefs.setDouble(budgetOverflowKey, overflow);
   }
 
-  static Future deleteBudgetOverflow() async {
+  static Future deleteAllData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(budgetOverflowKey);
+    for (var key in keyList) {
+      prefs.remove(key);
+    }
   }
 }

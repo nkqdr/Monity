@@ -5,6 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:monity/backend/database_manager.dart';
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/key_value_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/l10n/language_provider.dart';
@@ -355,6 +358,8 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (dialogResult != null) {
       await FinancesDatabase.instance.deleteDatabase();
       await KeyValueDatabase.deleteAllData();
+      Provider.of<ListProvider<InvestmentCategory>>(context, listen: false).reset();
+      Provider.of<ListProvider<TransactionCategory>>(context, listen: false).reset();
       Provider.of<LanguageProvider>(context, listen: false).reset();
       Provider.of<ConfigProvider>(context, listen: false).reset();
       Provider.of<ThemeProvider>(context, listen: false).reset();

@@ -1,10 +1,11 @@
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/utils.dart';
-import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddSnapshotBottomSheet extends StatefulWidget {
   const AddSnapshotBottomSheet({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class AddSnapshotBottomSheet extends StatefulWidget {
 
 class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Future<List<InvestmentCategory>> _categories = FinancesDatabase.instance.readAllInvestmentCategories();
   InvestmentCategory? _investmentCategory;
   double? _givenAmount;
 
@@ -43,6 +43,7 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    var categories = Provider.of<ListProvider<InvestmentCategory>>(context);
     var language = AppLocalizations.of(context)!;
     return CustomBottomSheet(
       child: Form(
@@ -65,67 +66,55 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                 ),
               ),
             ),
-            FutureBuilder<List<InvestmentCategory>>(
-              future: _categories,
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      if (snapshot.data!.isNotEmpty)
-                        Container(
-                          constraints: const BoxConstraints(minHeight: 50),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: DropdownButtonFormField<InvestmentCategory>(
-                            hint: Text(language.selectCategory),
-                            borderRadius: BorderRadius.circular(15),
-                            menuMaxHeight: 300,
-                            alignment: Alignment.center,
-                            value: _investmentCategory,
-                            enableFeedback: true,
-                            isExpanded: true,
-                            decoration: const InputDecoration(border: InputBorder.none),
-                            autovalidateMode: AutovalidateMode.disabled,
-                            items: snapshot.data!.map<DropdownMenuItem<InvestmentCategory>>((e) {
-                              return DropdownMenuItem<InvestmentCategory>(
-                                value: e,
-                                child: Text(e.name),
-                              );
-                            }).toList(),
-                            onChanged: (InvestmentCategory? cat) {
-                              setState(() => _investmentCategory = cat);
-                            },
-                            validator: (InvestmentCategory? cat) {
-                              if (!snapshot.data!.contains(cat) || cat == null) {
-                                return language.invalidInput;
-                              }
-                              return null;
-                            },
-                          ),
-                        )
-                      else
-                        SizedBox(
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              language.firstCreateCategories,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).secondaryHeaderColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                }
-                return const Center(child: AdaptiveProgressIndicator());
-              }),
-            ),
+            if (categories.list.isEmpty)
+              SizedBox(
+                height: 50,
+                child: Center(
+                  child: Text(
+                    language.firstCreateCategories,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
+                ),
+              )
+            else
+              Container(
+                constraints: const BoxConstraints(minHeight: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: DropdownButtonFormField<InvestmentCategory>(
+                  hint: Text(language.selectCategory),
+                  borderRadius: BorderRadius.circular(15),
+                  menuMaxHeight: 300,
+                  alignment: Alignment.center,
+                  value: _investmentCategory,
+                  enableFeedback: true,
+                  isExpanded: true,
+                  decoration: const InputDecoration(border: InputBorder.none),
+                  autovalidateMode: AutovalidateMode.disabled,
+                  items: categories.list.map<DropdownMenuItem<InvestmentCategory>>((e) {
+                    return DropdownMenuItem<InvestmentCategory>(
+                      value: e,
+                      child: Text(e.name),
+                    );
+                  }).toList(),
+                  onChanged: (InvestmentCategory? cat) {
+                    setState(() => _investmentCategory = cat);
+                  },
+                  validator: (InvestmentCategory? cat) {
+                    if (!categories.list.contains(cat) || cat == null) {
+                      return language.invalidInput;
+                    }
+                    return null;
+                  },
+                ),
+              ),
 
             // Amount of Snapshot
             Container(
@@ -161,35 +150,29 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
             ),
 
             // Save button
-            FutureBuilder<List<InvestmentCategory>>(
-              future: _categories,
-              builder: (context, snapshot) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 25.0, bottom: 15),
-                  child: Center(
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            snapshot.hasData && snapshot.data!.isEmpty ? Colors.grey : Colors.green),
-                        foregroundColor: MaterialStateProperty.all(Colors.white),
-                      ),
-                      onPressed: snapshot.hasData && snapshot.data!.isEmpty
-                          ? null
-                          : () async {
-                              bool isValid = _formKey.currentState!.validate();
-                              if (isValid) {
-                                await _handleAddSnapshot();
-                                Navigator.of(context).pop();
-                              } else {
-                                Utils.playErrorFeedback();
-                              }
-                            },
-                      child: Text(language.saveButton),
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25.0, bottom: 15),
+              child: Center(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(categories.list.isEmpty ? Colors.grey : Colors.green),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
                   ),
-                );
-              },
-            )
+                  onPressed: categories.list.isEmpty
+                      ? null
+                      : () async {
+                          bool isValid = _formKey.currentState!.validate();
+                          if (isValid) {
+                            await _handleAddSnapshot();
+                            Navigator.of(context).pop();
+                          } else {
+                            Utils.playErrorFeedback();
+                          }
+                        },
+                  child: Text(language.saveButton),
+                ),
+              ),
+            ),
           ],
         ),
       ),

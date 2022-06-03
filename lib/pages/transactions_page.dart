@@ -1,6 +1,8 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/finances_database.dart';
+import 'package:monity/backend/models/investment_model.dart';
 import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/showcase_keys_provider.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/adaptive_progress_indicator.dart';
@@ -26,7 +28,6 @@ class TransactionsPage extends StatefulWidget {
 class _TransactionsPageState extends State<TransactionsPage> {
   late List<DateTime> months;
   late List<Transaction> transactions;
-  late List<TransactionCategory> transactionCategories;
   late DateTime selectedMonth;
   bool isLoading = false;
   late List<Transaction> currentTransactions;
@@ -42,7 +43,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
     setState(() => isLoading = true);
     transactions = await FinancesDatabase.instance.readAllTransactions();
     months = transactions.map((e) => DateTime(e.date.year, e.date.month)).toSet().toList();
-    transactionCategories = await FinancesDatabase.instance.readAllTransactionCategories();
     if (init) {
       selectedMonth = months.isEmpty ? DateTime.now() : months.last;
     }
@@ -54,6 +54,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
+    var transactionCategories = Provider.of<ListProvider<TransactionCategory>>(context).list;
     DateFormat dateFormatter = Utils.getDateFormatter(context, includeDay: false);
     var language = AppLocalizations.of(context)!;
 
@@ -114,7 +115,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: CupertinoSearchTextField(
-                  onChanged: _filterTransactions,
+                  onChanged: (v) => _filterTransactions(v, transactionCategories),
                 ),
               ),
               CustomSection(
@@ -133,7 +134,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
     );
   }
 
-  void _filterTransactions(String searchValue) {
+  void _filterTransactions(String searchValue, List<TransactionCategory> transactionCategories) {
     List<Transaction> newCurrentTransactions = currentTransactions.where((e) {
       if (e.description != null) {
         return e.description!.toLowerCase().contains(searchValue.toLowerCase()) ||

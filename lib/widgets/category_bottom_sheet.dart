@@ -20,16 +20,19 @@ enum CategoryBottomSheetMode {
 class CategoryBottomSheet<T extends Category> extends StatefulWidget {
   final CategoryBottomSheetMode mode;
   final T? category;
-  final bool? hasLabelDropdown;
+  final bool hasLabelDropdown;
   final String? label;
 
-  const CategoryBottomSheet({
+  CategoryBottomSheet({
     Key? key,
     this.category,
-    this.hasLabelDropdown,
+    this.hasLabelDropdown = false,
     this.label,
     required this.mode,
-  }) : super(key: key);
+  }) : super(key: key) {
+    assert(mode != CategoryBottomSheetMode.edit || category != null,
+        "If you're using the .edit mode, you must provide a category to be edited!");
+  }
 
   @override
   _CategoryBottomSheetState<T> createState() => _CategoryBottomSheetState<T>();
@@ -54,7 +57,7 @@ class _CategoryBottomSheetState<T extends Category> extends State<CategoryBottom
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (widget.label != null) {
+    if (widget.label != null && widget.label != ConfigProvider.noneAssetLabel.title) {
       _selectedLabel = Provider.of<ConfigProvider>(context)
           .assetAllocationCategories
           .where((element) => element.title == widget.label)
@@ -108,23 +111,23 @@ class _CategoryBottomSheetState<T extends Category> extends State<CategoryBottom
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(15),
                       color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                     child: DropdownButton<AssetLabel?>(
-                        value: _selectedLabel,
-                        isExpanded: true,
-                        alignment: Alignment.center,
-                        borderRadius: BorderRadius.circular(20),
-                        underline: Container(),
-                        items:
-                            Provider.of<ConfigProvider>(context).assetAllocationCategories.map(buildMenuItem).toList(),
-                        onChanged: (value) {
-                          setState(() => _selectedLabel = value);
-                          if (!isTextFieldEmpty) {
-                            setState(() => isButtonDisabled = false);
-                          }
-                        }),
+                      value: _selectedLabel,
+                      isExpanded: true,
+                      alignment: Alignment.center,
+                      borderRadius: BorderRadius.circular(15),
+                      underline: Container(),
+                      items: Provider.of<ConfigProvider>(context).assetAllocationCategories.map(buildMenuItem).toList(),
+                      onChanged: (value) {
+                        setState(() => _selectedLabel = value);
+                        if (!isTextFieldEmpty) {
+                          setState(() => isButtonDisabled = false);
+                        }
+                      },
+                    ),
                   ),
                 ),
                 AdaptiveTextButton(
@@ -194,10 +197,13 @@ class _CategoryBottomSheetState<T extends Category> extends State<CategoryBottom
     } else if (T == InvestmentCategory) {
       categoriesProvider = Provider.of<ListProvider<InvestmentCategory>>(context, listen: false);
       if (widget.mode == CategoryBottomSheetMode.add) {
-        categoriesProvider.insert(InvestmentCategory(name: value, label: _selectedLabel?.title));
+        categoriesProvider.insert(
+            InvestmentCategory(name: value, label: _selectedLabel?.title ?? ConfigProvider.noneAssetLabel.title));
       } else if (widget.mode == CategoryBottomSheetMode.edit) {
-        categoriesProvider.update(widget.category!.id!,
-            (widget.category as InvestmentCategory).copy(name: value, label: _selectedLabel?.title));
+        categoriesProvider.update(
+            widget.category!.id!,
+            (widget.category as InvestmentCategory)
+                .copy(name: value, label: _selectedLabel?.title ?? ConfigProvider.noneAssetLabel.title));
       }
     }
   }

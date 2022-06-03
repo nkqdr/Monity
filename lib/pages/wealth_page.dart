@@ -1,5 +1,6 @@
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/investment_model.dart';
+import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/types.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/pages/wealth_category_page.dart';
@@ -19,6 +20,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 const double sidePadding = 15.0;
 
@@ -33,7 +35,6 @@ class _WealthPageState extends State<WealthPage> {
   late double displayWealth;
   VerticalLine? _indexLine;
   String subtitle = "";
-  late List<InvestmentCategory> categories;
   late List<WealthDataPoint> allDataPoints;
   late List<FlSpot> displayedDataPoints;
   int dataIndex = 1;
@@ -77,7 +78,6 @@ class _WealthPageState extends State<WealthPage> {
 
   Future _refreshCategories() async {
     setState(() => isLoading = true);
-    categories = await FinancesDatabase.instance.readAllInvestmentCategories();
     displayedDataPoints = [];
     allDataPoints = await FinancesDatabase.instance.getAllWealthDatapoints();
     _refreshDataPoints();
@@ -92,6 +92,7 @@ class _WealthPageState extends State<WealthPage> {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     var language = AppLocalizations.of(context)!;
+    var categories = Provider.of<ListProvider<InvestmentCategory>>(context).list;
     return View(
       appBar: CustomAppBar(
         title: language.wealthTitle,
@@ -214,16 +215,6 @@ class _WealthPageState extends State<WealthPage> {
     return allDataPoints.isEmpty ? 0 : allDataPoints.last.value;
   }
 
-  // Iterable<E> mapIndexed<E, T>(
-  //     Iterable<T> items, E Function(int index, T item) f) sync* {
-  //   var index = 0;
-
-  //   for (final item in items) {
-  //     yield f(index, item);
-  //     index = index + 1;
-  //   }
-  // }
-
   Future _handleAddSnapshot() async {
     await showModalBottomSheet(
         context: context,
@@ -283,6 +274,7 @@ class _WealthPageState extends State<WealthPage> {
         }
         setState(() {
           displayWealth = value;
+          // TODO: Look over this line...
           subtitle = dateFormat.format(currentXValues[response.lineBarSpots?[0].x.toInt() as int]);
           _indexLine = VerticalLine(
             x: response.lineBarSpots?[0].x as double,

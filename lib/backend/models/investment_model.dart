@@ -16,10 +16,10 @@ class InvestmentCategoryFields {
 }
 
 class InvestmentCategory extends Category {
-  final String? label;
+  final String label;
   const InvestmentCategory({
     int? id,
-    this.label,
+    required this.label,
     required String name,
   }) : super(id: id, name: name);
 
@@ -48,7 +48,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: json[InvestmentCategoryFields.id] as int?,
       name: json[InvestmentCategoryFields.name] as String,
-      label: json[InvestmentCategoryFields.label] as String?,
+      label: json[InvestmentCategoryFields.label] as String,
     );
   }
 
@@ -61,7 +61,7 @@ class InvestmentCategory extends Category {
     return InvestmentCategory(
       id: id ?? this.id,
       name: name ?? this.name,
-      label: label,
+      label: label ?? this.label,
     );
   }
 

@@ -144,19 +144,20 @@ class TransactionsSettingsPage extends StatelessWidget {
 
   Future _handleAddCategory(BuildContext context) async {
     await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const CategoryBottomSheet<TransactionCategory>(
-              mode: CategoryBottomSheetMode.add,
-            ),
-          );
-        });
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: CategoryBottomSheet<TransactionCategory>(
+            mode: CategoryBottomSheetMode.add,
+          ),
+        );
+      },
+    );
   }
 }
 

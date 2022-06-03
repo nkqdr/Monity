@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigProvider extends ChangeNotifier {
+  static final noneAssetLabel = AssetLabel(title: "None", displayColor: Colors.black);
   List<AssetLabel> assetAllocationCategories = [
     AssetLabel(
       title: "Invested",

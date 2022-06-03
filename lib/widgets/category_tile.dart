@@ -50,7 +50,8 @@ class CategoryTile<T extends Category> extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                    if (category is InvestmentCategory && (category as InvestmentCategory).label != null)
+                    if (category is InvestmentCategory &&
+                        (category as InvestmentCategory).label != ConfigProvider.noneAssetLabel.title)
                       Row(
                         children: [
                           Padding(
@@ -62,20 +63,21 @@ class CategoryTile<T extends Category> extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 color: _getColorForLabel(
                                   context,
-                                  (category as InvestmentCategory).label!,
+                                  (category as InvestmentCategory).label,
                                 ),
                               ),
                             ),
                           ),
                           Text(
-                            Utils.getCorrectTitleFromKey((category as InvestmentCategory).label!, language),
+                            Utils.getCorrectTitleFromKey((category as InvestmentCategory).label, language),
                             style: TextStyle(
                               color: Theme.of(context).secondaryHeaderColor,
                             ),
                           ),
                         ],
                       ),
-                    if (category is InvestmentCategory && (category as InvestmentCategory).label == null)
+                    if (category is InvestmentCategory &&
+                        (category as InvestmentCategory).label == ConfigProvider.noneAssetLabel.title)
                       Text(
                         language.noLabel,
                         style: TextStyle(

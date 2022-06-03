@@ -37,7 +37,7 @@ class ListProvider<T extends Category> extends ChangeNotifier {
     if (writeToDatabase) {
       newValue = await createFunction(value);
     }
-
+    print(newValue);
     // Insert the category and keep the list sorted.
     int index = _list.lastIndexWhere((v) => v.name.compareTo(value.name) < 0);
     _list.insert(index + 1 < 0 ? 0 : index + 1, newValue);
@@ -54,5 +54,10 @@ class ListProvider<T extends Category> extends ChangeNotifier {
       return await deleteFunction(value.id!);
     }
     return -1;
+  }
+
+  void reset() {
+    _list = [];
+    notifyListeners();
   }
 }

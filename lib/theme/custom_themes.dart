@@ -4,15 +4,16 @@ import 'package:flutter/services.dart';
 
 class CustomThemes {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: const Color(0xff333333),
+    shadowColor: const Color(0xff141414),
+    highlightColor: const Color(0xff414141),
     colorScheme: ColorScheme.dark(primary: Colors.blue[300] as Color),
     secondaryHeaderColor: Colors.grey[500],
-    hintColor: Colors.green[300],
-    errorColor: Colors.red[300],
+    hintColor: Colors.green[500],
+    errorColor: Colors.red[700],
     bottomAppBarColor: const Color.fromRGBO(55, 55, 55, 0.6),
     splashColor: Colors.grey[800],
-    highlightColor: Colors.grey[900],
-    cardColor: Colors.grey[900],
+    cardColor: Colors.grey[800],
     primaryColor: Colors.blue,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -22,7 +23,7 @@ class CustomThemes {
         backgroundColor: MaterialStateProperty.all(Colors.green),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
         ),
       ),
@@ -34,15 +35,16 @@ class CustomThemes {
   );
 
   static final lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: const Color(0xffdddddd),
+    shadowColor: const Color(0xffb1b1b1),
+    highlightColor: const Color(0xfff3f3f3),
     secondaryHeaderColor: Colors.grey[600],
     colorScheme: ColorScheme.light(primary: Colors.blue[600] as Color),
     hintColor: Colors.green[500],
     errorColor: Colors.red[500],
     bottomAppBarColor: const Color.fromRGBO(255, 255, 255, 0.6),
     splashColor: Colors.grey[300],
-    highlightColor: Colors.grey[200],
-    cardColor: Colors.grey[300],
+    cardColor: Colors.grey[400],
     primaryColor: Colors.blue,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -52,7 +54,7 @@ class CustomThemes {
         backgroundColor: MaterialStateProperty.all(Colors.green),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
         ),
       ),

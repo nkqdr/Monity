@@ -1,11 +1,12 @@
-import 'package:monity/widgets/adaptive_text_button.dart';
 import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HelpPage extends StatelessWidget {
-  static const String appVersion = "1.0.7";
+  static const String appVersion = "1.1";
 
   const HelpPage({Key? key}) : super(key: key);
 
@@ -33,10 +34,7 @@ class HelpPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Center(
-              child: Material(
-                borderRadius: BorderRadius.circular(15),
-                clipBehavior: Clip.antiAlias,
-                elevation: 10,
+              child: NewmorphicBox(
                 child: SizedBox(
                   width: 100,
                   height: 100,
@@ -68,14 +66,9 @@ class HelpPage extends StatelessWidget {
           height: 100,
         ),
         const SizedBox(height: 5),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
-          child: AdaptiveTextButton(
-            text: language.showAdditionalLicenses,
-            onPressed: () => _showLicenses(context),
-          ),
+        NewmorphpicButton(
+          text: language.showAdditionalLicenses,
+          onPressed: () => _showLicenses(context),
         ),
       ],
     );

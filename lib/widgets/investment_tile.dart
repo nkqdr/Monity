@@ -4,6 +4,7 @@ import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 
 class InvestmentTile extends StatelessWidget {
   final InvestmentCategory category;
@@ -22,10 +23,9 @@ class InvestmentTile extends StatelessWidget {
     Future<InvestmentSnapshot?> lastSnapshot = FinancesDatabase.instance.readLastSnapshotFor(category: category);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 10, right: 10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          color: Theme.of(context).cardColor,
+      child: NewmorphicBox(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
             child: Column(

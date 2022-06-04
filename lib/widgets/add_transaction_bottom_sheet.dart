@@ -7,6 +7,8 @@ import 'package:monity/widgets/custom_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:provider/provider.dart';
 
 class AddTransactionBottomSheet extends StatefulWidget {
@@ -86,68 +88,54 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                 ),
               )
             else
-              Container(
-                constraints: const BoxConstraints(minHeight: 50),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: DropdownButtonFormField<TransactionCategory>(
-                  hint: Text(language.selectCategory),
-                  borderRadius: BorderRadius.circular(15),
-                  menuMaxHeight: 300,
-                  alignment: Alignment.center,
-                  value: _transactionCategory,
-                  enableFeedback: true,
-                  isExpanded: true,
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  autovalidateMode: AutovalidateMode.disabled,
-                  items: categories.list.map<DropdownMenuItem<TransactionCategory>>((e) {
-                    return DropdownMenuItem<TransactionCategory>(
-                      value: e,
-                      child: Text(e.name),
-                    );
-                  }).toList(),
-                  onChanged: (TransactionCategory? cat) {
-                    setState(() => _transactionCategory = cat);
-                  },
-                  validator: (TransactionCategory? cat) {
-                    if (!categories.list.contains(cat) || cat == null) {
-                      return language.invalidInput;
-                    }
-                    return null;
-                  },
+              NewmorphicBox(
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: DropdownButtonFormField<TransactionCategory>(
+                    hint: Text(language.selectCategory),
+                    borderRadius: BorderRadius.circular(15),
+                    menuMaxHeight: 300,
+                    alignment: Alignment.center,
+                    value: _transactionCategory,
+                    enableFeedback: true,
+                    isExpanded: true,
+                    decoration: const InputDecoration(border: InputBorder.none),
+                    dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    items: categories.list.map<DropdownMenuItem<TransactionCategory>>((e) {
+                      return DropdownMenuItem<TransactionCategory>(
+                        value: e,
+                        child: Text(e.name),
+                      );
+                    }).toList(),
+                    onChanged: (TransactionCategory? cat) {
+                      setState(() => _transactionCategory = cat);
+                    },
+                    validator: (TransactionCategory? cat) {
+                      if (!categories.list.contains(cat) || cat == null) {
+                        return language.invalidInput;
+                      }
+                      return null;
+                    },
+                  ),
                 ),
               ),
 
             // Type of transaction
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() => _transactionType = TransactionType.expense);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.expense ? Colors.red : Colors.grey),
-                    ),
-                    child: Text(language.expense),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() => _transactionType = TransactionType.income);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          _transactionType == TransactionType.income ? Colors.green : Colors.grey),
-                    ),
-                    child: Text(language.income),
-                  ),
+              padding: const EdgeInsets.symmetric(vertical: 25.0),
+              child: NewmorphicButtonGroup<TransactionType?>(
+                value: _transactionType,
+                onChange: (v) => setState(() => _transactionType = v),
+                buttons: [
+                  NewmorphicButtonConfig(text: language.expense, value: TransactionType.expense),
+                  NewmorphicButtonConfig(text: language.income, value: TransactionType.income),
                 ],
               ),
             ),
@@ -165,33 +153,33 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             // Amount of transaction
             Container(
               constraints: const BoxConstraints(minHeight: 50),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(10),
-              child: TextFormField(
-                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
-                decoration: const InputDecoration.collapsed(hintText: "0,00"),
-                validator: (String? val) {
-                  double x = 0;
-                  if (val == null || val == "") {
-                    return language.invalidInput;
-                  }
-                  var amountString = val.replaceAll(",", ".");
-                  try {
-                    x = double.parse(amountString);
-                    setState(() => _givenAmount = x);
-                  } catch (e) {
-                    return language.invalidInput;
-                  }
-                  if (x < 0) {
-                    return language.invalidInput;
-                  }
-                  return null;
-                },
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              child: NewmorphicBox(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  child: TextFormField(
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                    decoration: const InputDecoration.collapsed(hintText: "0,00"),
+                    validator: (String? val) {
+                      double x = 0;
+                      if (val == null || val == "") {
+                        return language.invalidInput;
+                      }
+                      var amountString = val.replaceAll(",", ".");
+                      try {
+                        x = double.parse(amountString);
+                        setState(() => _givenAmount = x);
+                      } catch (e) {
+                        return language.invalidInput;
+                      }
+                      if (x < 0) {
+                        return language.invalidInput;
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
             ),
 
@@ -205,8 +193,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(top: 25.0, bottom: 15),
               child: Center(
-                child: ElevatedButton(
+                child: NewmorphpicButton(
                   key: const Key("save-transaction-button"),
+                  text: language.saveButton,
                   onPressed: categories.list.isEmpty
                       ? null
                       : () {
@@ -225,11 +214,6 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                             Utils.playErrorFeedback();
                           }
                         },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(categories.list.isEmpty ? Colors.grey : Colors.green),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                  ),
-                  child: Text(language.saveButton),
                 ),
               ),
             ),

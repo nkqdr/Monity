@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 
 enum DashboardTileWidth {
   half,
@@ -40,30 +41,16 @@ class DashboardTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
-          child: Material(
-            borderRadius: BorderRadius.circular(15),
-            child: Container(
-              height: height ?? 220,
-              width: width == DashboardTileWidth.half
-                  ? screenSize.width * 0.5 - 20
-                  : screenSize.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: backgroundColor, // Theme.of(context).cardColor,
-                gradient: backgroundColor != null
-                    ? null
-                    : LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Theme.of(context).scaffoldBackgroundColor,
-                          Theme.of(context).cardColor,
-                        ],
-                        stops: const [0.0, 0.5],
-                      ),
-              ),
-              child: fill.getChildFill(
+          margin: const EdgeInsets.only(top: 25, left: 15, right: 15),
+          child: NewmorphicBox(
+            child: Material(
+              borderRadius: BorderRadius.circular(15),
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                height: height ?? 220,
+                width: width == DashboardTileWidth.half ? screenSize.width * 0.5 - 30 : screenSize.width,
+                child: fill.getChildFill(
                   context,
                   child,
                   sideWidget,
@@ -74,7 +61,9 @@ class DashboardTile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: titleSize ?? 16,
                     color: titleColor ?? Theme.of(context).secondaryHeaderColor,
-                  )),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -84,28 +73,16 @@ class DashboardTile extends StatelessWidget {
 }
 
 abstract class DashboardTileFill {
-  Widget getChildFill(
-      BuildContext context,
-      Widget? child,
-      Widget? sideWidget,
-      String? title,
-      String? subtitle,
-      TextStyle? subtitleStyle,
-      TextStyle? titleStyle);
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget, String? title, String? subtitle,
+      TextStyle? subtitleStyle, TextStyle? titleStyle);
 }
 
 class DashboardTileFillAll implements DashboardTileFill {
   const DashboardTileFillAll();
 
   @override
-  Widget getChildFill(
-      BuildContext context,
-      Widget? child,
-      Widget? sideWidget,
-      String? title,
-      String? subtitle,
-      TextStyle? subtitleStyle,
-      TextStyle? titleStyle) {
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget, String? title, String? subtitle,
+      TextStyle? subtitleStyle, TextStyle? titleStyle) {
     return Stack(
       children: [
         child ?? Container(),
@@ -131,8 +108,7 @@ class DashboardTileFillAll implements DashboardTileFill {
                                   style: subtitleStyle ??
                                       TextStyle(
                                         fontSize: 16,
-                                        color: Theme.of(context)
-                                            .secondaryHeaderColor,
+                                        color: Theme.of(context).secondaryHeaderColor,
                                       ),
                                 )
                               : Container(),
@@ -153,14 +129,8 @@ class DashboardTileFillLeaveTitle implements DashboardTileFill {
   const DashboardTileFillLeaveTitle();
 
   @override
-  Widget getChildFill(
-      BuildContext context,
-      Widget? child,
-      Widget? sideWidget,
-      String? title,
-      String? subtitle,
-      TextStyle? subtitleStyle,
-      TextStyle? titleStyle) {
+  Widget getChildFill(BuildContext context, Widget? child, Widget? sideWidget, String? title, String? subtitle,
+      TextStyle? subtitleStyle, TextStyle? titleStyle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -185,8 +155,7 @@ class DashboardTileFillLeaveTitle implements DashboardTileFill {
                                 style: subtitleStyle ??
                                     TextStyle(
                                       fontSize: 18,
-                                      color: Theme.of(context)
-                                          .secondaryHeaderColor,
+                                      color: Theme.of(context).secondaryHeaderColor,
                                     ),
                               )
                             : Container(),

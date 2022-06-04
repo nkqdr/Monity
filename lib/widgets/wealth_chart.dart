@@ -15,9 +15,9 @@ class WealthChart extends StatelessWidget {
     required this.currentWealth,
   }) : super(key: key);
 
-  Color _getLineColor() {
+  Color _getLineColor(BuildContext context) {
     var firstValue = spots.isEmpty ? 0 : spots.first.y;
-    return currentWealth < firstValue ? Colors.red : Colors.green;
+    return currentWealth < firstValue ? Theme.of(context).errorColor : Theme.of(context).hintColor;
   }
 
   HorizontalLine? _getZeroLine(BuildContext context, double minLineChartValue) {
@@ -75,7 +75,7 @@ class WealthChart extends StatelessWidget {
             belowBarData: BarAreaData(show: false),
             dotData: FlDotData(show: false),
             barWidth: 3,
-            colors: [_getLineColor()],
+            colors: [_getLineColor(context)],
             spots: spots,
           )
         ],

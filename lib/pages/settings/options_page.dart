@@ -121,7 +121,7 @@ class _BooleanSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).cardColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
         child: Column(

@@ -1,12 +1,13 @@
 import 'package:monity/helper/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 
 class CustomSection extends StatelessWidget {
   final List<Widget> children;
   final String? title;
   final String? subtitle;
   final double? titleSize;
-  final double? titlePadding;
+  final double titlePadding;
   final FontWeight? titleWeight;
   final Color? titleColor;
   final InkWell? trailing;
@@ -20,7 +21,7 @@ class CustomSection extends StatelessWidget {
     this.subtitle,
     this.titleWeight,
     this.titleColor,
-    this.titlePadding,
+    this.titlePadding = 10,
     this.trailing,
     this.groupItems = false,
   }) : super(key: key);
@@ -33,7 +34,7 @@ class CustomSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: titlePadding ?? 0),
+            padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: titlePadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -67,15 +68,32 @@ class CustomSection extends StatelessWidget {
             ),
           ),
           if (groupItems)
-            ...Utils.mapIndexed(children, (index, Widget item) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-                child: ClipRRect(
-                  borderRadius: getBorderRadius(index, children.length) ?? BorderRadius.circular(0),
-                  child: item,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: NewmorphicBox(
+                child: Column(
+                  children: [
+                    ...Utils.mapIndexed(children, (index, Widget item) {
+                      return Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: getBorderRadius(index, children.length) ?? BorderRadius.circular(0),
+                            child: item,
+                          ),
+                          if (index < children.length - 1)
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 15),
+                              height: 1,
+                              width: double.infinity,
+                              color: Theme.of(context).cardColor,
+                            ),
+                        ],
+                      );
+                    }),
+                  ],
                 ),
-              );
-            })
+              ),
+            )
           else
             ...children
         ],

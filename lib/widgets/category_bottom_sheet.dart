@@ -3,13 +3,14 @@ import 'package:monity/helper/config_provider.dart';
 import 'package:monity/helper/interfaces.dart';
 import 'package:monity/helper/types.dart';
 import 'package:monity/helper/utils.dart';
-import 'package:monity/widgets/adaptive_text_button.dart';
 import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:monity/widgets/custom_textfield.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:provider/provider.dart';
 
 enum CategoryBottomSheetMode {
@@ -106,52 +107,56 @@ class _CategoryBottomSheetState<T extends Category> extends State<CategoryBottom
           if (widget.hasLabelDropdown == true)
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
+                NewmorphicBox(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                    ),
-                    child: DropdownButton<AssetLabel?>(
-                      value: _selectedLabel,
-                      isExpanded: true,
-                      alignment: Alignment.center,
-                      borderRadius: BorderRadius.circular(15),
-                      underline: Container(),
-                      items: Provider.of<ConfigProvider>(context).assetAllocationCategories.map(buildMenuItem).toList(),
-                      onChanged: (value) {
-                        setState(() => _selectedLabel = value);
-                        if (!isTextFieldEmpty) {
-                          setState(() => isButtonDisabled = false);
-                        }
-                      },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      child: DropdownButton<AssetLabel?>(
+                        value: _selectedLabel,
+                        isExpanded: true,
+                        alignment: Alignment.center,
+                        borderRadius: BorderRadius.circular(15),
+                        underline: Container(),
+                        dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                        items:
+                            Provider.of<ConfigProvider>(context).assetAllocationCategories.map(buildMenuItem).toList(),
+                        onChanged: (value) {
+                          setState(() => _selectedLabel = value);
+                          if (!isTextFieldEmpty) {
+                            setState(() => isButtonDisabled = false);
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
-                AdaptiveTextButton(
-                  text: language.removeLabel,
-                  onPressed: _selectedLabel == null
-                      ? null
-                      : () {
-                          setState(() => _selectedLabel = null);
-                          setState(() => isButtonDisabled = _categoryNameController.text == widget.category?.name &&
-                              widget.label == _selectedLabel?.title);
-                        },
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: NewmorphpicButton(
+                    text: language.removeLabel,
+                    isDestructive: true,
+                    onPressed: _selectedLabel == null
+                        ? null
+                        : () {
+                            setState(() => _selectedLabel = null);
+                            setState(() => isButtonDisabled = _categoryNameController.text == widget.category?.name &&
+                                widget.label == _selectedLabel?.title);
+                          },
+                  ),
                 ),
               ],
             ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0),
             child: Center(
-              child: ElevatedButton(
+              child: NewmorphpicButton(
                 onPressed: isButtonDisabled ? null : _handleSubmit,
-                style: isButtonDisabled
-                    ? ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).secondaryHeaderColor))
-                    : null,
-                child:
-                    Text(widget.mode == CategoryBottomSheetMode.add ? language.addCategoryButton : language.saveButton),
+                text: widget.mode == CategoryBottomSheetMode.add ? language.addCategoryButton : language.saveButton,
               ),
             ),
           ),

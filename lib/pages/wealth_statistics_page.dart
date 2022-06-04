@@ -8,7 +8,7 @@ import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_indicator.dart';
 import 'package:monity/widgets/horizontal_bar.dart';
-import 'package:monity/widgets/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';

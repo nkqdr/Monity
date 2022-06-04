@@ -7,6 +7,8 @@ import 'package:monity/widgets/category_tile.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_section.dart';
 import 'package:monity/widgets/category_bottom_sheet.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -43,48 +45,56 @@ class TransactionsSettingsPage extends StatelessWidget {
           // titleSize: 18,
           titlePadding: 10,
           subtitle: language.monthlyLimitDescription,
+          groupItems: true,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Row(
-                  children: [
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    monthlyLimit != null ? language.yourMonthlyLimit : language.noMonthlyLimit,
+                    style: monthlyLimit != null
+                        ? null
+                        : TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                          ),
+                  ),
+                  if (monthlyLimit != null)
                     Text(
-                      monthlyLimit != null ? language.yourMonthlyLimit : language.noMonthlyLimit,
-                      style: monthlyLimit != null
-                          ? null
-                          : TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                    ),
-                    if (monthlyLimit != null)
-                      Text(
-                        currencyFormat.format(monthlyLimit),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      )
-                  ],
-                ),
+                      currencyFormat.format(monthlyLimit),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    )
+                ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AdaptiveTextButton(
+          ],
+        ),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width - 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: NewmorphpicButton(
                   text: language.changeMonthlyLimit,
                   onPressed: () => _handleSetMonthlyLimit(context),
                 ),
-                AdaptiveTextButton(
+              ),
+              Expanded(
+                child: NewmorphpicButton(
                   text: language.deleteMonthlyLimit,
-                  isDescructive: true,
+                  isDestructive: true,
                   onPressed: () => _handleDeleteMonthlyLimit(context),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
         CustomSection(
           title: language.categories,
@@ -99,7 +109,7 @@ class TransactionsSettingsPage extends StatelessWidget {
             onTap: () => _handleAddCategory(context),
           ),
           children: const [
-            TransactionCategoriesList(),
+            _TransactionCategoriesList(),
           ],
         )
       ],
@@ -162,8 +172,8 @@ class TransactionsSettingsPage extends StatelessWidget {
   }
 }
 
-class TransactionCategoriesList extends StatelessWidget {
-  const TransactionCategoriesList({Key? key}) : super(key: key);
+class _TransactionCategoriesList extends StatelessWidget {
+  const _TransactionCategoriesList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

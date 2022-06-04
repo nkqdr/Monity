@@ -5,6 +5,7 @@ import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_cupertino_context_menu_action.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,34 +90,34 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                             onPressed: () => _handleDeleteSnapshot(e),
                           )
                         ],
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Material(
-                            color: Theme.of(context).cardColor,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  dateFormatter.format(e.date),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0, left: 10, right: 10),
+                          child: NewmorphicBox(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                              child: Material(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      dateFormatter.format(e.date),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      currencyFormat.format(e.amount),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).secondaryHeaderColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  currencyFormat.format(e.amount),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).secondaryHeaderColor,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),

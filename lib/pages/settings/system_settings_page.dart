@@ -16,6 +16,7 @@ import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_section.dart';
 import 'package:monity/widgets/adaptive_text_button.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             // Registered transactions
             Container(
               width: double.infinity,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
@@ -111,7 +112,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             // Registered snapshots
             Container(
               width: double.infinity,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
@@ -141,7 +142,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             // Used storage
             Container(
               width: double.infinity,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                 child: Row(
@@ -171,11 +172,17 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
           ],
         ),
         Center(
-          child: AdaptiveTextButton(
+          child: NewmorphpicButton(
             onPressed: _handleDeleteData,
-            isDescructive: true,
             text: language.deleteAllData,
+            isDestructive: true,
+            // expandWidth: true,
           ),
+          // child: AdaptiveTextButton(
+          //   onPressed: _handleDeleteData,
+          //   isDescructive: true,
+          //   text: language.deleteAllData,
+          // ),
         ),
         CustomSection(
           title: language.backup,
@@ -184,14 +191,22 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                AdaptiveTextButton(
-                  onPressed: () => _handleGenerateBackup(context),
+                NewmorphpicButton(
                   text: language.generateBackup,
+                  onPressed: () => _handleGenerateBackup(context),
                 ),
-                AdaptiveTextButton(
-                  onPressed: () => _handleLoadBackup(context),
+                NewmorphpicButton(
                   text: language.loadBackup,
+                  onPressed: () => _handleLoadBackup(context),
                 ),
+                // AdaptiveTextButton(
+                //   onPressed: () => _handleGenerateBackup(context),
+                //   text: language.generateBackup,
+                // ),
+                // AdaptiveTextButton(
+                //   onPressed: () => _handleLoadBackup(context),
+                //   text: language.loadBackup,
+                // ),
               ],
             ),
             if (configProvider.lastBackupCreated != null)

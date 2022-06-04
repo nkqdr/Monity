@@ -31,7 +31,7 @@ class TransactionContextMenu extends StatelessWidget {
     return CupertinoContextMenu(
       previewBuilder: (context, animation, child) {
         return Material(
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(15),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,

@@ -5,6 +5,8 @@ import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/custom_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:provider/provider.dart';
 
 class AddSnapshotBottomSheet extends StatefulWidget {
@@ -80,72 +82,75 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                 ),
               )
             else
-              Container(
-                constraints: const BoxConstraints(minHeight: 50),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: DropdownButtonFormField<InvestmentCategory>(
-                  hint: Text(language.selectCategory),
-                  borderRadius: BorderRadius.circular(15),
-                  menuMaxHeight: 300,
-                  alignment: Alignment.center,
-                  value: _investmentCategory,
-                  enableFeedback: true,
-                  isExpanded: true,
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  autovalidateMode: AutovalidateMode.disabled,
-                  items: categories.list.map<DropdownMenuItem<InvestmentCategory>>((e) {
-                    return DropdownMenuItem<InvestmentCategory>(
-                      value: e,
-                      child: Text(e.name),
-                    );
-                  }).toList(),
-                  onChanged: (InvestmentCategory? cat) {
-                    setState(() => _investmentCategory = cat);
-                  },
-                  validator: (InvestmentCategory? cat) {
-                    if (!categories.list.contains(cat) || cat == null) {
-                      return language.invalidInput;
-                    }
-                    return null;
-                  },
+              NewmorphicBox(
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: DropdownButtonFormField<InvestmentCategory>(
+                    hint: Text(language.selectCategory),
+                    borderRadius: BorderRadius.circular(15),
+                    menuMaxHeight: 300,
+                    alignment: Alignment.center,
+                    value: _investmentCategory,
+                    enableFeedback: true,
+                    isExpanded: true,
+                    decoration: const InputDecoration(border: InputBorder.none),
+                    dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    items: categories.list.map<DropdownMenuItem<InvestmentCategory>>((e) {
+                      return DropdownMenuItem<InvestmentCategory>(
+                        value: e,
+                        child: Text(e.name),
+                      );
+                    }).toList(),
+                    onChanged: (InvestmentCategory? cat) {
+                      setState(() => _investmentCategory = cat);
+                    },
+                    validator: (InvestmentCategory? cat) {
+                      if (!categories.list.contains(cat) || cat == null) {
+                        return language.invalidInput;
+                      }
+                      return null;
+                    },
+                  ),
                 ),
               ),
 
             // Amount of Snapshot
-            Container(
-              constraints: const BoxConstraints(minHeight: 50),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(10),
-              child: TextFormField(
-                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
-                decoration: const InputDecoration.collapsed(hintText: "0,00"),
-                validator: (String? val) {
-                  double x = 0;
-                  if (val == null || val == "") {
-                    return language.invalidInput;
-                  }
-                  var amountString = val.replaceAll(",", ".");
-                  try {
-                    x = double.parse(amountString);
-                    setState(() => _givenAmount = x);
-                  } catch (e) {
-                    return language.invalidInput;
-                  }
-                  if (x < 0) {
-                    return language.invalidInput;
-                  }
-                  return null;
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: NewmorphicBox(
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 50),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: TextFormField(
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                    decoration: const InputDecoration.collapsed(hintText: "0,00"),
+                    validator: (String? val) {
+                      double x = 0;
+                      if (val == null || val == "") {
+                        return language.invalidInput;
+                      }
+                      var amountString = val.replaceAll(",", ".");
+                      try {
+                        x = double.parse(amountString);
+                        setState(() => _givenAmount = x);
+                      } catch (e) {
+                        return language.invalidInput;
+                      }
+                      // if (x < 0) {
+                      //   return language.invalidInput;
+                      // }
+                      return null;
+                    },
+                  ),
+                ),
               ),
             ),
 
@@ -153,11 +158,8 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(top: 25.0, bottom: 15),
               child: Center(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(categories.list.isEmpty ? Colors.grey : Colors.green),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                  ),
+                child: NewmorphpicButton(
+                  text: language.saveButton,
                   onPressed: categories.list.isEmpty
                       ? null
                       : () async {
@@ -169,7 +171,6 @@ class _AddSnapshotBottomSheetState extends State<AddSnapshotBottomSheet> {
                             Utils.playErrorFeedback();
                           }
                         },
-                  child: Text(language.saveButton),
                 ),
               ),
             ),

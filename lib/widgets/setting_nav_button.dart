@@ -46,7 +46,21 @@ class _SettingNavButtonState extends State<SettingNavButton> {
       child: AnimatedContainer(
         width: double.infinity,
         duration: const Duration(milliseconds: 100),
-        color: _isTapped ? Theme.of(context).canvasColor : Theme.of(context).cardColor,
+        decoration: BoxDecoration(
+          color: _isTapped ? Theme.of(context).canvasColor : Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).highlightColor,
+              offset: const Offset(-5, -5),
+              blurRadius: 8,
+            ),
+            BoxShadow(
+              color: Theme.of(context).shadowColor,
+              offset: const Offset(5, 5),
+              blurRadius: 8,
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           child: Row(

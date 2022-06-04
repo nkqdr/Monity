@@ -35,7 +35,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
           }
         });
         return Material(
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(15),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
@@ -126,7 +126,7 @@ class CurrentMonthContextMenu extends StatelessWidget {
                                       height: max(MediaQuery.of(context).size.height / 4 - 20, 180),
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            colors: [Colors.green, Theme.of(context).cardColor],
+                                            colors: [Colors.green, Theme.of(context).scaffoldBackgroundColor],
                                             stops: remainingAmount! <= 0
                                                 ? [0, 0]
                                                 : [

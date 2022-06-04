@@ -13,6 +13,7 @@ import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_section.dart';
 import 'package:monity/widgets/dashboard_tile.dart';
 import 'package:monity/widgets/investment_tile.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_button.dart';
 import 'package:monity/widgets/tab_switcher.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:monity/widgets/wealth_chart.dart';
@@ -84,44 +85,96 @@ class _WealthPageState extends State<WealthPage> {
       safeAreaBottomDisabled: true,
       children: [
         isLoading
-            ? const DashboardTile(
+            ? const SizedBox(
+                height: 250,
+                width: double.infinity,
                 child: Center(
                   child: AdaptiveProgressIndicator(),
                 ),
               )
-            : DashboardTile(
-                title: currencyFormat.format(displayWealth),
-                titleColor: Theme.of(context).colorScheme.onBackground,
-                fill: const DashboardTileFillLeaveTitle(),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                height: 250,
-                titleSize: 24,
-                subtitle: subtitle,
-                child: Expanded(
-                  child: displayedDataPoints.length > 1
-                      ? WealthChart(
-                          //key: Key("wealth-chart-${displayedDataPoints.length}"),
-                          currentWealth: _getCurrentWealth(),
-                          spots: displayedDataPoints,
-                          indexLine: _indexLine,
-                          touchHandler: (e, v) {
-                            _handleChartTouch(e, v, dateFormatter);
-                          },
-                        )
-                      : Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              language.noDatapointsForSelectedPeriod,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).secondaryHeaderColor,
-                              ),
-                            ),
-                          ),
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: SizedBox(
+                  height: 250,
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        currencyFormat.format(displayWealth),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
                         ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                      Expanded(
+                        child: displayedDataPoints.length > 1
+                            ? WealthChart(
+                                //key: Key("wealth-chart-${displayedDataPoints.length}"),
+                                currentWealth: _getCurrentWealth(),
+                                spots: displayedDataPoints,
+                                indexLine: _indexLine,
+                                touchHandler: (e, v) {
+                                  _handleChartTouch(e, v, dateFormatter);
+                                },
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    language.noDatapointsForSelectedPeriod,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Theme.of(context).secondaryHeaderColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+        // : DashboardTile(
+        //     title: currencyFormat.format(displayWealth),
+        //     titleColor: Theme.of(context).colorScheme.onBackground,
+        //     fill: const DashboardTileFillLeaveTitle(),
+        //     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        //     height: 250,
+        //     titleSize: 24,
+        //     subtitle: subtitle,
+        //     child: Expanded(
+        //       child: displayedDataPoints.length > 1
+        //           ? WealthChart(
+        //               //key: Key("wealth-chart-${displayedDataPoints.length}"),
+        //               currentWealth: _getCurrentWealth(),
+        //               spots: displayedDataPoints,
+        //               indexLine: _indexLine,
+        //               touchHandler: (e, v) {
+        //                 _handleChartTouch(e, v, dateFormatter);
+        //               },
+        //             )
+        //           : Center(
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(5.0),
+        //                 child: Text(
+        //                   language.noDatapointsForSelectedPeriod,
+        //                   textAlign: TextAlign.center,
+        //                   style: TextStyle(
+        //                     color: Theme.of(context).secondaryHeaderColor,
+        //                   ),
+        //                 ),
+        //               ),
+        //             ),
+        //     ),
+        //   ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: sidePadding, vertical: 15),
           child: TabSwitcher(
@@ -147,7 +200,7 @@ class _WealthPageState extends State<WealthPage> {
           ),
         ),
         Center(
-          child: AdaptiveTextButton(
+          child: NewmorphpicButton(
             text: language.wealthSplitTitle,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {

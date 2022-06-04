@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/transaction_model.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 import 'package:monity/widgets/transaction_context_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -24,27 +25,30 @@ class TransactionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
-    return Padding(
-      padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
-      child: TransactionContextMenu(
-        transaction: transaction,
-        transactionCategory: category,
-        handleDelete: () => _handleDeleteTransaction(context),
-        child: Material(
-          borderRadius: BorderRadius.circular(15),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-                Theme.of(context).scaffoldBackgroundColor,
-                (transaction.type == TransactionType.income ? Colors.green[600] as Color : Colors.red[600] as Color),
-              ], stops: const [
-                0.1,
-                1
-              ]),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
+    return TransactionContextMenu(
+      transaction: transaction,
+      transactionCategory: category,
+      handleDelete: () => _handleDeleteTransaction(context),
+      child: Container(
+        margin: const EdgeInsets.only(top: 15.0, left: 15, right: 15),
+        child: NewmorphicBox(
+          child: Material(
+            borderRadius: BorderRadius.circular(15),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).scaffoldBackgroundColor,
+                    (transaction.type == TransactionType.income
+                        ? Theme.of(context).hintColor
+                        : Theme.of(context).errorColor),
+                  ],
+                  stops: const [0, 1],
+                ),
+              ),
               child: SizedBox(
                 height: 75,
                 child: Row(

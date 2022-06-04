@@ -8,6 +8,7 @@ import 'package:monity/helper/utils.dart';
 import 'package:monity/widgets/category_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:monity/widgets/newmorphic/newmorphic_box.dart';
 import 'package:provider/provider.dart';
 
 class CategoryTile<T extends Category> extends StatelessWidget {
@@ -24,85 +25,87 @@ class CategoryTile<T extends Category> extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Theme.of(context).cardColor,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
+      child: NewmorphicBox(
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    if (category is InvestmentCategory)
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    if (category is InvestmentCategory &&
-                        (category as InvestmentCategory).label != ConfigProvider.noneAssetLabel.title)
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _getColorForLabel(
-                                  context,
-                                  (category as InvestmentCategory).label,
+                      if (category is InvestmentCategory)
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      if (category is InvestmentCategory &&
+                          (category as InvestmentCategory).label != ConfigProvider.noneAssetLabel.title)
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _getColorForLabel(
+                                    context,
+                                    (category as InvestmentCategory).label,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            Utils.getCorrectTitleFromKey((category as InvestmentCategory).label, language),
-                            style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
+                            Text(
+                              Utils.getCorrectTitleFromKey((category as InvestmentCategory).label, language),
+                              style: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    if (category is InvestmentCategory &&
-                        (category as InvestmentCategory).label == ConfigProvider.noneAssetLabel.title)
-                      Text(
-                        language.noLabel,
-                        style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
+                          ],
                         ),
-                      ),
+                      if (category is InvestmentCategory &&
+                          (category as InvestmentCategory).label == ConfigProvider.noneAssetLabel.title)
+                        Text(
+                          language.noLabel,
+                          style: TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      child: const Icon(Icons.edit_rounded),
+                      onTap: () => _handleEdit(context),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    InkWell(
+                      child: const Icon(Icons.delete_rounded, color: Colors.red),
+                      onTap: () => _handleDelete(context),
+                    ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  InkWell(
-                    child: const Icon(Icons.edit_rounded),
-                    onTap: () => _handleEdit(context),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  InkWell(
-                    child: const Icon(Icons.delete_rounded, color: Colors.red),
-                    onTap: () => _handleDelete(context),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

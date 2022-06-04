@@ -67,10 +67,8 @@ class PieChart extends StatelessWidget {
     var sum = _getSum();
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = sum < currencyFormatThreshhold
-        ? NumberFormat.simpleCurrency(
-            locale: locale.toString(), decimalDigits: 2)
-        : NumberFormat.compactCurrency(
-            locale: locale.toString(), decimalDigits: 2);
+        ? NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2)
+        : NumberFormat.compactCurrency(locale: locale.toString(), decimalDigits: 2);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,9 +79,7 @@ class PieChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               for (var category in dataset)
-                PieChartCategory(
-                    text: category.name,
-                    color: usedColorScheme[dataset.indexOf(category)] as Color)
+                PieChartCategory(text: category.name, color: usedColorScheme[dataset.indexOf(category)] as Color)
             ],
           ),
         ),
@@ -93,40 +89,54 @@ class PieChart extends StatelessWidget {
           child: Stack(
             children: [
               Center(
-                child: CustomPaint(
-                  child: const SizedBox.expand(),
-                  painter: PieChartPainter(
-                    categories: dataset,
-                    width: 10,
-                    colorScheme: usedColorScheme,
+                child: Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                    const BoxShadow(
+                      blurRadius: 1,
+                      offset: Offset(-1, -1),
+                      color: Colors.white,
+                    ),
+                    BoxShadow(
+                      blurRadius: 8,
+                      offset: const Offset(3, 3),
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ]),
+                  child: CustomPaint(
+                    child: const SizedBox.expand(),
+                    painter: PieChartPainter(
+                      categories: dataset,
+                      width: 10,
+                      colorScheme: usedColorScheme,
+                    ),
                   ),
                 ),
               ),
               Center(
                 child: Container(
                   height: 90,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: usedColorScheme.first!.withOpacity(0.9),
-                      boxShadow: [
-                        const BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(-1, -1),
-                          color: Colors.white,
-                        ),
-                        BoxShadow(
-                          spreadRadius: -2,
-                          blurRadius: 10,
-                          offset: const Offset(5, 5),
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                      ]),
+                  decoration:
+                      BoxDecoration(shape: BoxShape.circle, color: usedColorScheme.first!.withOpacity(0.9), boxShadow: [
+                    const BoxShadow(
+                      blurRadius: 1,
+                      offset: Offset(-1, -1),
+                      color: Colors.white,
+                    ),
+                    BoxShadow(
+                      blurRadius: 4,
+                      offset: const Offset(3, 3),
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ]),
                   child: Center(
-                      child: Text(
-                    currencyFormat.format(sum),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500, color: Colors.white),
-                  )),
+                    child: Text(
+                      currencyFormat.format(sum),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -168,8 +178,7 @@ class PieChartPainter extends CustomPainter {
         ..style = PaintingStyle.fill
         ..strokeWidth = width
         ..color = colorScheme.elementAt(index % categories.length) as Color;
-      final rect = Rect.fromCenter(
-          center: center, width: radius * 2, height: radius * 2);
+      final rect = Rect.fromCenter(center: center, width: radius * 2, height: radius * 2);
       canvas.drawArc(
         rect,
         startRadian,

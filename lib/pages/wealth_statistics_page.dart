@@ -8,6 +8,7 @@ import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/custom_appbar.dart';
 import 'package:monity/widgets/custom_indicator.dart';
 import 'package:monity/widgets/horizontal_bar.dart';
+import 'package:monity/widgets/newmorphic_box.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
@@ -23,30 +24,9 @@ class WealthStatisticsPage extends StatefulWidget {
   State<WealthStatisticsPage> createState() => _WealthStatisticsPageState();
 }
 
-class DisplayAssetAllocation {
-  final AssetLabel label;
-  final double totalSum;
-  final List<CategoryWithSnapshot> relevantCategories;
-
-  const DisplayAssetAllocation({
-    required this.label,
-    required this.totalSum,
-    required this.relevantCategories,
-  });
-}
-
-class CategoryWithSnapshot {
-  final InvestmentCategory category;
-  final InvestmentSnapshot snapshot;
-  const CategoryWithSnapshot({
-    required this.category,
-    required this.snapshot,
-  });
-}
-
 class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
   late int touchedIndex;
-  late List<DisplayAssetAllocation> allAllocations = [];
+  late List<_DisplayAssetAllocation> allAllocations = [];
   bool isLoading = false;
   bool noContent = false;
 
@@ -81,16 +61,17 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
     for (var element in lastSnapshots) {
       totalSum += element.amount;
     }
+    List<_DisplayAssetAllocation> newAllocations = [];
     for (var i = 0; i < labelTitles.length; i++) {
       // Find relevant Investments and their last snapshots for this allocation.
-      List<CategoryWithSnapshot> relevantCategoriesWithSnapshot = [];
+      List<_CategoryWithSnapshot> relevantCategoriesWithSnapshot = [];
       List<InvestmentCategory> relevantCategories =
           investmentCategories.where((element) => element.label == labelTitles[i].title).toList();
       for (var j = 0; j < relevantCategories.length; j++) {
         var lastSnapshot = await FinancesDatabase.instance.readLastSnapshotFor(category: relevantCategories[j]);
         if (lastSnapshot != null && lastSnapshot.amount > 0) {
           relevantCategoriesWithSnapshot
-              .add(CategoryWithSnapshot(category: relevantCategories[j], snapshot: lastSnapshot));
+              .add(_CategoryWithSnapshot(category: relevantCategories[j], snapshot: lastSnapshot));
         }
       }
       // Calculate total sum
@@ -102,11 +83,14 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       // Set the correct percentage for this allocation
       labelTitles[i].percentage = sum / totalSum * 100;
       // Add this allocation to the list
-      var newAllocation = DisplayAssetAllocation(
+      var newAllocation = _DisplayAssetAllocation(
           label: labelTitles[i], totalSum: sum, relevantCategories: relevantCategoriesWithSnapshot);
-      allAllocations.add(newAllocation);
+      newAllocations.add(newAllocation);
     }
-    setState(() => isLoading = false);
+    setState(() {
+      isLoading = false;
+      allAllocations = newAllocations;
+    });
   }
 
   @override
@@ -129,7 +113,10 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
           },
         ),
         right: IconButton(
-          icon: const Icon(Icons.help_outline_rounded),
+          icon: Icon(
+            Icons.help_outline_rounded,
+            color: Theme.of(context).primaryColor,
+          ),
           splashRadius: 18,
           onPressed: () => showHelpDialog(language),
         ),
@@ -165,7 +152,7 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: Utils.mapIndexed(allAllocations, (index, DisplayAssetAllocation item) {
+                    children: Utils.mapIndexed(allAllocations, (index, _DisplayAssetAllocation item) {
                       return Indicator(
                         color: item.label.displayColor,
                         text: Utils.getCorrectTitleFromKey(item.label.title, language),
@@ -214,107 +201,108 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 800),
-                      constraints: const BoxConstraints(
-                        minHeight: 100.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Theme.of(context).cardColor,
-                      ),
-                      child: touchedIndex == -1
-                          ? Center(
-                              child: Text(
-                                language.tapChartForDetails,
-                                style: TextStyle(
-                                  color: Theme.of(context).secondaryHeaderColor,
+                    child: NewmorphicBox(
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          minHeight: 100.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        child: touchedIndex == -1
+                            ? Center(
+                                child: Text(
+                                  language.tapChartForDetails,
+                                  style: TextStyle(
+                                    color: Theme.of(context).secondaryHeaderColor,
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          Utils.getCorrectTitleFromKey(
+                                              allAllocations[touchedIndex].label.title, language),
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          currencyFormat.format(allAllocations[touchedIndex].totalSum),
+                                          style: TextStyle(
+                                            color: allAllocations[touchedIndex].totalSum >= 0
+                                                ? Theme.of(context).hintColor
+                                                : Theme.of(context).errorColor,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    Column(
+                                      children: [
+                                        ...Utils.mapIndexed(allAllocations[touchedIndex].relevantCategories,
+                                            (i, _CategoryWithSnapshot e) {
+                                          return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                e.category.name,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  HorizontalBar(
+                                                    amount: e.snapshot.amount,
+                                                    size: 1 / allAllocations[touchedIndex].totalSum,
+                                                    color: allAllocations[touchedIndex].label.displayColor,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 15,
+                                                  ),
+                                                  Text(
+                                                    (e.snapshot.amount / allAllocations[touchedIndex].totalSum * 100)
+                                                            .toStringAsFixed(1) +
+                                                        "%",
+                                                    style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 15,
+                                              ),
+                                            ],
+                                          );
+                                        })
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        Utils.getCorrectTitleFromKey(
-                                            allAllocations[touchedIndex].label.title, language),
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        currencyFormat.format(allAllocations[touchedIndex].totalSum),
-                                        style: TextStyle(
-                                          color: allAllocations[touchedIndex].totalSum >= 0
-                                              ? Theme.of(context).hintColor
-                                              : Theme.of(context).errorColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 30,
-                                  ),
-                                  Column(
-                                    children: [
-                                      ...Utils.mapIndexed(allAllocations[touchedIndex].relevantCategories,
-                                          (i, CategoryWithSnapshot e) {
-                                        return Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              e.category.name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              children: [
-                                                HorizontalBar(
-                                                  amount: e.snapshot.amount,
-                                                  size: 1 / allAllocations[touchedIndex].totalSum,
-                                                  color: allAllocations[touchedIndex].label.displayColor,
-                                                ),
-                                                const SizedBox(
-                                                  width: 15,
-                                                ),
-                                                Text(
-                                                  (e.snapshot.amount / allAllocations[touchedIndex].totalSum * 100)
-                                                          .toStringAsFixed(1) +
-                                                      "%",
-                                                  style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 15,
-                                            ),
-                                          ],
-                                        );
-                                      })
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                      ),
                     ),
                   ),
                 ],
     );
   }
 
-  List<PieChartSectionData> getSections(List<DisplayAssetAllocation> allocations) {
+  List<PieChartSectionData> getSections(List<_DisplayAssetAllocation> allocations) {
     // If the smallest fraction is too small and would make the chart look bad, give it some of the width of the biggest fraction.
     var labelTitles = allocations.map((e) => e.label);
     double minValue = double.maxFinite;
@@ -357,4 +345,25 @@ class _WealthStatisticsPageState extends State<WealthStatisticsPage> {
       message: language.assetAllocationHelp,
     );
   }
+}
+
+class _DisplayAssetAllocation {
+  final AssetLabel label;
+  final double totalSum;
+  final List<_CategoryWithSnapshot> relevantCategories;
+
+  const _DisplayAssetAllocation({
+    required this.label,
+    required this.totalSum,
+    required this.relevantCategories,
+  });
+}
+
+class _CategoryWithSnapshot {
+  final InvestmentCategory category;
+  final InvestmentSnapshot snapshot;
+  const _CategoryWithSnapshot({
+    required this.category,
+    required this.snapshot,
+  });
 }

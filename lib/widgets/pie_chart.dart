@@ -115,19 +115,21 @@ class PieChart extends StatelessWidget {
               Center(
                 child: Container(
                   height: 90,
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: usedColorScheme.first!.withOpacity(0.9), boxShadow: [
-                    const BoxShadow(
-                      blurRadius: 1,
-                      offset: Offset(-1, -1),
-                      color: Colors.white,
-                    ),
-                    BoxShadow(
-                      blurRadius: 4,
-                      offset: const Offset(3, 3),
-                      color: Theme.of(context).shadowColor,
-                    ),
-                  ]),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: usedColorScheme.first!.withOpacity(0.9),
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 1,
+                          offset: Offset(-1, -1),
+                          color: Colors.white,
+                        ),
+                        BoxShadow(
+                          blurRadius: 4,
+                          offset: Offset(3, 3),
+                          color: Color(0xff252525),
+                        ),
+                      ]),
                   child: Center(
                     child: Text(
                       currencyFormat.format(sum),

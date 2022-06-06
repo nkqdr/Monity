@@ -95,7 +95,11 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
                       .map(
                         (year) => CustomSection(
                           title: "$year",
-                          subtitle: _getPerformanceForYear(snapshotsByDate[year]!.first, snapshotsByDate[year]!.last),
+                          subtitle: _getPerformanceForYear(snapshotsByDate[year]!.first, snapshotsByDate[year]!.last) +
+                              " (" +
+                              _getPerformanceForYear(snapshotsByDate[year]!.first, snapshotsByDate[year]!.last,
+                                  absolute: true) +
+                              ")",
                           subtitleTextStyle: TextStyle(
                             color: _calculatePerformance(snapshotsByDate[year]!.first, snapshotsByDate[year]!.last) >= 0
                                 ? Theme.of(context).hintColor
@@ -158,9 +162,18 @@ class _WealthCategoryPageState extends State<WealthCategoryPage> {
     return (last.amount - first.amount) / first.amount;
   }
 
-  String _getPerformanceForYear(InvestmentSnapshot first, InvestmentSnapshot last) {
-    double performance = _calculatePerformance(first, last);
-    String endString = "${(performance * 100).toStringAsFixed(1)}%";
+  String _getPerformanceForYear(InvestmentSnapshot first, InvestmentSnapshot last, {bool absolute = false}) {
+    String endString = "";
+    double performance = 0;
+    if (!absolute) {
+      performance = _calculatePerformance(first, last);
+      endString = "${(performance * 100).toStringAsFixed(1)}%";
+    } else {
+      performance = last.amount - first.amount;
+      Locale locale = Localizations.localeOf(context);
+      var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
+      endString = currencyFormat.format(performance);
+    }
     if (performance > 0) {
       return "+" + endString;
     }

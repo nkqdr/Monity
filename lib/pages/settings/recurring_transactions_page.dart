@@ -21,10 +21,12 @@ class RecurringTransactions extends StatefulWidget {
 
 class _RecurringTransactionsState extends State<RecurringTransactions> {
   late Future<List<Transaction>> _recurringTransactions;
+  late List<TransactionCategory> transactionCategories;
 
   @override
   void initState() {
     _refreshTransactions();
+    FinancesDatabase.instance.readAllTransactionCategories().then((value) => transactionCategories = value);
     super.initState();
   }
 
@@ -41,101 +43,110 @@ class _RecurringTransactionsState extends State<RecurringTransactions> {
     Locale locale = Localizations.localeOf(context);
     var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return View(
-        appBar: CustomAppBar(
-          title: language.transactionsTitle,
-          left: IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              color: Theme.of(context).primaryColor,
-            ),
-            splashRadius: 18,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+      appBar: CustomAppBar(
+        title: language.transactionsTitle,
+        left: IconButton(
+          icon: Icon(
+            Icons.chevron_left,
+            color: Theme.of(context).primaryColor,
           ),
-          right: IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Theme.of(context).primaryColor,
-            ),
-            splashRadius: 18,
-            onPressed: _handleAddTransaction,
-          ),
+          splashRadius: 18,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        fixedAppBar: true,
-        children: [
-          FutureBuilder<List<Transaction>>(
-              future: _recurringTransactions,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.isEmpty) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height - 150,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Text(
-                            language.noTransactions,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
+        right: IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Theme.of(context).primaryColor,
+          ),
+          splashRadius: 18,
+          onPressed: _handleAddTransaction,
+        ),
+      ),
+      fixedAppBar: true,
+      children: [
+        FutureBuilder<List<Transaction>>(
+          future: _recurringTransactions,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height - 150,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Text(
+                        language.noTransactions,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              snapshot.data!.sort(_sortTransactionsByCategoryName);
+              return Column(
+                children: [
+                  CustomSection(
+                    title: language.fixedMonthlyIncome,
+                    subtitle: currencyFormat.format(
+                      _getMonthlyFixed(snapshot.data!, TransactionType.income),
+                    ),
+                    subtitleTextStyle: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      ...snapshot.data!.where((element) => element.type == TransactionType.income).map(
+                            (e) => TransactionTile(
+                              transaction: e,
+                              category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
+                              isRecurring: true,
+                              refreshFunction: _refreshTransactions,
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      CustomSection(
-                        title: language.fixedMonthlyIncome,
-                        subtitle: currencyFormat.format(
-                          _getMonthlyFixed(snapshot.data!, TransactionType.income),
-                        ),
-                        subtitleTextStyle: TextStyle(
-                          color: Theme.of(context).hintColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          ...snapshot.data!.where((element) => element.type == TransactionType.income).map(
-                                (e) => TransactionTile(
-                                  transaction: e,
-                                  category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
-                                  isRecurring: true,
-                                  refreshFunction: _refreshTransactions,
-                                ),
-                              ),
-                        ],
-                      ),
-                      CustomSection(
-                        title: language.fixedMonthlyExpenses,
-                        subtitle: currencyFormat.format(
-                          _getMonthlyFixed(snapshot.data!, TransactionType.expense),
-                        ),
-                        subtitleTextStyle: TextStyle(
-                          color: Theme.of(context).errorColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          ...snapshot.data!.where((element) => element.type == TransactionType.expense).map(
-                                (e) => TransactionTile(
-                                  transaction: e,
-                                  category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
-                                  isRecurring: true,
-                                  refreshFunction: _refreshTransactions,
-                                ),
-                              ),
-                        ],
-                      ),
                     ],
-                  );
-                } else {
-                  return const Center(child: AdaptiveProgressIndicator());
-                }
-              })
-        ]);
+                  ),
+                  CustomSection(
+                    title: language.fixedMonthlyExpenses,
+                    subtitle: currencyFormat.format(
+                      _getMonthlyFixed(snapshot.data!, TransactionType.expense),
+                    ),
+                    subtitleTextStyle: TextStyle(
+                      color: Theme.of(context).errorColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      ...snapshot.data!.where((element) => element.type == TransactionType.expense).map(
+                            (e) => TransactionTile(
+                              transaction: e,
+                              category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
+                              isRecurring: true,
+                              refreshFunction: _refreshTransactions,
+                            ),
+                          ),
+                    ],
+                  ),
+                ],
+              );
+            } else {
+              return const Center(child: AdaptiveProgressIndicator());
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  int _sortTransactionsByCategoryName(Transaction t1, Transaction t2) {
+    var c1 = transactionCategories.singleWhere((element) => element.id == t1.categoryId);
+    var c2 = transactionCategories.singleWhere((element) => element.id == t2.categoryId);
+    return c1.name.compareTo(c2.name);
   }
 
   double _getMonthlyFixed(List<Transaction> transactions, TransactionType type) {

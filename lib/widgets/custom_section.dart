@@ -9,6 +9,7 @@ class CustomSection extends StatelessWidget {
   final double? titleSize;
   final double titlePadding;
   final FontWeight? titleWeight;
+  final TextStyle? subtitleTextStyle;
   final Color? titleColor;
   final InkWell? trailing;
   final bool groupItems;
@@ -23,6 +24,7 @@ class CustomSection extends StatelessWidget {
     this.titleColor,
     this.titlePadding = 10,
     this.trailing,
+    this.subtitleTextStyle,
     this.groupItems = false,
   }) : super(key: key);
 
@@ -61,8 +63,9 @@ class CustomSection extends StatelessWidget {
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: TextStyle(
-                        color: Theme.of(context).secondaryHeaderColor, fontSize: 14, fontWeight: FontWeight.w500),
+                    style: subtitleTextStyle ??
+                        TextStyle(
+                            color: Theme.of(context).secondaryHeaderColor, fontSize: 14, fontWeight: FontWeight.w500),
                   )
               ],
             ),

@@ -122,6 +122,8 @@
   "recurringTransactions": "Wiederkehrende Transaktionen",
   "recurringTransactionsSubtitle": "Diese Transaktionen werden automatisch zu Beginn eines jeden Monats registriert.",
   "disable": "Deaktivieren",
+  "fixedMonthlyExpenses": "Feste monatliche Ausgaben",
+  "fixedMonthlyIncome": "Feste monatliche Einnahmen",
 
 
 

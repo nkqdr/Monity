@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:monity/backend/finances_database.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/widgets/adaptive_progress_indicator.dart';
 import 'package:monity/widgets/add_transaction_bottom_sheet.dart';
 import 'package:monity/widgets/custom_appbar.dart';
+import 'package:monity/widgets/custom_section.dart';
 import 'package:monity/widgets/transaction_tile.dart';
 import 'package:monity/widgets/view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,6 +38,8 @@ class _RecurringTransactionsState extends State<RecurringTransactions> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     var transactionCategories = Provider.of<ListProvider<TransactionCategory>>(context).list;
+    Locale locale = Localizations.localeOf(context);
+    var currencyFormat = NumberFormat.simpleCurrency(locale: locale.toString(), decimalDigits: 2);
     return View(
         appBar: CustomAppBar(
           title: language.transactionsTitle,
@@ -83,13 +87,47 @@ class _RecurringTransactionsState extends State<RecurringTransactions> {
                   }
                   return Column(
                     children: [
-                      ...snapshot.data!.map(
-                        (e) => TransactionTile(
-                          transaction: e,
-                          category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
-                          isRecurring: true,
-                          refreshFunction: _refreshTransactions,
+                      CustomSection(
+                        title: language.fixedMonthlyIncome,
+                        subtitle: currencyFormat.format(
+                          _getMonthlyFixed(snapshot.data!, TransactionType.income),
                         ),
+                        subtitleTextStyle: TextStyle(
+                          color: Theme.of(context).hintColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          ...snapshot.data!.where((element) => element.type == TransactionType.income).map(
+                                (e) => TransactionTile(
+                                  transaction: e,
+                                  category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
+                                  isRecurring: true,
+                                  refreshFunction: _refreshTransactions,
+                                ),
+                              ),
+                        ],
+                      ),
+                      CustomSection(
+                        title: language.fixedMonthlyExpenses,
+                        subtitle: currencyFormat.format(
+                          _getMonthlyFixed(snapshot.data!, TransactionType.expense),
+                        ),
+                        subtitleTextStyle: TextStyle(
+                          color: Theme.of(context).errorColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          ...snapshot.data!.where((element) => element.type == TransactionType.expense).map(
+                                (e) => TransactionTile(
+                                  transaction: e,
+                                  category: transactionCategories.firstWhere((element) => element.id == e.categoryId),
+                                  isRecurring: true,
+                                  refreshFunction: _refreshTransactions,
+                                ),
+                              ),
+                        ],
                       ),
                     ],
                   );
@@ -98,6 +136,16 @@ class _RecurringTransactionsState extends State<RecurringTransactions> {
                 }
               })
         ]);
+  }
+
+  double _getMonthlyFixed(List<Transaction> transactions, TransactionType type) {
+    double sum = 0;
+    for (var transaction in transactions) {
+      if (transaction.type == type) {
+        sum += transaction.amount;
+      }
+    }
+    return sum;
   }
 
   void _handleAddTransaction() async {

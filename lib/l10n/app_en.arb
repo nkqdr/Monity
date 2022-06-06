@@ -491,6 +491,14 @@
   "@disable": {
     "description": "Disable option in settings."
   },
+  "fixedMonthlyExpenses": "Fixed monthly expenses",
+  "@fixedMonthlyExpenses": {
+    "description": "Settings title for fixed monthly expenses."
+  },
+  "fixedMonthlyIncome": "Fixed monthly income",
+  "@fixedMonthlyIncome": {
+    "description": "Settings title for fixed monthly income."
+  },
 
 
 

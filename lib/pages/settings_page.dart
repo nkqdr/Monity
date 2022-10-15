@@ -25,10 +25,13 @@ class SettingsPage extends StatelessWidget {
     var language = AppLocalizations.of(context)!;
     var showcaseKeys = Provider.of<ShowcaseProvider>(context, listen: false);
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       showcaseKeys.startTourIfNeeded(
         myContext!,
-        [showcaseKeys.generalSettingsKey, showcaseKeys.configurationSettingsKey],
+        [
+          showcaseKeys.generalSettingsKey,
+          showcaseKeys.configurationSettingsKey
+        ],
         delay: const Duration(milliseconds: 200),
       );
     });
@@ -88,7 +91,8 @@ class SettingsPage extends StatelessWidget {
                           onTargetClick: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const TransactionsSettingsPage(),
+                                builder: (context) =>
+                                    const TransactionsSettingsPage(),
                               ),
                             );
                           },

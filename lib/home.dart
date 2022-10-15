@@ -29,8 +29,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    var showcaseProvider = Provider.of<ShowcaseProvider>(context, listen: false);
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    var showcaseProvider =
+        Provider.of<ShowcaseProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (showcaseProvider.showShowcase) {
         await showModalBottomSheet(
             context: context,
@@ -44,7 +45,8 @@ class _HomePageState extends State<HomePage> {
             });
       }
       if (showcaseProvider.userWantsTour) {
-        showcaseProvider.startTourIfNeeded(context, [showcaseProvider.settingsKey]);
+        showcaseProvider
+            .startTourIfNeeded(context, [showcaseProvider.settingsKey]);
       }
     });
   }
@@ -56,7 +58,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBody: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: Theme.of(context).appBarTheme.systemOverlayStyle as SystemUiOverlayStyle,
+        value: Theme.of(context).appBarTheme.systemOverlayStyle
+            as SystemUiOverlayStyle,
         child: _getCurrentPage(),
       ),
       bottomNavigationBar: Theme(
@@ -85,12 +88,14 @@ class _HomePageState extends State<HomePage> {
                     showcaseKey: showcaseKeys.transactionsKey,
                     title: language.transactionsTitle,
                     description: language.tap_to_view_transactions,
-                    overlayPadding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    overlayPadding:
+                        const EdgeInsets.only(left: 30, right: 30, bottom: 20),
                     disableBackdropClick: true,
                     disposeOnTap: true,
                     onTargetClick: () {
                       setState(() => _currentPage = 0);
-                      showcaseKeys.startTourIfNeeded(context, [showcaseKeys.addTransactionKey],
+                      showcaseKeys.startTourIfNeeded(
+                          context, [showcaseKeys.addTransactionKey],
                           delay: const Duration(milliseconds: 200));
                     },
                     child: const Icon(
@@ -104,7 +109,8 @@ class _HomePageState extends State<HomePage> {
                     showcaseKey: showcaseKeys.dashboardKey,
                     title: language.dashboardTitle,
                     description: language.tap_to_view_dashboard,
-                    overlayPadding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                    overlayPadding:
+                        const EdgeInsets.only(left: 30, right: 30, bottom: 20),
                     disableBackdropClick: true,
                     disposeOnTap: true,
                     onTargetClick: () async {
@@ -156,7 +162,8 @@ class _WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var showcaseProvider = Provider.of<ShowcaseProvider>(context, listen: false);
+    var showcaseProvider =
+        Provider.of<ShowcaseProvider>(context, listen: false);
     var language = AppLocalizations.of(context)!;
     return CustomBottomSheet(
       child: Container(

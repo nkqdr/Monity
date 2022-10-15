@@ -42,7 +42,7 @@ class CustomShowcase extends StatelessWidget {
         color: Colors.white,
       ),
       blurValue: 0.5,
-      disableBackdropClick: disableBackdropClick,
+      // disableBackdropClick: disableBackdropClick,
     );
   }
 }

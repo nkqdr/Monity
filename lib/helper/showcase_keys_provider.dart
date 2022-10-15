@@ -45,13 +45,14 @@ class ShowcaseProvider extends ChangeNotifier {
     showShowcase = false;
   }
 
-  void startTourIfNeeded(BuildContext context, List<GlobalKey> keys, {Duration? delay}) {
+  void startTourIfNeeded(BuildContext context, List<GlobalKey> keys,
+      {Duration? delay}) {
     if (!showShowcase || !userWantsTour) return;
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (delay != null) {
         await Future.delayed(delay);
       }
-      ShowCaseWidget.of(context)!.startShowCase(keys);
+      ShowCaseWidget.of(context).startShowCase(keys);
     });
   }
 
@@ -65,7 +66,8 @@ class _ShowcaseCompletedScreen extends StatefulWidget {
   const _ShowcaseCompletedScreen({Key? key}) : super(key: key);
 
   @override
-  State<_ShowcaseCompletedScreen> createState() => __ShowcaseCompletedScreenState();
+  State<_ShowcaseCompletedScreen> createState() =>
+      __ShowcaseCompletedScreenState();
 }
 
 class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
@@ -81,7 +83,8 @@ class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
   @override
   void initState() {
     _position = -_deltaY;
-    _timer = Timer.periodic(Duration(milliseconds: _animationMillis), _changeDirection);
+    _timer = Timer.periodic(
+        Duration(milliseconds: _animationMillis), _changeDirection);
     super.initState();
   }
 
@@ -95,7 +98,8 @@ class __ShowcaseCompletedScreenState extends State<_ShowcaseCompletedScreen> {
   Widget build(BuildContext context) {
     var language = AppLocalizations.of(context)!;
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         //height: height,
         width: double.infinity,

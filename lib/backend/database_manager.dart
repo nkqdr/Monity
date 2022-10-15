@@ -47,7 +47,8 @@ class DatabaseManager {
     var key = encrypt.Key.fromUtf8(secretKey);
     var iv = encrypt.IV.fromLength(16);
     var encrypter = encrypt.Encrypter(encrypt.AES(key));
-    List json = convert.jsonDecode(isEncrypted ? encrypter.decrypt64(backup, iv: iv) : backup);
+    List json = convert
+        .jsonDecode(isEncrypted ? encrypter.decrypt64(backup, iv: iv) : backup);
     for (var i = 0; i < json[0].length; i++) {
       for (var k = 0; k < json[1][i].length; k++) {
         batch.insert(json[0][i], json[1][i][k]);
@@ -56,25 +57,36 @@ class DatabaseManager {
     await batch.commit(continueOnError: false, noResult: true);
   }
 
-  Future<String> saveBackup(String backup, String fileName) async {
+  Future<String> saveBackup(String backup, String fileName,
+      {bool includeExtension = true}) async {
     // Directory(await getFilePath(fileName, onlyDirectory: true)).createSync();
-    File(await getFilePath(fileName)).create();
-    File file = File(await getFilePath(fileName));
+    File(await getFilePath(fileName, automaticExtension: includeExtension))
+        .create();
+    File file =
+        File(await getFilePath(fileName, automaticExtension: includeExtension));
     file.writeAsString(backup);
     return file.path;
   }
 
-  Future<String> getFilePath(String fileName, {bool onlyDirectory = false}) async {
+  Future<String> getFilePath(String fileName,
+      {bool onlyDirectory = false, bool automaticExtension = true}) async {
     String appDocumentsPath = "";
     if (Platform.isIOS) {
-      Directory appDocumentsDirectory = await getApplicationDocumentsDirectory();
+      Directory appDocumentsDirectory =
+          await getApplicationDocumentsDirectory();
       appDocumentsPath = appDocumentsDirectory.path;
     } else {
-      appDocumentsPath = (await getExternalStorageDirectories(type: StorageDirectory.documents))!.first.path;
+      appDocumentsPath = (await getExternalStorageDirectories(
+              type: StorageDirectory.documents))!
+          .first
+          .path;
     }
     if (onlyDirectory) {
       return appDocumentsPath;
+    } else if (automaticExtension) {
+      return '$appDocumentsPath/$fileName.$saveFileType';
+    } else {
+      return '$appDocumentsPath/$fileName';
     }
-    return '$appDocumentsPath/$fileName.$saveFileType';
   }
 }

@@ -7,8 +7,8 @@ const String tableRecurringTransaction = "recurring_transaction_base";
 const String tableTransactionCategory = "transaction_category";
 
 enum TransactionType {
-  expense,
-  income,
+  expense, // := 0
+  income, // := 1
 }
 
 class TransactionFields {

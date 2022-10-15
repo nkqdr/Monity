@@ -9,6 +9,7 @@ import 'package:monity/backend/models/investment_model.dart';
 import 'package:monity/backend/models/transaction_model.dart';
 import 'package:monity/helper/category_list_provider.dart';
 import 'package:monity/helper/config_provider.dart';
+import 'package:monity/helper/csv_utils.dart';
 import 'package:monity/helper/utils.dart';
 import 'package:monity/l10n/language_provider.dart';
 import 'package:monity/theme/theme_provider.dart';
@@ -231,7 +232,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
             ),
             AdaptiveTextButton(
               text: "Save Investments CSV",
-              onPressed: () => _handleExportTransactionsCSV(context),
+              onPressed: () => _handleExportInvestmentsCSV(context),
             ),
           ],
         ),
@@ -239,7 +240,50 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
   }
 
-  Future _handleExportTransactionsCSV(BuildContext context) async {}
+  Future _handleExportTransactionsCSV(BuildContext context) async {
+    var language = AppLocalizations.of(context)!;
+    var db = await FinancesDatabase.instance.database;
+    var wantedAttributes = "description, amount, date, type, name as category";
+    var result = await db.rawQuery('''
+SELECT $wantedAttributes FROM $tableTransaction LEFT JOIN $tableTransactionCategory ON $tableTransaction.category_id = $tableTransactionCategory._id
+''');
+    print(result);
+    var csv = mapListToCsv(result);
+    print(csv);
+    if (csv != null) {
+      String filePath = await DatabaseManager.instance
+          .saveBackup(csv, "transactions.csv", includeExtension: false);
+      await showOkAlertDialog(
+        context: context,
+        title: language.save_success,
+        message: Platform.isIOS
+            ? language.savedTo
+            : language.savedToAndroid + "\n" + filePath,
+      );
+    }
+  }
+
+  Future _handleExportInvestmentsCSV(BuildContext context) async {
+    var language = AppLocalizations.of(context)!;
+    var db = await FinancesDatabase.instance.database;
+    var wantedAttributes =
+        "amount, date, name as category_name, label as category_label";
+    var result = await db.rawQuery('''
+SELECT $wantedAttributes FROM $tableInvestmentSnapshot LEFT JOIN $tableInvestmentCategory ON $tableInvestmentSnapshot.category_id = $tableInvestmentCategory._id
+''');
+    var csv = mapListToCsv(result);
+    if (csv != null) {
+      String filePath = await DatabaseManager.instance
+          .saveBackup(csv, "investments.csv", includeExtension: false);
+      await showOkAlertDialog(
+        context: context,
+        title: language.save_success,
+        message: Platform.isIOS
+            ? language.savedTo
+            : language.savedToAndroid + "\n" + filePath,
+      );
+    }
+  }
 
   Future _handleLoadBackup(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
